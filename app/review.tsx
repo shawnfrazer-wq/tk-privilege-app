@@ -2,9 +2,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { crm } from '../src/crm';
 import { useData } from '../src/data';
+import { openOutside } from '../src/links';
 import { C, F, ls } from '../src/theme';
 import { CopyBtn } from '../src/ui/CopyBtn';
 import { TextArea } from '../src/ui/Field';
@@ -47,12 +48,16 @@ export default function Review() {
     timer.current = setTimeout(() => setCopyLabel('Copy'), 1600);
   }
 
-  // copies the review, records the tap for the desk's Review claims list, opens the site
+  // copies the review, records the tap for the desk's Review claims list, then opens the site in the
+  // in-app browser so Done brings her straight back here. The link is whatever app_settings returns.
   async function share(platform: 'google' | 'trustpilot', link: string) {
     await Clipboard.setStringAsync(text.trim());
-    crm.reviewTap(platform).catch(() => {});
-    Linking.openURL(link).catch(() => {});
-    router.navigate('/home');
+    try {
+      await crm.reviewTap(platform);
+    } catch (e) {
+      console.error('app_review_tap', e);
+    }
+    await openOutside(link);
   }
 
   const n = text.trim().length;

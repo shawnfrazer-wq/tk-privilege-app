@@ -37,7 +37,8 @@ export default function Refer() {
 
   const rows = list ?? [];
   const code = s?.referral_code ?? '';
-  const message = `Come to Tatiana Karelina with my code ${code} and you will get 1,000 points, £100, to use on your first visit.`;
+  // the code is app_summary referral_code; the CRM makes it once from her first name at the time and keeps it
+  const message = `Come to Tatiana Karelina with my code ${code} and you will get 1,000 points, £100, to use on your first visit. Book at tatianakarelina.co.uk`;
 
   async function copyCode() {
     await Clipboard.setStringAsync(code);
@@ -73,7 +74,7 @@ export default function Refer() {
       <Gap />
       <Btn label={shareLabel} onPress={share} />
       <Gap size="s" />
-      <Small>Press the button and the message and code are copied. Send it by your preferred method.</Small>
+      <Small>Tap the button and choose WhatsApp, Messages, email or any app on your phone. The message and your code go with it. Your friend gives the code at reception, or puts it in her own app.</Small>
 
       <Gap size="l" />
       <Eyebrow>Recently earned</Eyebrow>

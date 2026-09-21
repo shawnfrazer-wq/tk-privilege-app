@@ -1,7 +1,8 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Linking, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { useData } from '../src/data';
+import { openOutside } from '../src/links';
 import { C, F } from '../src/theme';
 import { Gap } from '../src/ui/Gap';
 import { MailIcon, PhoneIcon, QuestionIcon, WhatsAppIcon } from '../src/ui/Icons';
@@ -14,9 +15,7 @@ export default function Contact() {
   const router = useRouter();
   const { settings, failed, refreshing, refresh } = useData();
   const toMore = () => router.navigate('/more');
-  const open = (url?: string) => {
-    if (url) Linking.openURL(url).catch(() => {});
-  };
+  const open = (url?: string) => openOutside(url);
   return (
     <Screen tab="more" back onBack={toMore} title="Contact" refreshing={refreshing} onRefresh={refresh} status={statusOf(settings, failed)}>
       <Gap />

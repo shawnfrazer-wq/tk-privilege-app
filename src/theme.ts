@@ -9,7 +9,6 @@ export const C = {
   hair: '#E8E5E0',
   hairSoft: '#F1EEEA',
   gold: '#A98351',
-  navOff: '#A8A49F',
   placeholder: '#AEAAA5',
   switchOff: '#DDD9D4',
   dark: '#0A0A0A',

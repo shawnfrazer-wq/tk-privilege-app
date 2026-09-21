@@ -23,7 +23,7 @@ export function Nav({ tab }: { tab: Tab }) {
     <View style={[s.nav, { paddingBottom: Math.max(22, insets.bottom + 8) }]}>
       {TABS.map(({ key, label, href, Icon }) => {
         const on = key === tab;
-        const colour = on ? C.ink : C.navOff;
+        const colour = on ? C.ink : C.mute;
         return (
           <Pressable
             key={key}
@@ -34,7 +34,7 @@ export function Nav({ tab }: { tab: Tab }) {
               if (!on) router.navigate(href);
             }}
           >
-            <Icon color={colour} />
+            <Icon color={colour} size={22} width={1.7} />
             <Text style={[s.label, { color: colour }]}>{label}</Text>
           </Pressable>
         );
@@ -53,5 +53,5 @@ const s = StyleSheet.create({
     paddingHorizontal: 4,
   },
   btn: { flex: 1, alignItems: 'center', gap: 6, paddingVertical: 4 },
-  label: { fontFamily: F.med, fontSize: 8, letterSpacing: ls(0.12, 8), textTransform: 'uppercase' },
+  label: { fontFamily: F.med, fontSize: 9, letterSpacing: ls(0.12, 9), textTransform: 'uppercase' },
 });

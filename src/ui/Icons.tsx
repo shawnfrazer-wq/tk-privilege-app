@@ -13,9 +13,9 @@ const base = (size: number, color: string, width: number) => ({
   strokeLinejoin: 'round' as const,
 });
 
-// nav icons, stroke 1.3
-export const MoreIcon = ({ color, size = 20 }: P) => (
-  <Svg {...base(size, color, 1.3)}>
+// nav icons: 22 by 22 at stroke 1.7 in the bottom menu, 20 at 1.3 elsewhere
+export const MoreIcon = ({ color, size = 20, width = 1.3 }: P) => (
+  <Svg {...base(size, color, width)}>
     <Path d="M4 7h16M4 12h16M4 17h16" />
   </Svg>
 );
@@ -26,24 +26,24 @@ export const InfoIcon = ({ color, size = 20 }: P) => (
     <Path d="M12 8h.01" />
   </Svg>
 );
-export const HomeIcon = ({ color, size = 20 }: P) => (
-  <Svg {...base(size, color, 1.3)}>
+export const HomeIcon = ({ color, size = 20, width = 1.3 }: P) => (
+  <Svg {...base(size, color, width)}>
     <Path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z" />
   </Svg>
 );
-export const CardIcon = ({ color, size = 20 }: P) => (
-  <Svg {...base(size, color, 1.3)}>
+export const CardIcon = ({ color, size = 20, width = 1.3 }: P) => (
+  <Svg {...base(size, color, width)}>
     <Rect x="3" y="6" width="18" height="12" rx="2" />
     <Path d="M3 10h18" />
   </Svg>
 );
-export const RewardsIcon = ({ color, size = 20 }: P) => (
-  <Svg {...base(size, color, 1.3)}>
+export const RewardsIcon = ({ color, size = 20, width = 1.3 }: P) => (
+  <Svg {...base(size, color, width)}>
     <Path d="M12 3l2.4 5.3 5.6.6-4.2 3.8 1.2 5.6L12 15.6 6.999 18.3l1.2-5.6L4 8.9l5.6-.6z" />
   </Svg>
 );
-export const VisitsIcon = ({ color, size = 20 }: P) => (
-  <Svg {...base(size, color, 1.3)}>
+export const VisitsIcon = ({ color, size = 20, width = 1.3 }: P) => (
+  <Svg {...base(size, color, width)}>
     <Rect x="4" y="5" width="16" height="15" rx="2" />
     <Path d="M4 10h16M8 3v4M16 3v4" />
   </Svg>
