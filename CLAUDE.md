@@ -30,13 +30,13 @@ Supabase project fqvwyerheoafulmezyfm, schema salon.
 URL: https://fqvwyerheoafulmezyfm.supabase.co
 Publishable key: sb_publishable_jWITKqsg98dIrBIw3Y0DCQ_K1NNBKc2
 
-Existing functions include privilege_summary, privilege_card, privilege_card_boxes, privilege_card_target, privilege_tier, privilege_visit_count, privilege_band_on, privilege_band1_last_day, privilege_family, privilege_referral_code, privilege_request_booking, privilege_review_tap, privilege_profile_missing and privilege_delete_account.
+docs/crm-api.md is the data guide. The app calls only the app_ functions listed there, with supabase-js created with { db: { schema: "salon" } } and supabase.rpc. It never calls a privilege_ function or reads a table directly; those are blocked for signed in clients by salon.api_guard.
 
-The CRM is built and changed in a separate chat, never from here. Do not create or change tables, functions, policies or settings in Supabase. If the app needs something the CRM does not provide (for example a function that lists a stylist's free times, or the client's ledger lines), stop and write it down in docs/crm-requests.md with exactly what it must return, so Shawn can pass it to the CRM chat.
+The CRM is built and changed in a separate chat, never from here. Do not create or change tables, functions, policies or settings in Supabase. If the app needs something the CRM does not provide (for example a field app_summary does not return), stop and write it down in docs/crm-requests.md with exactly what it must return, so Shawn can pass it to the CRM chat.
 
 ## Sign in
 
-Supabase phone auth with a one time code by text, sent through Twilio (already set up in Supabase). The sign in screen has a "Keep me signed in for 90 days" switch, on by default, under the mobile number and above Send me a code. With it on, she stays signed in on that phone for 90 days from the code and then needs a new one. With it off, she needs a new code each time the app is opened. The first time she signs in, if her card is incomplete she is taken to Your Details and cannot go further until the required fields are filled (see rules.md section 6). For testing, use a Supabase test phone number with a fixed code.
+Supabase phone auth with a one time code by text, sent through Twilio (already set up in Supabase). The sign in screen has a "Keep me signed in for 90 days" switch, on by default, under the mobile number and above Send me a code. With it on, she stays signed in on that phone for 90 days from the code and then needs a new one. With it off, she needs a new code each time the app is opened. The first time she signs in, if her card is incomplete she is taken to Your Details and cannot go further until the required fields are filled (see rules.md section 6). For testing, use +44 7700 900124 (card deliberately incomplete, for the Your Details gate) and +44 7700 900123 (card complete, kept for Apple's reviewer), both with code 123456. Neither receives messages.
 
 ## Build order
 

@@ -27,7 +27,7 @@ Each of these is read by the app already, so it lights up as soon as the CRM add
 4. **app_summary: pending_pounds_at_next_appointment** (numeric). When she is booked past band 1 the block reads "Worth £52.50 on 2 December. Come in by 21 November and it is £70." Fallback: the band 1 sentence is shown instead.
 5. **app_summary: card_reward_pounds** (numeric, 50). The Care Card line reads "A full card is 500 points, £50". Fallback: the app divides card_reward_points by redeem_rate_points_per_pound, which is the one figure it works out itself until this lands.
 6. **app_summary: next_tier_visits** (integer, 4 or 6). The tier tracker reads "4 of 6 in the last 12 months". Fallback: visits_12m plus visits_to_next_tier.
-7. **Supabase auth: a test phone number with a fixed code** for the App Store reviewer and for testing, and the salon must be in the API's exposed schemas (the api_guard function suggests it is; it could not be confirmed from here because this container cannot reach the REST endpoint). Shawn to confirm both.
+7. Confirmed by docs/crm-api.md on 21 September: the salon schema is exposed to the API, and the test numbers are +44 7700 900123 (complete card, Apple's reviewer) and +44 7700 900124 (incomplete card), both with code 123456.
 
 ## Wireframe questions, not CRM
 

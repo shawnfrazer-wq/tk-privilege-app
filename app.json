@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "TK Privilege",
+    "slug": "tk-privilege",
+    "owner": "tatianakarelina",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/appicon.png",
+    "scheme": "tkprivilege",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "uk.co.tatianakarelina.privilege",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "uk.co.tatianakarelina.privilege",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/appicon.png",
+        "backgroundColor": "#0A0A0A"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "plugins": [
+      "expo-router",
+      "expo-video",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/logo_white.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#0A0A0A"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

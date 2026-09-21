@@ -1,0 +1,122 @@
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { crm, LedgerLine, Settings, Summary, Visits } from './crm';
+import { signOut, supabase } from './supabase';
+
+type Auth = { signedIn: boolean; setSignedIn: (v: boolean) => void };
+const AuthCtx = createContext<Auth>({ signedIn: false, setSignedIn: () => {} });
+export const useAuth = () => useContext(AuthCtx);
+
+export function AuthProvider({ initial, children }: { initial: boolean; children: React.ReactNode }) {
+  const [signedIn, setSignedIn] = useState(initial);
+  useEffect(() => {
+    const { data } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') setSignedIn(false);
+    });
+    return () => data.subscription.unsubscribe();
+  }, []);
+  const value = useMemo(() => ({ signedIn, setSignedIn }), [signedIn]);
+  return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>;
+}
+
+type Data = {
+  summary: Summary | null;
+  settings: Settings | null;
+  ledger: LedgerLine[] | null;
+  visits: Visits | null;
+  updatedAt: number | null;
+  refreshing: boolean;
+  refresh: () => Promise<void>;
+  loadLedger: () => Promise<void>;
+  loadVisits: () => Promise<void>;
+};
+
+const DataCtx = createContext<Data | null>(null);
+
+export function DataProvider({ children }: { children: React.ReactNode }) {
+  const { signedIn } = useAuth();
+  const [summary, setSummary] = useState<Summary | null>(null);
+  const [settings, setSettings] = useState<Settings | null>(null);
+  const [ledger, setLedger] = useState<LedgerLine[] | null>(null);
+  const [visits, setVisits] = useState<Visits | null>(null);
+  const [updatedAt, setUpdatedAt] = useState<number | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const loaded = useRef({ ledger: false, visits: false });
+
+  const loadLedger = useCallback(async () => {
+    try {
+      setLedger(await crm.ledger());
+      loaded.current.ledger = true;
+    } catch {}
+  }, []);
+
+  const loadVisits = useCallback(async () => {
+    try {
+      setVisits(await crm.visits());
+      loaded.current.visits = true;
+    } catch {}
+  }, []);
+
+  const refresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      const [s, st] = await Promise.all([crm.summary(), settings ? Promise.resolve(settings) : crm.settings()]);
+      setSummary(s);
+      setSettings(st);
+      setUpdatedAt(Date.now());
+      const extra: Promise<void>[] = [];
+      if (loaded.current.ledger) extra.push(loadLedger());
+      if (loaded.current.visits) extra.push(loadVisits());
+      await Promise.all(extra);
+    } catch {
+      // keep what is on screen; she can pull to refresh
+    } finally {
+      setRefreshing(false);
+    }
+  }, [settings, loadLedger, loadVisits]);
+
+  useEffect(() => {
+    if (!signedIn) {
+      setSummary(null);
+      setSettings(null);
+      setLedger(null);
+      setVisits(null);
+      setUpdatedAt(null);
+      loaded.current = { ledger: false, visits: false };
+      return;
+    }
+    (async () => {
+      try {
+        // app_link records the visit and confirms the phone still maps to a live client
+        const link = await crm.link();
+        if (link.status !== 'linked') {
+          await signOut();
+          return;
+        }
+      } catch {}
+      await refresh();
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signedIn]);
+
+  const value = useMemo(
+    () => ({ summary, settings, ledger, visits, updatedAt, refreshing, refresh, loadLedger, loadVisits }),
+    [summary, settings, ledger, visits, updatedAt, refreshing, refresh, loadLedger, loadVisits],
+  );
+  return <DataCtx.Provider value={value}>{children}</DataCtx.Provider>;
+}
+
+export function useData(): Data {
+  const d = useContext(DataCtx);
+  if (!d) throw new Error('useData outside DataProvider');
+  return d;
+}
+
+// ticks once a minute so "Updated 2 minutes ago" stays right
+export function useNow(): number {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const t = setInterval(() => setNow(Date.now()), 60000);
+    return () => clearInterval(t);
+  }, []);
+  return now;
+}
