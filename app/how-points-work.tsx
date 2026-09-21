@@ -105,10 +105,10 @@ const s = StyleSheet.create({
   eyebrow: { fontFamily: F.med, fontSize: 9, letterSpacing: ls(0.2, 9), textTransform: 'uppercase', color: C.gold, marginBottom: 8 },
   srow: { flexDirection: 'row', justifyContent: 'space-between', gap: 16, paddingVertical: 11, borderBottomWidth: 1, borderBottomColor: C.hairSoft },
   srowGold: { borderBottomColor: 'rgba(169,131,81,0.22)' },
-  srowLeft: { flex: 1, fontFamily: F.light, fontSize: 12.5, lineHeight: 18.75, color: C.grey },
+  srowLeft: { flex: 1, fontFamily: F.reg, fontSize: 12.5, lineHeight: 18.75, color: C.grey },
   srowRight: { fontFamily: F.reg, fontSize: 12.5, lineHeight: 18.75, color: C.ink, textAlign: 'right' },
-  srowNote: { fontFamily: F.light, fontSize: 10.5, color: C.gold, marginTop: 3, textAlign: 'right' },
+  srowNote: { fontFamily: F.reg, fontSize: 10.5, color: C.gold, marginTop: 3, textAlign: 'right' },
   know: { paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: C.hairSoft },
   knowTitle: { fontFamily: F.reg, fontSize: 13, color: C.ink, marginBottom: 4 },
-  knowBody: { fontFamily: F.light, fontSize: 12, lineHeight: 19.8, color: C.grey, textAlign: 'justify' },
+  knowBody: { fontFamily: F.reg, fontSize: 12, lineHeight: 19.8, color: C.grey, textAlign: 'justify' },
 });

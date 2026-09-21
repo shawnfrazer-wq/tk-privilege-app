@@ -71,6 +71,6 @@ const s = StyleSheet.create({
   fig: { flexDirection: 'row', alignItems: 'baseline', gap: 10 },
   big: { fontFamily: F.serif, fontSize: 32, lineHeight: 34, color: C.ink },
   unit: { fontFamily: F.reg, fontSize: 12, color: C.gold, letterSpacing: ls(0.04, 12) },
-  p: { fontFamily: F.light, fontSize: 12, lineHeight: 19.2, color: C.grey },
+  p: { fontFamily: F.reg, fontSize: 12, lineHeight: 19.2, color: C.grey },
   bonus: { marginTop: 8, paddingTop: 8, borderTopWidth: 1, borderTopColor: 'rgba(169,131,81,0.28)', fontSize: 11.5 },
 });

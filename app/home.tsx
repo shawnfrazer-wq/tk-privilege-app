@@ -11,7 +11,9 @@ import { NextAppt } from '../src/ui/NextAppt';
 import { PrivilegeCard } from '../src/ui/PrivilegeCard';
 import { Screen } from '../src/ui/Screen';
 import { Copy, Disp, Sect, Stale } from '../src/ui/T';
-import { GoIcon } from '../src/ui/Icons';
+import { DetailsIcon, PointsIcon, ReferIcon, ReviewIcon } from '../src/ui/Icons';
+import { RowLink } from '../src/ui/RowLink';
+import { statusOf } from '../src/ui/Screen';
 import { tierTile } from '../src/ui/tiers';
 import { Waiting } from '../src/ui/Waiting';
 
@@ -34,11 +36,11 @@ function careCardLine(s: Summary, rate: number): string {
 // 4 HOME
 export default function Home() {
   const router = useRouter();
-  const { summary: s, settings, requests, updatedAt, refreshing, refresh } = useData();
+  const { summary: s, settings, requests, failed, updatedAt, refreshing, refresh } = useData();
   const now = useNow();
 
   if (!s) {
-    return <Screen tab="home" brand refreshing={refreshing} onRefresh={refresh}>{null}</Screen>;
+    return <Screen tab="home" brand refreshing={refreshing} onRefresh={refresh} status={statusOf(s, failed)}>{null}</Screen>;
   }
 
   const rate = Number(settings?.redeem_rate_points_per_pound) || 10;
@@ -137,27 +139,12 @@ export default function Home() {
         })}
       </View>
 
-      {/* The wireframe has no way from Home to these 3 screens, so they sit here in its .rowbtn style. See docs/crm-requests.md. */}
+      {/* the way to the 4 screens the bottom menu does not carry, in the Contact row style (Shawn, 21 September) */}
       <Gap size="l" />
-      <View>
-        {(
-          [
-            ['Refer a Friend', '/refer'],
-            ['Review', '/review'],
-            ['Your Details', '/details'],
-          ] as const
-        ).map(([label, href], i, all) => (
-          <Pressable
-            key={href}
-            onPress={() => router.push(href)}
-            accessibilityRole="button"
-            style={({ pressed }) => [h.rowbtn, i === all.length - 1 && { borderBottomWidth: 0 }, pressed && { opacity: 0.6 }]}
-          >
-            <Text style={h.rowbtnText}>{label}</Text>
-            <GoIcon color={C.ink} />
-          </Pressable>
-        ))}
-      </View>
+      <RowLink Icon={PointsIcon} title="Your Points" sub="Every line, pending and released" onPress={() => router.push('/points')} />
+      <RowLink Icon={ReferIcon} title="Refer a Friend" sub="500 points for you, 1,000 for her" onPress={() => router.push('/refer')} />
+      <RowLink Icon={ReviewIcon} title="Leave a Review" sub="250 points per platform" onPress={() => router.push('/review')} />
+      <RowLink Icon={DetailsIcon} title="Your Details" sub="What the salon has for you" onPress={() => router.push('/details')} last />
       <Stale>{updatedAgo(updatedAt, now)}</Stale>
     </Screen>
   );
@@ -167,10 +154,8 @@ const h = StyleSheet.create({
   tiles: { flexDirection: 'row', gap: 10 },
   tile: { flex: 1, backgroundColor: C.band, borderRadius: 10, paddingVertical: 14, paddingHorizontal: 16, gap: 5 },
   tileBig: { fontFamily: F.serif, fontSize: 22, lineHeight: 24, color: C.ink },
-  tileSmall: { fontFamily: F.light, fontSize: 10.5, lineHeight: 15.75, color: C.mute },
+  tileSmall: { fontFamily: F.reg, fontSize: 10.5, lineHeight: 15.75, color: C.mute },
   boxes: { flexDirection: 'row', gap: 8, marginTop: 12 },
   box: { flex: 1, height: 44, borderWidth: 1, borderColor: C.hair, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
   boxFilled: { backgroundColor: C.ink, borderColor: C.ink },
-  rowbtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 14, paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: C.hairSoft },
-  rowbtnText: { fontFamily: F.reg, fontSize: 13.5, color: C.ink },
 });

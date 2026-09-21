@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import React, { useEffect, useRef } from 'react';
-import { Animated, Easing, Image, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Animated, Easing, Image, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { Btn } from '../src/ui/Btn';
 import { C, F, ls } from '../src/theme';
 

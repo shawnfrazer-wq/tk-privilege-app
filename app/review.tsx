@@ -9,7 +9,7 @@ import { C, F, ls } from '../src/theme';
 import { CopyBtn } from '../src/ui/CopyBtn';
 import { TextArea } from '../src/ui/Field';
 import { Gap } from '../src/ui/Gap';
-import { Screen } from '../src/ui/Screen';
+import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Disp, Hint, Small } from '../src/ui/T';
 
 const markGoogle = require('../assets/mark_google.png');
@@ -20,7 +20,7 @@ const LONG_ENOUGH = 60;
 // 13 REVIEW. The draft is kept on the phone, so it survives leaving the app, backgrounding and a force quit.
 export default function Review() {
   const router = useRouter();
-  const { settings } = useData();
+  const { settings, failed, refreshing, refresh } = useData();
   const [text, setText] = useState('');
   const [copyLabel, setCopyLabel] = useState('Copy');
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -61,7 +61,7 @@ export default function Review() {
   const trustpilot = settings?.trustpilot_review_link;
 
   return (
-    <Screen tab="home" back title="Review">
+    <Screen tab="home" back title="Review" status={statusOf(settings, failed)} refreshing={refreshing} onRefresh={refresh}>
       <Gap />
       <Disp>Tell Us How It Went</Disp>
       <Gap size="s" />

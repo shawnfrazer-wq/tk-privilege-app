@@ -9,7 +9,7 @@ import { C, F } from '../src/theme';
 import { Btn, TextLink } from '../src/ui/Btn';
 import { Field, Input, Select, TextArea } from '../src/ui/Field';
 import { Gap } from '../src/ui/Gap';
-import { Screen } from '../src/ui/Screen';
+import { Screen, statusOf } from '../src/ui/Screen';
 import { SwitchRow } from '../src/ui/Switch';
 import { Copy, Disp, Hint, Sect, Small } from '../src/ui/T';
 
@@ -39,6 +39,8 @@ export default function Details() {
   const [stylists, setStylists] = useState<Stylist[]>([]);
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   const [first, setFirst] = useState('');
   const [last, setLast] = useState('');
@@ -57,6 +59,7 @@ export default function Details() {
 
   useEffect(() => {
     (async () => {
+      setLoadFailed(false);
       try {
         const [prof, st] = await Promise.all([crm.profile(), crm.stylists().catch(() => [] as Stylist[])]);
         setP(prof);
@@ -76,10 +79,11 @@ export default function Details() {
         setByText(prof.sms_marketing ?? true);
         setByWhatsApp(prof.whatsapp_marketing ?? true);
       } catch (e) {
-        setProblem(e instanceof Error ? e.message : 'Your details could not be loaded.');
+        console.error('app_profile', e);
+        setLoadFailed(true);
       }
     })();
-  }, []);
+  }, [attempt]);
 
   const stylistOptions = useMemo(() => [...stylists.map((s) => ({ label: s.name, value: s.id })), { label: 'No preference', value: NO_PREFERENCE }], [stylists]);
 
@@ -149,7 +153,7 @@ export default function Details() {
   }
 
   return (
-    <Screen tab={gate ? undefined : 'home'} back={!gate} title="Your Details">
+    <Screen tab={gate ? undefined : 'home'} back={!gate} title="Your Details" status={statusOf(p, loadFailed)} refreshing={false} onRefresh={() => setAttempt((a) => a + 1)}>
       <Gap />
       <Disp>Your Details</Disp>
       <Gap size="s" />
@@ -270,10 +274,10 @@ function Ro({ label, value }: { label: string; value: string }) {
 const d = StyleSheet.create({
   goldpanel: { backgroundColor: C.band, borderLeftWidth: 2, borderLeftColor: C.gold, borderRadius: 8, paddingVertical: 14, paddingHorizontal: 16, marginTop: 20 },
   goldTitle: { fontFamily: F.reg, fontSize: 12.5, color: C.ink, marginBottom: 3 },
-  goldBody: { fontFamily: F.light, fontSize: 11.5, lineHeight: 17.8, color: C.grey },
+  goldBody: { fontFamily: F.reg, fontSize: 11.5, lineHeight: 17.8, color: C.grey },
   two: { flexDirection: 'row', gap: 18 },
   ro: { flexDirection: 'row', justifyContent: 'space-between', gap: 16, paddingVertical: 11, borderBottomWidth: 1, borderBottomColor: C.hairSoft },
-  roLabel: { fontFamily: F.light, fontSize: 13, color: C.grey },
+  roLabel: { fontFamily: F.reg, fontSize: 13, color: C.grey },
   roValue: { fontFamily: F.reg, fontSize: 13, color: C.ink, textAlign: 'right', flexShrink: 1 },
   centre: { textAlign: 'center' },
 });

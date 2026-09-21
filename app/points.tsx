@@ -6,7 +6,7 @@ import { num, pounds, signedPoints } from '../src/format';
 import { C, F } from '../src/theme';
 import { Gap } from '../src/ui/Gap';
 import { LedgerRow } from '../src/ui/Ledger';
-import { Screen } from '../src/ui/Screen';
+import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Disp, Sect } from '../src/ui/T';
 import { Waiting } from '../src/ui/Waiting';
 
@@ -22,13 +22,18 @@ function line(l: LedgerLine, last: boolean) {
 
 // 7 HER POINTS
 export default function Points() {
-  const { summary: s, ledger, loadLedger, refreshing, refresh } = useData();
+  const { summary: s, ledger, failed, ledgerFailed, loadLedger, refreshing, refresh } = useData();
   useEffect(() => {
     if (!ledger) loadLedger();
   }, [ledger, loadLedger]);
+  const status = statusOf(s && ledger, failed || ledgerFailed);
+  const retry = () => {
+    refresh();
+    if (!ledger) loadLedger();
+  };
 
   return (
-    <Screen tab="card" back title="Your Points" refreshing={refreshing} onRefresh={refresh}>
+    <Screen tab="card" back title="Your Points" refreshing={refreshing} onRefresh={retry} status={status}>
       <Gap />
       <Disp>Your Points</Disp>
       <Gap size="s" />

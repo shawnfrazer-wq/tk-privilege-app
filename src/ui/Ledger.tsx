@@ -31,7 +31,7 @@ const s = StyleSheet.create({
     borderBottomColor: C.hairSoft,
   },
   title: { fontFamily: F.reg, fontSize: 12.5, color: C.ink },
-  detail: { fontFamily: F.light, fontSize: 11, color: C.mute, marginTop: 2 },
+  detail: { fontFamily: F.reg, fontSize: 11, color: C.mute, marginTop: 2 },
   right: { fontFamily: F.reg, fontSize: 13, color: C.ink, textAlign: 'right' },
-  note: { fontFamily: F.light, fontSize: 10, color: C.mute, marginTop: 2 },
+  note: { fontFamily: F.reg, fontSize: 10, color: C.mute, marginTop: 2 },
 });

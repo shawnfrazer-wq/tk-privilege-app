@@ -2,7 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
 import { Image, Platform, StyleSheet, Text, View } from 'react-native';
 import { Tier } from '../crm';
-import { C, F, ls } from '../theme';
+import { F, ls } from '../theme';
 
 const logoWhite = require('../../assets/logo_white.png');
 const logoBlack = require('../../assets/logo_black.png');
@@ -97,6 +97,6 @@ const s = StyleSheet.create({
   word: { fontFamily: F.serif, fontSize: 30, lineHeight: 30 },
   who: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: 14 },
   name: { fontFamily: F.reg, fontSize: 13, letterSpacing: ls(0.02, 13) },
-  since: { fontFamily: F.light, fontSize: 10, letterSpacing: ls(0.06, 10), opacity: 0.78, marginTop: 3 },
+  since: { fontFamily: F.reg, fontSize: 10, letterSpacing: ls(0.06, 10), opacity: 0.78, marginTop: 3 },
   no: { fontFamily: F.reg, fontSize: 10, letterSpacing: ls(0.16, 10), opacity: 0.78 },
 });

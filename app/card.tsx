@@ -8,7 +8,7 @@ import { C, F } from '../src/theme';
 import { Btn, TextLink } from '../src/ui/Btn';
 import { Gap } from '../src/ui/Gap';
 import { PrivilegeCard, TierSurface } from '../src/ui/PrivilegeCard';
-import { Screen } from '../src/ui/Screen';
+import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Sect, Small } from '../src/ui/T';
 import { TIER_INFO, tierName, track } from '../src/ui/tiers';
 import { Waiting } from '../src/ui/Waiting';
@@ -20,11 +20,11 @@ const TIERS: Tier[] = ['silver', 'gold', 'black'];
 // 5 CARD
 export default function Card() {
   const router = useRouter();
-  const { summary: s, refreshing, refresh } = useData();
+  const { summary: s, failed, refreshing, refresh } = useData();
   const [sheet, setSheet] = useState<Tier | null>(null);
 
   if (!s) {
-    return <Screen tab="card" title="Your Card" refreshing={refreshing} onRefresh={refresh}>{null}</Screen>;
+    return <Screen tab="card" title="Your Card" refreshing={refreshing} onRefresh={refresh} status={statusOf(s, failed)}>{null}</Screen>;
   }
   const t = track(s);
 
@@ -62,6 +62,8 @@ export default function Card() {
       <Copy>10 points is £1, off anything on our price list, at any visit.</Copy>
       <Gap size="s" />
       <TextLink label="How points work" onPress={() => router.push('/how-points-work')} />
+      <Gap size="s" />
+      <TextLink label="See every line" onPress={() => router.push('/points')} />
 
       {!!s.pending_points && (
         <>
@@ -139,12 +141,12 @@ const c = StyleSheet.create({
   chipText: { fontFamily: F.serif, fontSize: 16, color: '#fff' },
   track: { marginTop: 20 },
   trackLine: { fontFamily: F.reg, fontSize: 13.5, color: C.ink },
-  trackSub: { fontFamily: F.light, fontSize: 11.5, color: C.mute, marginTop: 3 },
+  trackSub: { fontFamily: F.reg, fontSize: 11.5, color: C.mute, marginTop: 3 },
   bar: { height: 4, borderRadius: 2, backgroundColor: C.hair, marginTop: 13, overflow: 'hidden' },
   fill: { height: '100%', backgroundColor: C.ink, borderRadius: 2 },
   sheet: { flex: 1, backgroundColor: 'rgba(20,20,19,0.4)', justifyContent: 'flex-end' },
   inner: { backgroundColor: '#fff', borderTopLeftRadius: 18, borderTopRightRadius: 18, paddingTop: 26, paddingHorizontal: 26, paddingBottom: 34 },
   h4: { fontFamily: F.serif, fontSize: 20, color: C.ink, marginBottom: 10 },
   li: { flexDirection: 'row', gap: 8, paddingLeft: 8, marginBottom: 4 },
-  liText: { fontFamily: F.light, fontSize: 12.5, lineHeight: 21, color: C.grey },
+  liText: { fontFamily: F.reg, fontSize: 12.5, lineHeight: 21, color: C.grey },
 });

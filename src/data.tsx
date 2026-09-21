@@ -29,6 +29,9 @@ type Data = {
   ledger: LedgerLine[] | null;
   visits: Visits | null;
   requests: BookingRequest[] | null;
+  failed: boolean;
+  ledgerFailed: boolean;
+  visitsFailed: boolean;
   updatedAt: number | null;
   refreshing: boolean;
   refresh: () => Promise<void>;
@@ -47,20 +50,31 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [visits, setVisits] = useState<Visits | null>(null);
   const [updatedAt, setUpdatedAt] = useState<number | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [ledgerFailed, setLedgerFailed] = useState(false);
+  const [visitsFailed, setVisitsFailed] = useState(false);
   const loaded = useRef({ ledger: false, visits: false });
 
   const loadLedger = useCallback(async () => {
     try {
       setLedger(await crm.ledger());
       loaded.current.ledger = true;
-    } catch {}
+      setLedgerFailed(false);
+    } catch (e) {
+      console.error('app_ledger', e);
+      setLedgerFailed(true);
+    }
   }, []);
 
   const loadVisits = useCallback(async () => {
     try {
       setVisits(await crm.visits());
       loaded.current.visits = true;
-    } catch {}
+      setVisitsFailed(false);
+    } catch (e) {
+      console.error('app_visits', e);
+      setVisitsFailed(true);
+    }
   }, []);
 
   const refresh = useCallback(async () => {
@@ -75,12 +89,15 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       setSettings(st);
       setRequests(rq);
       setUpdatedAt(Date.now());
+      setFailed(false);
       const extra: Promise<void>[] = [];
       if (loaded.current.ledger) extra.push(loadLedger());
       if (loaded.current.visits) extra.push(loadVisits());
       await Promise.all(extra);
-    } catch {
+    } catch (e) {
       // keep what is on screen; she can pull to refresh
+      console.error('app_summary', e);
+      setFailed(true);
     } finally {
       setRefreshing(false);
     }
@@ -93,6 +110,9 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       setLedger(null);
       setVisits(null);
       setRequests(null);
+      setFailed(false);
+      setLedgerFailed(false);
+      setVisitsFailed(false);
       setUpdatedAt(null);
       loaded.current = { ledger: false, visits: false };
       return;
@@ -106,15 +126,17 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
           return;
         }
         setGate(link.complete === false);
-      } catch {}
+      } catch (e) {
+        console.error('app_link', e);
+      }
       await refresh();
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signedIn]);
 
   const value = useMemo(
-    () => ({ summary, settings, ledger, visits, requests, updatedAt, refreshing, refresh, loadLedger, loadVisits }),
-    [summary, settings, ledger, visits, requests, updatedAt, refreshing, refresh, loadLedger, loadVisits],
+    () => ({ summary, settings, ledger, visits, requests, failed, ledgerFailed, visitsFailed, updatedAt, refreshing, refresh, loadLedger, loadVisits }),
+    [summary, settings, ledger, visits, requests, failed, ledgerFailed, visitsFailed, updatedAt, refreshing, refresh, loadLedger, loadVisits],
   );
   return <DataCtx.Provider value={value}>{children}</DataCtx.Provider>;
 }

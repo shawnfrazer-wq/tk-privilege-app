@@ -77,9 +77,9 @@ export function Select({ value, options, placeholder, onChange, accessibilityLab
 const s = StyleSheet.create({
   field: { gap: 6, marginTop: 20 },
   label: { fontFamily: F.med, fontSize: 10, letterSpacing: ls(0.18, 10), textTransform: 'uppercase', color: C.mute },
-  fieldHint: { fontFamily: F.light, fontSize: 11, color: C.mute, marginTop: 2 },
+  fieldHint: { fontFamily: F.reg, fontSize: 11, color: C.mute, marginTop: 2 },
   input: {
-    fontFamily: F.light,
+    fontFamily: F.reg,
     fontSize: 15,
     color: C.ink,
     borderBottomWidth: 1,
@@ -89,9 +89,9 @@ const s = StyleSheet.create({
   },
   textarea: { lineHeight: 23 },
   select: { borderBottomWidth: 1, borderBottomColor: C.hair, paddingVertical: 8 },
-  selectText: { fontFamily: F.light, fontSize: 15, color: C.ink },
+  selectText: { fontFamily: F.reg, fontSize: 15, color: C.ink },
   sheet: { flex: 1, backgroundColor: 'rgba(20,20,19,0.4)', justifyContent: 'flex-end' },
   inner: { backgroundColor: '#fff', borderTopLeftRadius: 18, borderTopRightRadius: 18, paddingTop: 10, paddingHorizontal: 26, paddingBottom: 34 },
   option: { paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: C.hairSoft },
-  optionText: { fontFamily: F.light, fontSize: 14, color: C.ink },
+  optionText: { fontFamily: F.reg, fontSize: 14, color: C.ink },
 });

@@ -95,5 +95,5 @@ const f = StyleSheet.create({
   summary: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 14 },
   q: { flex: 1, fontFamily: F.reg, fontSize: 13, color: C.ink },
   mark: { fontFamily: F.reg, fontSize: 16, lineHeight: 18, color: C.mute },
-  a: { fontFamily: F.light, fontSize: 12, lineHeight: 20.4, color: C.grey, marginTop: 10, textAlign: 'justify' },
+  a: { fontFamily: F.reg, fontSize: 12, lineHeight: 20.4, color: C.grey, marginTop: 10, textAlign: 'justify' },
 });

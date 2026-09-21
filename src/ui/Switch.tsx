@@ -53,5 +53,5 @@ const s = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: C.hairSoft,
   },
-  label: { fontFamily: F.light, fontSize: 13, color: C.ink, flex: 1 },
+  label: { fontFamily: F.reg, fontSize: 13, color: C.ink, flex: 1 },
 });

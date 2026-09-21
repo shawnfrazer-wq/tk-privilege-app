@@ -5,7 +5,7 @@ import { Gap } from '../src/ui/Gap';
 import { LedgerRow } from '../src/ui/Ledger';
 import { NextAppt } from '../src/ui/NextAppt';
 import { Note } from '../src/ui/Note';
-import { Screen } from '../src/ui/Screen';
+import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Disp, Sect } from '../src/ui/T';
 
 const METHOD: Record<string, string> = {
@@ -26,10 +26,15 @@ const HOW_IT_IS_DONE: Record<string, string> = {
 
 // 10 VISITS
 export default function VisitsScreen() {
-  const { summary: s, visits: v, loadVisits, refreshing, refresh } = useData();
+  const { summary: s, visits: v, failed, visitsFailed, loadVisits, refreshing, refresh } = useData();
   useEffect(() => {
     if (!v) loadVisits();
   }, [v, loadVisits]);
+  const status = statusOf(s && v, failed || visitsFailed);
+  const retry = () => {
+    refresh();
+    if (!v) loadVisits();
+  };
 
   const next = s?.next_appointment_at;
   const who = [s?.next_appointment_services, s?.next_appointment_stylists].filter(Boolean).join(' with ');
@@ -45,7 +50,7 @@ export default function VisitsScreen() {
     : '';
 
   return (
-    <Screen tab="visits" title="Your Visits" refreshing={refreshing} onRefresh={refresh}>
+    <Screen tab="visits" title="Your Visits" refreshing={refreshing} onRefresh={retry} status={status}>
       <Gap />
       <Disp>Your Visits</Disp>
       <Gap size="s" />

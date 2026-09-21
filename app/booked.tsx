@@ -16,7 +16,7 @@ export default function Booked() {
   const where = s?.next_appointment_location ? `, ${s.next_appointment_location}` : '';
   const pending = s?.pending_points ?? 0;
   return (
-    <Screen tab="home" title="Book">
+    <Screen tab="home" back onBack={() => router.replace('/home')} title="Book">
       <Gap size="l" />
       <Disp>Requested</Disp>
       <Gap size="s" />

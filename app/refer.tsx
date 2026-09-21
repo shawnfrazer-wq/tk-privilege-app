@@ -9,23 +9,29 @@ import { Btn } from '../src/ui/Btn';
 import { CopyBtn } from '../src/ui/CopyBtn';
 import { Gap } from '../src/ui/Gap';
 import { LedgerRow } from '../src/ui/Ledger';
-import { Screen } from '../src/ui/Screen';
+import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Disp, Eyebrow, Small } from '../src/ui/T';
 
 // 12 REFER
 export default function Refer() {
-  const { summary: s } = useData();
+  const { summary: s, failed } = useData();
+  const [listFailed, setListFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const [list, setList] = useState<Referral[] | null>(null);
   const [copyLabel, setCopyLabel] = useState('Copy');
   const [shareLabel, setShareLabel] = useState('Share your code');
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
+    setListFailed(false);
     crm.referrals()
       .then(setList)
-      .catch(() => setList([]));
-    return () => timers.current.forEach(clearTimeout);
-  }, []);
+      .catch((e) => {
+        console.error('app_referrals', e);
+        setListFailed(true);
+      });
+  }, [attempt]);
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   const rows = list ?? [];
   const code = s?.referral_code ?? '';
@@ -47,7 +53,7 @@ export default function Refer() {
   }
 
   return (
-    <Screen tab="home" back title="Refer a Friend">
+    <Screen tab="home" back title="Refer a Friend" status={statusOf(s && list, failed || listFailed)} refreshing={false} onRefresh={() => setAttempt((a) => a + 1)}>
       <Gap />
       <Disp>Refer a Friend</Disp>
       <Gap size="s" />

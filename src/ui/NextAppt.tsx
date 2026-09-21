@@ -26,5 +26,5 @@ const s = StyleSheet.create({
   day: { fontFamily: F.serif, fontSize: 34, lineHeight: 36, color: C.ink },
   month: { fontFamily: F.med, fontSize: 10, letterSpacing: ls(0.16, 10), textTransform: 'uppercase', color: C.mute, marginTop: 6 },
   what: { fontFamily: F.reg, fontSize: 14, lineHeight: 19.6, color: C.ink },
-  detail: { fontFamily: F.light, fontSize: 12, lineHeight: 18.6, color: C.grey, marginTop: 4 },
+  detail: { fontFamily: F.reg, fontSize: 12, lineHeight: 18.6, color: C.grey, marginTop: 4 },
 });

@@ -80,3 +80,31 @@ export const QuestionIcon = ({ color, size = 20 }: P) => (
     <Path d="M12 17h.01" />
   </Svg>
 );
+
+// Home rows, stroke 1.3
+export const PointsIcon = ({ color, size = 20 }: P) => (
+  <Svg {...base(size, color, 1.3)}>
+    <Path d="M20 12l-8 8-8-8V4h8z" />
+    <Circle cx="15" cy="9" r="1" />
+  </Svg>
+);
+export const ReferIcon = ({ color, size = 20 }: P) => (
+  <Svg {...base(size, color, 1.3)}>
+    <Circle cx="9" cy="8" r="3" />
+    <Path d="M3 20a6 6 0 0 1 12 0" />
+    <Circle cx="17" cy="9" r="2.5" />
+    <Path d="M21 20a4.5 4.5 0 0 0-6-4.2" />
+  </Svg>
+);
+export const ReviewIcon = ({ color, size = 20 }: P) => (
+  <Svg {...base(size, color, 1.3)}>
+    <Path d="M4 20l4-1 10-10-3-3L5 16z" />
+    <Path d="M13 7l3 3" />
+  </Svg>
+);
+export const DetailsIcon = ({ color, size = 20 }: P) => (
+  <Svg {...base(size, color, 1.3)}>
+    <Circle cx="12" cy="8" r="4" />
+    <Path d="M4 21a8 8 0 0 1 16 0" />
+  </Svg>
+);

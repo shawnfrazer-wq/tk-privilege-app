@@ -7,7 +7,7 @@ import { dayMonth, dayNumber, num, pounds, time } from '../src/format';
 import { C, F, ls } from '../src/theme';
 import { Btn } from '../src/ui/Btn';
 import { Gap } from '../src/ui/Gap';
-import { Screen } from '../src/ui/Screen';
+import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Disp, Eyebrow, Small } from '../src/ui/T';
 
 const BATCH_DAYS = 31;
@@ -33,6 +33,8 @@ export default function Book() {
   const [slot, setSlot] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
+  const [loadFailed, setLoadFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   // asked for in docs/crm-requests.md: the maintenance service for her method
   const service = s?.care_service_id ?? null;
@@ -40,15 +42,17 @@ export default function Book() {
 
   useEffect(() => {
     (async () => {
+      setLoadFailed(false);
       try {
         const [prof, list] = await Promise.all([crm.profile(), crm.stylists()]);
         const mine = list.find((x) => x.id === prof.preferred_staff_id) ?? list[0] ?? null;
         setStaff(mine);
       } catch (e) {
-        setProblem(e instanceof Error ? e.message : 'The diary could not be read.');
+        console.error('app_stylists', e);
+        setLoadFailed(true);
       }
     })();
-  }, []);
+  }, [attempt]);
 
   useEffect(() => {
     if (!staff || !service) return;
@@ -66,7 +70,8 @@ export default function Book() {
             return [...prev, ...batch.filter((b) => !seen.has(b.slot_start))];
           });
         } catch (e) {
-          if (!cancelled) setProblem(e instanceof Error ? e.message : 'The diary could not be read.');
+          console.error('app_free_times', e);
+          if (!cancelled) setLoadFailed(true);
           return;
         }
       }
@@ -114,7 +119,7 @@ export default function Book() {
   const isNew = !!s && !s.balance_points && !pending && !s.visits_12m;
 
   return (
-    <Screen tab="home" back title="Book">
+    <Screen tab="home" back title="Book" status={statusOf(s && staff, loadFailed)} refreshing={false} onRefresh={() => setAttempt((a) => a + 1)}>
       <Gap />
       <Disp>{s?.care_date ? `Your Care Date Is ${dayMonth(s.care_date)}` : 'Your Next Visit'}</Disp>
       <Gap size="s" />
@@ -202,9 +207,9 @@ const b = StyleSheet.create({
   times: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 12 },
   time: { width: '31.5%', backgroundColor: '#fff', borderWidth: 1, borderColor: C.hair, borderRadius: 8, paddingVertical: 12, paddingHorizontal: 4, alignItems: 'center' },
   timeOn: { borderColor: C.ink, backgroundColor: C.ink },
-  timeText: { fontFamily: F.light, fontSize: 12.5, color: C.ink },
+  timeText: { fontFamily: F.reg, fontSize: 12.5, color: C.ink },
   summary: { backgroundColor: C.band, borderRadius: 10, paddingVertical: 16, paddingHorizontal: 18, marginTop: 22, gap: 9 },
   r: { flexDirection: 'row', justifyContent: 'space-between', gap: 14 },
-  rl: { fontFamily: F.light, fontSize: 12, color: C.grey, flexShrink: 1 },
+  rl: { fontFamily: F.reg, fontSize: 12, color: C.grey, flexShrink: 1 },
   rr: { fontFamily: F.reg, fontSize: 12, color: C.ink, textAlign: 'right', flexShrink: 1 },
 });

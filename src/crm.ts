@@ -94,6 +94,8 @@ export type ProfilePatch = Partial<{
 }>;
 
 export type Stylist = { id: string; name: string };
+// for_me is asked for in docs/crm-requests.md: true when the service suits her family
+export type PriceRow = { id: string; name: string; price: number | string; points: number; section: 'colour' | 'hair' | 'davines' | 'other'; for_me?: boolean | null };
 export type FreeTime = { slot_start: string };
 export type BookingRequest = { id: number; requested_start: string; service: string | null; stylist: string | null; status: string };
 export type Referral = { friend: string; status: 'paid' | 'waiting'; happened_on: string | null; points: number; pounds: number | string | null };
@@ -149,6 +151,7 @@ export const crm = {
   profile: () => rpc<Profile>('app_profile'),
   saveProfile: (p: ProfilePatch) => rpc<Profile>('app_save_profile', { p }),
   stylists: () => rpc<Stylist[]>('app_stylists'),
+  priceList: () => rpc<PriceRow[]>('app_price_list'),
   freeTimes: (staff: string, service: string, from: string, days: number) =>
     rpc<FreeTime[]>('app_free_times', { p_staff: staff, p_service: service, p_from: from, p_days: days }),
   requestBooking: (service: string, staff: string, start: string, note: string | null) =>

@@ -1,9 +1,10 @@
-// Colours, fonts and spacing, taken from the :root block of wireframes/all-screens.html.
+// Colours, fonts and spacing from the :root block of wireframes/all-screens.html,
+// with the greys darkened and Poppins 300 replaced by 400 after testing on the phone (21 September).
 export const C = {
   ink: '#141413',
   paper: '#FFFFFF',
-  grey: '#5F5B57',
-  mute: '#8C8882',
+  grey: '#3E3A36',
+  mute: '#6E6A64',
   band: '#F6F4F1',
   hair: '#E8E5E0',
   hairSoft: '#F1EEEA',
@@ -17,7 +18,6 @@ export const C = {
 export const F = {
   serif: 'PlayfairDisplay_400Regular',
   serifMed: 'PlayfairDisplay_500Medium',
-  light: 'Poppins_300Light',
   reg: 'Poppins_400Regular',
   med: 'Poppins_500Medium',
   semi: 'Poppins_600SemiBold',

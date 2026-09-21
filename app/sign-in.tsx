@@ -84,10 +84,10 @@ const s = StyleSheet.create({
   field: { gap: 6, marginTop: 20 },
   label: { fontFamily: F.med, fontSize: 10, letterSpacing: ls(0.18, 10), textTransform: 'uppercase', color: C.mute },
   phonefield: { flexDirection: 'row', gap: 14, alignItems: 'flex-end' },
-  cc: { fontFamily: F.light, fontSize: 15, color: C.ink, borderBottomWidth: 1, borderBottomColor: C.hair, paddingVertical: 8 },
+  cc: { fontFamily: F.reg, fontSize: 15, color: C.ink, borderBottomWidth: 1, borderBottomColor: C.hair, paddingVertical: 8 },
   input: {
     flex: 1,
-    fontFamily: F.light,
+    fontFamily: F.reg,
     fontSize: 15,
     color: C.ink,
     borderBottomWidth: 1,

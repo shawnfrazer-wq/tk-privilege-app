@@ -16,6 +16,8 @@ wireframes/all-screens.html is the specification. Match it exactly: fonts (Playf
 
 wireframes/new-client.html shows the same screens for a new client with nothing yet.
 
+Two changes from the wireframes, made after testing on the phone on 21 September: Poppins is weight 400 everywhere the wireframes use 300, the body grey is #3E3A36 and the muted grey is #6E6A64. Every signed in screen that is not a tab has a back arrow. No screen is ever blank: while loading it shows a quiet spinner, and if a call fails it shows "Something went wrong. Pull down to try again." and logs the error.
+
 Logos, the TK mark, wallet badges and the Google and Trustpilot marks are in assets/. The home screen video is built at 1080p. assets/loop-preview-only.mp4 is a small preview copy only; the 1080p file will be added to assets/ as loop.mp4.
 
 ## Client data
