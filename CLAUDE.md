@@ -36,7 +36,7 @@ The CRM is built and changed in a separate chat, never from here. Do not create 
 
 ## Sign in
 
-Supabase phone auth with a one time code by text, sent through Twilio (already set up in Supabase). One code on first install, then she stays signed in on that phone. The first time she signs in, if her card is incomplete she is taken to Your Details and cannot go further until the required fields are filled (see rules.md section 6). For testing, use a Supabase test phone number with a fixed code.
+Supabase phone auth with a one time code by text, sent through Twilio (already set up in Supabase). The sign in screen has a "Keep me signed in for 90 days" switch, on by default, under the mobile number and above Send me a code. With it on, she stays signed in on that phone for 90 days from the code and then needs a new one. With it off, she needs a new code each time the app is opened. The first time she signs in, if her card is incomplete she is taken to Your Details and cannot go further until the required fields are filled (see rules.md section 6). For testing, use a Supabase test phone number with a fixed code.
 
 ## Build order
 

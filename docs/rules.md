@@ -85,6 +85,7 @@ BUILT 21 September: bonus_review_share 250.
 ## 6 Complete client card
 
 Every client is already in the CRM, so there is no sign up. She signs in with her mobile and a one time code.
+The sign in screen has a "Keep me signed in for 90 days" switch, on by default, under the mobile number and above Send me a code. With it on, she stays signed in on that phone for 90 days from the code and then needs a new one. With it off, she needs a new code each time the app is opened.
 The first time she signs in, the app shows Your Details with whatever the salon is missing, and she cannot go in until her card is complete. If her card is already complete she goes straight to Home.
 Required: first and last name, mobile, email, address, postcode, preferred stylist, how she likes her hair, and best way to contact her.
 Optional: birthday, day and month only, never the year, and occupation. The birthday hint reads "Having it lets us recognise your birthday." No birthday gift is promised or run by the system.
