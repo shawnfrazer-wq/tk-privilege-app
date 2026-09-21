@@ -152,7 +152,7 @@ She picks from her stylist's free times, read from the diary through a CRM funct
 ## 13 Client data in the app
 
 Nothing about a client is built into the app. Every name, referral code, balance, pound value, tier, care date, visit, ledger line, Care Card box and detail on Your Details is read from the CRM for the client who is signed in.
-The names and figures in the wireframes (Sophie Alderton, SOPHIE 24, 1,240 points and the rest) are placeholders only.
+The names and figures in the wireframes (Sophie Alderton, SOPHIE24, 1,240 points and the rest) are placeholders only.
 Fonts, layout, colours and all fixed text are built exactly as the wireframes show them.
 The app never works out a figure itself. Points, pound values, bands, tier and Care Card all come from named CRM functions.
 

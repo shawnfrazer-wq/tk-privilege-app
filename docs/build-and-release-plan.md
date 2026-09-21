@@ -14,7 +14,7 @@ The 21 wireframe screens translate almost one for one into React Native screens.
 
 The video in the app is built at 1080p.
 
-No client data is built into the app. Every name, referral code, balance, date, visit and ledger line in the wireframes (Sophie Alderton, SOPHIE 24, 1,240 points and the rest) is a placeholder. In the app each one is read from the CRM for the client who is signed in. Fonts, layout, colours and all fixed text are built exactly as the wireframes show them.
+No client data is built into the app. Every name, referral code, balance, date, visit and ledger line in the wireframes (Sophie Alderton, SOPHIE24, 1,240 points and the rest) is a placeholder. In the app each one is read from the CRM for the client who is signed in. Fonts, layout, colours and all fixed text are built exactly as the wireframes show them.
 
 Rough shape of the work: project scaffold and navigation, the card component with its three tier states, the data layer against Supabase, the forms, push notifications, and the Apple Wallet pass.
 

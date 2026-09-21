@@ -126,7 +126,7 @@ export default function Home() {
       <Sect>Care Card</Sect>
       <Gap size="s" />
       <Copy>{careCardLine(s, rate)}</Copy>
-      <CareCardBoxes filled={s.card_boxes || 0} target={target} rewardPoints={s.card_reward_points} />
+      <CareCardBoxes filled={s.card_boxes || 0} target={target} />
 
       {/* the way to the 4 screens the bottom menu does not carry, in the Contact row style (Shawn, 21 September) */}
       <Gap size="l" />

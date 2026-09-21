@@ -16,13 +16,13 @@ wireframes/all-screens.html is the specification. Match it exactly: fonts (Playf
 
 wireframes/new-client.html shows the same screens for a new client with nothing yet.
 
-Changes from the wireframes, made after testing on the phone on 21 September: Poppins is weight 400 everywhere the wireframes use 300; body text only is larger (body copy 14, small text 12.5, notes and FAQ answers 13, hints 11.5), never headings; the body grey is #2E2A27 and the muted grey is #5A5650. The fifth tab is More (3 lines), not Contact: it lists Your Points, How Points Work, Refer a Friend, Leave a Review, Your Details, FAQs and Contact Us, and those screens show the More tab with a back arrow to More. Home also carries 4 rows under the Care Card to Your Points, Refer a Friend, Leave a Review and Your Details. Every signed in screen that is not a tab has a back arrow. The opening screen plays every time the app opens, and when she is signed in it goes on to Home by itself. No screen is ever blank: while loading it shows a quiet spinner, and if a call fails it shows "Something went wrong. Pull down to try again." and logs the error.
+Changes from the wireframes, made after testing on the phone on 21 September: Poppins is weight 400 everywhere the wireframes use 300; body text only is larger (body copy 14, small text 12.5, notes and FAQ answers 13, hints 11.5), never headings; the body grey is #2E2A27 and the muted grey is #5A5650. The fifth tab is More (3 lines), not Contact: it lists Your Points, How Points Work, Refer a Friend, Leave a Review, Your Details, FAQs and Contact Us, and those screens show the More tab with a back arrow to More. Home also carries 4 rows under the Care Card to Your Points, Refer a Friend, Leave a Review and Your Details. Every signed in screen that is not a tab has a back arrow. The opening screen (video, logo and Privilege) plays every time the app opens and never moves on by itself: there is no timer and no automatic move to sign in or Home, she always presses the button. Signed out, the button reads Log in and goes to Your Mobile Number. Signed in within her 90 days, the button reads Enter and goes straight to Home. app_link can run in the background while the video plays. No screen is ever blank: while loading it shows a quiet spinner, and if a call fails it shows "Something went wrong. Pull down to try again." and logs the error.
 
 Logos, the TK mark, wallet badges and the Google and Trustpilot marks are in assets/. The home screen video is built at 1080p. assets/loop-preview-only.mp4 is a small preview copy only; the 1080p file will be added to assets/ as loop.mp4.
 
 ## Client data
 
-Nothing about a client is built into the app. Sophie Alderton, SOPHIE 24, 1,240 points and every other name and figure in the wireframes are placeholders. Every name, referral code, balance, pound value, tier, care date, visit, ledger line, Care Card box and detail on Your Details is read from the CRM for the client who is signed in.
+Nothing about a client is built into the app. Sophie Alderton, SOPHIE24, 1,240 points and every other name and figure in the wireframes are placeholders. Every name, referral code, balance, pound value, tier, care date, visit, ledger line, Care Card box and detail on Your Details is read from the CRM for the client who is signed in.
 
 The app never works out a figure itself and never writes to CRM tables. Points, pound values, bands, tier and Care Card come from named functions in the salon schema. Anything the client does (a booking request, a review tap, a change to her details, deleting her account) goes through a CRM function.
 
@@ -39,6 +39,16 @@ The CRM is built and changed in a separate chat, never from here. Do not create 
 ## Sign in
 
 Supabase phone auth with a one time code by text, sent through Twilio (already set up in Supabase). The sign in screen has a "Keep me signed in for 90 days" switch, on by default, under the mobile number and above Send me a code. With it on, she stays signed in on that phone for 90 days from the code and then needs a new one. With it off, she needs a new code each time the app is opened. The first time she signs in, if her card is incomplete she is taken to Your Details and cannot go further until the required fields are filled (see rules.md section 6). For testing, use +44 7700 900124 (card deliberately incomplete, for the Your Details gate) and +44 7700 900123 (card complete, kept for Apple's reviewer), both with code 123456. Neither receives messages.
+
+## Referral code and message
+
+A referral code never contains a space. Wherever the code is shown, copied or shared, the app removes all spaces from what the CRM returns (SHAWN 36 becomes SHAWN36). The code itself is made once by the CRM and never changes.
+
+The shared message contains no links at all. It is exactly this, with her code inserted, and the What She Will See panel shows the same text:
+
+"Come to Tatiana Karelina with my code SHAWN36 and you will get 1,000 points, £100, to use on your first visit.
+
+Message the salon on WhatsApp on 07714 392999 or call 020 3645 1761 and give them my code."
 
 ## Build order
 
