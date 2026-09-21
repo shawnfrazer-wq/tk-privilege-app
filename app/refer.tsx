@@ -16,7 +16,7 @@ import { Copy, Disp, Eyebrow, Small } from '../src/ui/T';
 // 12 REFER
 export default function Refer() {
   const router = useRouter();
-  const { summary: s, failed } = useData();
+  const { summary: s, settings, failed } = useData();
   const [listFailed, setListFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [list, setList] = useState<Referral[] | null>(null);
@@ -36,9 +36,21 @@ export default function Refer() {
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   const rows = list ?? [];
-  const code = s?.referral_code ?? '';
   // the code is app_summary referral_code; the CRM makes it once from her first name at the time and keeps it
-  const message = `Come to Tatiana Karelina with my code ${code} and you will get 1,000 points, £100, to use on your first visit. Book at tatianakarelina.co.uk`;
+  const code = s?.referral_code ?? '';
+  const first = s?.first_name ?? '';
+  // the WhatsApp link is contact_whatsapp from app_settings with a prefilled message for the salon
+  const wa = settings?.contact_whatsapp ?? '';
+  const prefill = `Hi, I was referred by ${first}, my code is ${code}. I'd like to book a consultation.`;
+  const waLink = wa ? `${wa}${wa.includes('?') ? '&' : '?'}text=${encodeURIComponent(prefill)}` : '';
+  const waShown = wa.replace(/^https?:\/\//i, '');
+  const body = (link: string) =>
+    `Come to Tatiana Karelina with my code ${code} and you will get 1,000 points, £100, to use on your first visit.\n\n` +
+    `Message the salon on WhatsApp: ${link}\n\n` +
+    `Or visit https://tatianakarelina.co.uk/contact-us/`;
+  // what is shared and copied, and what the What she will see box shows (the link without its prefilled text)
+  const message = body(waLink);
+  const shown = body(waShown);
 
   async function copyCode() {
     await Clipboard.setStringAsync(code);
@@ -56,7 +68,7 @@ export default function Refer() {
   }
 
   return (
-    <Screen tab="more" back onBack={() => router.navigate('/more')} title="Refer a Friend" status={statusOf(s && list, failed || listFailed)} refreshing={false} onRefresh={() => setAttempt((a) => a + 1)}>
+    <Screen tab="more" back onBack={() => router.navigate('/more')} title="Refer a Friend" status={statusOf(s && settings && list, failed || listFailed)} refreshing={false} onRefresh={() => setAttempt((a) => a + 1)}>
       <Gap />
       <Disp>Refer a Friend</Disp>
       <Gap size="s" />
@@ -70,7 +82,7 @@ export default function Refer() {
       <Gap size="l" />
       <Eyebrow>What she will see</Eyebrow>
       <Gap size="s" />
-      <Text style={r.said}>{message}</Text>
+      <Text style={r.said}>{shown}</Text>
       <Gap />
       <Btn label={shareLabel} onPress={share} />
       <Gap size="s" />
