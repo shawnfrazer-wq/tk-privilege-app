@@ -3,23 +3,33 @@ import { BookingRequest, crm, LedgerLine, Settings, Summary, Visits } from './cr
 import { signOut, supabase } from './supabase';
 
 // gate: her card is incomplete, so Your Details is the only screen she can see (rules.md section 6)
-type Auth = { signedIn: boolean; setSignedIn: (v: boolean) => void; gate: boolean; setGate: (v: boolean) => void };
-const AuthCtx = createContext<Auth>({ signedIn: false, setSignedIn: () => {}, gate: false, setGate: () => {} });
+// linked: app_link has answered since the app opened, so the opening screen knows where to go
+type Auth = {
+  signedIn: boolean;
+  setSignedIn: (v: boolean) => void;
+  gate: boolean;
+  setGate: (v: boolean) => void;
+  linked: boolean;
+  setLinked: (v: boolean) => void;
+};
+const AuthCtx = createContext<Auth>({ signedIn: false, setSignedIn: () => {}, gate: false, setGate: () => {}, linked: false, setLinked: () => {} });
 export const useAuth = () => useContext(AuthCtx);
 
 export function AuthProvider({ initial, children }: { initial: boolean; children: React.ReactNode }) {
   const [signedIn, setSignedIn] = useState(initial);
   const [gate, setGate] = useState(false);
+  const [linked, setLinked] = useState(false);
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_OUT') {
         setSignedIn(false);
         setGate(false);
+        setLinked(false);
       }
     });
     return () => data.subscription.unsubscribe();
   }, []);
-  const value = useMemo(() => ({ signedIn, setSignedIn, gate, setGate }), [signedIn, gate]);
+  const value = useMemo(() => ({ signedIn, setSignedIn, gate, setGate, linked, setLinked }), [signedIn, gate, linked]);
   return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>;
 }
 
@@ -42,7 +52,7 @@ type Data = {
 const DataCtx = createContext<Data | null>(null);
 
 export function DataProvider({ children }: { children: React.ReactNode }) {
-  const { signedIn, setGate } = useAuth();
+  const { signedIn, setGate, setLinked } = useAuth();
   const [summary, setSummary] = useState<Summary | null>(null);
   const [requests, setRequests] = useState<BookingRequest[] | null>(null);
   const [settings, setSettings] = useState<Settings | null>(null);
@@ -128,6 +138,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         setGate(link.complete === false);
       } catch (e) {
         console.error('app_link', e);
+      } finally {
+        setLinked(true);
       }
       await refresh();
     })();

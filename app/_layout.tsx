@@ -12,15 +12,14 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 
 function Routes() {
   const { signedIn, gate } = useAuth();
-  const tab = { animation: 'none' as const };
+  const tab = { animation: 'none' as const, gestureEnabled: false };
+  // The opening screen is the first route whether she is signed in or not, and it decides where to go.
   // While her card is incomplete only Your Details is available, so the router lands there and stays there.
   return (
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: C.paper } }}>
-      <Stack.Protected guard={!signedIn}>
-        <Stack.Screen name="index" options={{ contentStyle: { backgroundColor: C.dark } }} />
-        <Stack.Screen name="sign-in" />
-        <Stack.Screen name="code" />
-      </Stack.Protected>
+      <Stack.Screen name="index" options={{ contentStyle: { backgroundColor: C.dark }, gestureEnabled: false }} />
+      <Stack.Screen name="sign-in" />
+      <Stack.Screen name="code" />
       <Stack.Protected guard={signedIn && !gate}>
         <Stack.Screen name="home" options={tab} />
         <Stack.Screen name="card" options={tab} />
@@ -36,7 +35,7 @@ function Routes() {
         <Stack.Screen name="review" />
       </Stack.Protected>
       <Stack.Protected guard={signedIn}>
-        <Stack.Screen name="details" />
+        <Stack.Screen name="details" options={{ gestureEnabled: false }} />
       </Stack.Protected>
     </Stack>
   );

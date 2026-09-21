@@ -1,5 +1,5 @@
-import { useLocalSearchParams } from 'expo-router';
-import React, { useRef, useState } from 'react';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useEffect, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { crm } from '../src/crm';
 import { useAuth } from '../src/data';
@@ -16,12 +16,18 @@ const NOT_RECOGNISED = 'If your number is not recognised, ask at reception and t
 
 // 3 CODE
 export default function Code() {
-  const { setSignedIn, setGate } = useAuth();
+  const router = useRouter();
+  const { signedIn, gate, setSignedIn, setGate } = useAuth();
   const { phone } = useLocalSearchParams<{ phone: string }>();
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
   const input = useRef<TextInput>(null);
+
+  // once the guards in app/_layout.tsx have opened the signed in routes, go to Your Details or Home
+  useEffect(() => {
+    if (signedIn) router.replace(gate ? '/details' : '/home');
+  }, [signedIn, gate, router]);
 
   const digits = code.replace(/\D/g, '').slice(0, 6);
   const complete = digits.length === 6;
@@ -41,7 +47,6 @@ export default function Code() {
       }
       await markSignedIn();
       // If her card is incomplete the gate keeps her on Your Details until it is complete (rules.md section 6).
-      // The signed in routes open once the guards in app/_layout.tsx flip: Home, or Your Details when gated.
       setGate(link.complete === false);
       setSignedIn(true);
     } catch (e) {
