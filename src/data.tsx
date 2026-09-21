@@ -1,20 +1,25 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { crm, LedgerLine, Settings, Summary, Visits } from './crm';
+import { BookingRequest, crm, LedgerLine, Settings, Summary, Visits } from './crm';
 import { signOut, supabase } from './supabase';
 
-type Auth = { signedIn: boolean; setSignedIn: (v: boolean) => void };
-const AuthCtx = createContext<Auth>({ signedIn: false, setSignedIn: () => {} });
+// gate: her card is incomplete, so Your Details is the only screen she can see (rules.md section 6)
+type Auth = { signedIn: boolean; setSignedIn: (v: boolean) => void; gate: boolean; setGate: (v: boolean) => void };
+const AuthCtx = createContext<Auth>({ signedIn: false, setSignedIn: () => {}, gate: false, setGate: () => {} });
 export const useAuth = () => useContext(AuthCtx);
 
 export function AuthProvider({ initial, children }: { initial: boolean; children: React.ReactNode }) {
   const [signedIn, setSignedIn] = useState(initial);
+  const [gate, setGate] = useState(false);
   useEffect(() => {
     const { data } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_OUT') setSignedIn(false);
+      if (event === 'SIGNED_OUT') {
+        setSignedIn(false);
+        setGate(false);
+      }
     });
     return () => data.subscription.unsubscribe();
   }, []);
-  const value = useMemo(() => ({ signedIn, setSignedIn }), [signedIn]);
+  const value = useMemo(() => ({ signedIn, setSignedIn, gate, setGate }), [signedIn, gate]);
   return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>;
 }
 
@@ -23,6 +28,7 @@ type Data = {
   settings: Settings | null;
   ledger: LedgerLine[] | null;
   visits: Visits | null;
+  requests: BookingRequest[] | null;
   updatedAt: number | null;
   refreshing: boolean;
   refresh: () => Promise<void>;
@@ -33,8 +39,9 @@ type Data = {
 const DataCtx = createContext<Data | null>(null);
 
 export function DataProvider({ children }: { children: React.ReactNode }) {
-  const { signedIn } = useAuth();
+  const { signedIn, setGate } = useAuth();
   const [summary, setSummary] = useState<Summary | null>(null);
+  const [requests, setRequests] = useState<BookingRequest[] | null>(null);
   const [settings, setSettings] = useState<Settings | null>(null);
   const [ledger, setLedger] = useState<LedgerLine[] | null>(null);
   const [visits, setVisits] = useState<Visits | null>(null);
@@ -59,9 +66,14 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const refresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      const [s, st] = await Promise.all([crm.summary(), settings ? Promise.resolve(settings) : crm.settings()]);
+      const [s, st, rq] = await Promise.all([
+        crm.summary(),
+        settings ? Promise.resolve(settings) : crm.settings(),
+        crm.bookingRequests().catch(() => [] as BookingRequest[]),
+      ]);
       setSummary(s);
       setSettings(st);
+      setRequests(rq);
       setUpdatedAt(Date.now());
       const extra: Promise<void>[] = [];
       if (loaded.current.ledger) extra.push(loadLedger());
@@ -80,6 +92,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       setSettings(null);
       setLedger(null);
       setVisits(null);
+      setRequests(null);
       setUpdatedAt(null);
       loaded.current = { ledger: false, visits: false };
       return;
@@ -92,6 +105,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
           await signOut();
           return;
         }
+        setGate(link.complete === false);
       } catch {}
       await refresh();
     })();
@@ -99,8 +113,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   }, [signedIn]);
 
   const value = useMemo(
-    () => ({ summary, settings, ledger, visits, updatedAt, refreshing, refresh, loadLedger, loadVisits }),
-    [summary, settings, ledger, visits, updatedAt, refreshing, refresh, loadLedger, loadVisits],
+    () => ({ summary, settings, ledger, visits, requests, updatedAt, refreshing, refresh, loadLedger, loadVisits }),
+    [summary, settings, ledger, visits, requests, updatedAt, refreshing, refresh, loadLedger, loadVisits],
   );
   return <DataCtx.Provider value={value}>{children}</DataCtx.Provider>;
 }

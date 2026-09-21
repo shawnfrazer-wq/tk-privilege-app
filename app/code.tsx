@@ -16,7 +16,7 @@ const NOT_RECOGNISED = 'If your number is not recognised, ask at reception and t
 
 // 3 CODE
 export default function Code() {
-  const { setSignedIn } = useAuth();
+  const { setSignedIn, setGate } = useAuth();
   const { phone } = useLocalSearchParams<{ phone: string }>();
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
@@ -40,8 +40,9 @@ export default function Code() {
         return;
       }
       await markSignedIn();
-      // Stage 2 adds Your Details here: if link.complete is false she goes there first and cannot go further.
-      // the signed in routes open once the guard in app/_layout.tsx flips, Home first
+      // If her card is incomplete the gate keeps her on Your Details until it is complete (rules.md section 6).
+      // The signed in routes open once the guards in app/_layout.tsx flip: Home, or Your Details when gated.
+      setGate(link.complete === false);
       setSignedIn(true);
     } catch (e) {
       setProblem(e instanceof Error ? e.message : 'That code did not work.');

@@ -11,6 +11,7 @@ import { NextAppt } from '../src/ui/NextAppt';
 import { PrivilegeCard } from '../src/ui/PrivilegeCard';
 import { Screen } from '../src/ui/Screen';
 import { Copy, Disp, Sect, Stale } from '../src/ui/T';
+import { GoIcon } from '../src/ui/Icons';
 import { tierTile } from '../src/ui/tiers';
 import { Waiting } from '../src/ui/Waiting';
 
@@ -33,7 +34,7 @@ function careCardLine(s: Summary, rate: number): string {
 // 4 HOME
 export default function Home() {
   const router = useRouter();
-  const { summary: s, settings, updatedAt, refreshing, refresh } = useData();
+  const { summary: s, settings, requests, updatedAt, refreshing, refresh } = useData();
   const now = useNow();
 
   if (!s) {
@@ -42,7 +43,9 @@ export default function Home() {
 
   const rate = Number(settings?.redeem_rate_points_per_pound) || 10;
   const next = s.next_appointment_at;
-  const isNew = !next && !s.balance_points && !s.pending_points && !s.visits_12m;
+  // a booking request she has sent that the desk has not yet put in the diary (decisions-21-sep.md section 1)
+  const waiting = !next && requests && requests.length > 0 ? requests[0] : null;
+  const isNew = !next && !waiting && !s.balance_points && !s.pending_points && !s.visits_12m;
   const tile = tierTile(s);
   const target = s.card_target || 4;
   const who = [s.next_appointment_services, s.next_appointment_stylists].filter(Boolean).join(' with ');
@@ -74,7 +77,7 @@ export default function Home() {
       {!isNew && (
         <>
           <Gap />
-          <Sect>{next ? 'Your Next Appointment' : 'Nothing Booked Yet'}</Sect>
+          <Sect>{next ? 'Your Next Appointment' : waiting ? 'Requested' : 'Nothing Booked Yet'}</Sect>
           {next ? (
             <NextAppt
               day={dayNumber(next)}
@@ -82,11 +85,17 @@ export default function Home() {
               what={who}
               detail={`${weekday(next)} at ${time(next)}${where}. Please arrive with clean, dry hair.`}
             />
+          ) : waiting ? (
+            <NextAppt
+              day={dayNumber(waiting.requested_start)}
+              month={monthShort(waiting.requested_start)}
+              what={[waiting.service, waiting.stylist].filter(Boolean).join(' with ')}
+              detail={`${weekday(waiting.requested_start)} at ${time(waiting.requested_start)}${where}`}
+            />
           ) : (
             <>
               <Gap size="s" />
-              {/* Booking is stage 2. The button is drawn as the wireframe shows it and is wired then. */}
-              <Btn variant="gold" label={s.care_date ? `Book my ${dayMonth(s.care_date)} visit` : 'Book my next visit'} />
+              <Btn variant="gold" label={s.care_date ? `Book my ${dayMonth(s.care_date)} visit` : 'Book my next visit'} onPress={() => router.push('/book')} />
             </>
           )}
         </>
@@ -127,6 +136,28 @@ export default function Home() {
           );
         })}
       </View>
+
+      {/* The wireframe has no way from Home to these 3 screens, so they sit here in its .rowbtn style. See docs/crm-requests.md. */}
+      <Gap size="l" />
+      <View>
+        {(
+          [
+            ['Refer a Friend', '/refer'],
+            ['Review', '/review'],
+            ['Your Details', '/details'],
+          ] as const
+        ).map(([label, href], i, all) => (
+          <Pressable
+            key={href}
+            onPress={() => router.push(href)}
+            accessibilityRole="button"
+            style={({ pressed }) => [h.rowbtn, i === all.length - 1 && { borderBottomWidth: 0 }, pressed && { opacity: 0.6 }]}
+          >
+            <Text style={h.rowbtnText}>{label}</Text>
+            <GoIcon color={C.ink} />
+          </Pressable>
+        ))}
+      </View>
       <Stale>{updatedAgo(updatedAt, now)}</Stale>
     </Screen>
   );
@@ -140,4 +171,6 @@ const h = StyleSheet.create({
   boxes: { flexDirection: 'row', gap: 8, marginTop: 12 },
   box: { flex: 1, height: 44, borderWidth: 1, borderColor: C.hair, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
   boxFilled: { backgroundColor: C.ink, borderColor: C.ink },
+  rowbtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 14, paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: C.hairSoft },
+  rowbtnText: { fontFamily: F.reg, fontSize: 13.5, color: C.ink },
 });

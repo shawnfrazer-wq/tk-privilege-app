@@ -11,8 +11,9 @@ import { C } from '../src/theme';
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 function Routes() {
-  const { signedIn } = useAuth();
+  const { signedIn, gate } = useAuth();
   const tab = { animation: 'none' as const };
+  // While her card is incomplete only Your Details is available, so the router lands there and stays there.
   return (
     <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: C.paper } }}>
       <Stack.Protected guard={!signedIn}>
@@ -20,7 +21,7 @@ function Routes() {
         <Stack.Screen name="sign-in" />
         <Stack.Screen name="code" />
       </Stack.Protected>
-      <Stack.Protected guard={signedIn}>
+      <Stack.Protected guard={signedIn && !gate}>
         <Stack.Screen name="home" options={tab} />
         <Stack.Screen name="card" options={tab} />
         <Stack.Screen name="rewards" options={tab} />
@@ -29,6 +30,13 @@ function Routes() {
         <Stack.Screen name="how-points-work" />
         <Stack.Screen name="points" />
         <Stack.Screen name="faqs" />
+        <Stack.Screen name="book" />
+        <Stack.Screen name="booked" />
+        <Stack.Screen name="refer" />
+        <Stack.Screen name="review" />
+      </Stack.Protected>
+      <Stack.Protected guard={signedIn}>
+        <Stack.Screen name="details" />
       </Stack.Protected>
     </Stack>
   );
