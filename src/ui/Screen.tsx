@@ -95,6 +95,6 @@ const s = StyleSheet.create({
   back: { padding: 6, marginLeft: -6 },
   title: { fontFamily: F.med, fontSize: 11, letterSpacing: ls(0.2, 11), textTransform: 'uppercase', color: C.ink },
   brand: { alignItems: 'center', paddingTop: 16, paddingBottom: 6, paddingHorizontal: PAD },
-  pad: { paddingHorizontal: PAD, paddingBottom: 40 },
+  pad: { paddingHorizontal: PAD, paddingBottom: 24 },
   centre: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 80 },
 });

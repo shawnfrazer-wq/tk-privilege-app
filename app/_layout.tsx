@@ -28,6 +28,8 @@ function Routes() {
         <Stack.Screen name="more" options={tab} />
         <Stack.Screen name="contact" />
         <Stack.Screen name="how-points-work" />
+        <Stack.Screen name="how-tiers-work" />
+        <Stack.Screen name="tier-perks" />
         <Stack.Screen name="points" />
         <Stack.Screen name="faqs" />
         <Stack.Screen name="book" />

@@ -23,7 +23,7 @@ export const F = {
 };
 
 export const PAD = 26;
-export const GAP = { s: 14, m: 26, l: 34 };
+export const GAP = { s: 10, m: 18, l: 24 };
 
 // letter-spacing in the wireframe is given in em; RN wants points
 export const ls = (em: number, size: number) => Math.round(em * size * 100) / 100;

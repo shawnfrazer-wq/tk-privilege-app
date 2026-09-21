@@ -47,6 +47,10 @@ export function dayMonthYear(s: string | null | undefined) {
   if (!d) return '';
   return d.getFullYear() === currentYear() ? dayMonth(s) : fmt(s, { day: 'numeric', month: 'long', year: 'numeric' });
 }
+// 31 December 2027
+export const fullDate = (s: string | null | undefined) => fmt(s, { day: 'numeric', month: 'long', year: 'numeric' });
+// 2027
+export const yearOf = (s: string | null | undefined) => fmt(s, { year: 'numeric' });
 // 14
 export const dayNumber = (s: string | null | undefined) => fmt(s, { day: 'numeric' });
 // Nov

@@ -43,10 +43,10 @@ export function TierSurface({ tier, style, children }: { tier: Tier; style?: obj
   );
 }
 
-type Props = { tier: Tier; name: string; since: string; right: string };
+type Props = { tier: Tier; name: string; since: string; right: string; word?: string };
 
 // .card
-export function PrivilegeCard({ tier, name, since, right }: Props) {
+export function PrivilegeCard({ tier, name, since, right, word = 'Privilege' }: Props) {
   const dark = tier !== 'silver';
   const text = dark ? '#fff' : '#161616';
   return (
@@ -56,13 +56,13 @@ export function PrivilegeCard({ tier, name, since, right }: Props) {
           <Image source={dark ? logoWhite : logoBlack} style={dark ? s.logoW : s.logoK} resizeMode="contain" />
         </View>
         <View>
-          <Text style={[s.word, { color: text }]}>Privilege</Text>
+          <Text style={[s.word, { color: text }]}>{word}</Text>
           <View style={s.who}>
             <View>
               <Text style={[s.name, { color: text }]}>{name}</Text>
               <Text style={[s.since, { color: text }]}>{since}</Text>
             </View>
-            <Text style={[s.no, { color: text }]}>{right}</Text>
+            {!!right && <Text style={[s.no, { color: text }]}>{right}</Text>}
           </View>
         </View>
       </TierSurface>

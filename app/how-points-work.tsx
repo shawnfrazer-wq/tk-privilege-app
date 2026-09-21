@@ -1,101 +1,102 @@
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useData } from '../src/data';
+import { num } from '../src/format';
 import { C, F, ls } from '../src/theme';
 import { Gap } from '../src/ui/Gap';
+import { Kind, Kinds } from '../src/ui/Kinds';
+import { Know, RowBtn, SRow } from '../src/ui/Rows';
 import { Screen } from '../src/ui/Screen';
-import { Copy, Disp, Sect, Small } from '../src/ui/T';
+import { Copy, Disp, Sect } from '../src/ui/T';
 
-// .srow, inside an .egbox or on its own
-function Row({ left, right, note, gold, last }: { left: string; right: string; note?: string; gold?: boolean; last?: boolean }) {
-  return (
-    <View style={[s.srow, gold && s.srowGold, last && { borderBottomWidth: 0 }]}>
-      <Text style={s.srowLeft}>{left}</Text>
-      <View style={{ alignItems: 'flex-end' }}>
-        <Text style={s.srowRight}>{right}</Text>
-        {!!note && <Text style={s.srowNote}>{note}</Text>}
-      </View>
-    </View>
-  );
-}
-
-// .know
-function Know({ title, body, last }: { title: string; body: string; last?: boolean }) {
-  return (
-    <View style={[s.know, last && { borderBottomWidth: 0 }]}>
-      <Text style={s.knowTitle}>{title}</Text>
-      <Text style={s.knowBody}>{body}</Text>
-    </View>
-  );
-}
-
-// 6 HOW POINTS WORK, fixed text
+// 6 HOW POINTS WORK. The fixed text is the wireframe's; the figures in it come from app_tier_rules and
+// app_tier_perks, and a sentence that needs a figure the CRM has not sent yet is left out.
 export default function HowPointsWork() {
+  const router = useRouter();
+  const { tierRules: r, tierPerks: perks } = useData();
+  const rate = (t: string) => perks?.find((p) => p.tier === t)?.earn_rate;
+  const rates = rate('silver') != null && rate('gold') != null && rate('black') != null ? `: ${rate('silver')} at Silver, ${rate('gold')} at Gold and ${rate('black')} at Black` : '';
+  const tierKind = r ? `1 Tier Point for each £1 you spend. ${num(r.gold_achieve)} for Gold and ${num(r.black_achieve)} for Black.` : '1 Tier Point for each £1 you spend.';
+  const maintenance = r
+    ? `A maintenance of £${num(r.care_visit_min_pounds)} or more, at least ${num(r.gap_weeks_tapes)} weeks after your last one for tapes, or ${num(r.gap_weeks_other)} weeks for everything else. It fills a box on your Care Card, counts towards your tier and releases the points pending from your last one.`
+    : 'A maintenance fills a box on your Care Card, counts towards your tier and releases the points pending from your last one.';
+
   return (
     <Screen tab="card" back title="How Points Work">
       <Gap />
       <Disp>How Points Work</Disp>
       <Gap size="s" />
-      <Copy>Your first care visit after signing up earns points. They show in your account as “pending” until your next visit, and they are released when you arrive.</Copy>
+      <Copy>There are 2 kinds of points. Every maintenance earns TK Points. They show in your account as “pending”, and they are released when you come in for your next maintenance.</Copy>
+      <Gap size="s" />
+      <Kinds>
+        <Kind label="TK Points" text="Yours to spend. 10 TK Points is £1, off all products and services." />
+        <Kind label="Tier Points" text={tierKind} />
+      </Kinds>
+      <Gap size="s" />
+      <View>
+        <RowBtn title="How Tiers Work" sub="Moving up, and staying there" onPress={() => router.push('/how-tiers-work')} />
+        <RowBtn title="Tier Perks" sub="What Silver, Gold and Black give you" onPress={() => router.push('/tier-perks')} last />
+      </View>
 
       <Gap />
-      <Sect>What Is a Care Visit</Sect>
+      <Sect>What Counts as a Maintenance</Sect>
       <Gap size="s" />
-      <Copy>Any maintenance appointment for micro rings, bonds, tapes and wefts, as well as any maintenance for toppers, wigs and clip-ins. A new set or a new piece is not a care visit.</Copy>
+      <Copy>{maintenance}</Copy>
+      <Gap size="s" />
+      <Copy>A smaller visit, or one sooner than that, is a top up. Top ups still earn points. They are added to what is pending and released with your next maintenance.</Copy>
 
       <Gap />
       <Sect>What You Earn</Sect>
       <Gap size="s" />
-      <Copy>1 point for every £1 you spend at a care visit. The maintenance itself, colour, a blow dry, a trim, Davines products, anything you buy that day. 10 points is £1. New sets and hair pieces do not earn points.</Copy>
+      <Copy>
+        TK Points for every £1 you spend at a maintenance or a top up{rates}. The maintenance itself, colour, a blow dry, a trim, Davines products, anything you buy that day. 10 TK Points is £1. New sets and hair pieces do not earn points.
+      </Copy>
 
       <Gap />
-      <Sect>What That Is Worth</Sect>
+      <Sect>Come Back Earlier. Earn More</Sect>
       <Gap size="s" />
-      <Copy>A £400 visit puts 400 points pending. 10 points is always £1 when you spend them. What changes is how many of those pending points are released, and that depends on how often you come in.</Copy>
+      <Copy>A £400 maintenance at Silver puts 400 TK Points pending. 10 TK Points is always £1 when you spend them. How many are released depends on how early you come back for your next maintenance.</Copy>
       <Gap size="s" />
       <View style={s.egbox}>
         <Text style={s.eyebrow}>Micro rings, micro bonds and wefts</Text>
-        <Row gold left="Come every 8 weeks" right="All 400" note="£40, 10% back" />
-        <Row gold left="Every 10 weeks" right="300" note="£30, 7.5% back" />
-        <Row gold left="Every 12 weeks" right="200" note="£20, 5% back" />
-        <Row gold left="Longer than that" right="Talk to us" note="Nothing automatic" last />
+        <Copy style={{ marginBottom: 6 }}>Every 3 months earns half points. Every 11 weeks, three quarters. Every 9 weeks, full points.</Copy>
+        <SRow gold left="Every 9 weeks" right="All 400" note="£40, full points" />
+        <SRow gold left="Every 11 weeks" right="300" note="£30, three quarters" />
+        <SRow gold left="Every 3 months" right="200" note="£20, half points" last />
       </View>
       <Gap size="s" />
       <View style={s.egbox}>
         <Text style={s.eyebrow}>Tapes</Text>
-        <Row gold left="Come every 6 weeks" right="All 400" note="£40, 10% back" />
-        <Row gold left="Every 8 weeks" right="300" note="£30, 7.5% back" />
-        <Row gold left="Every 10 weeks" right="200" note="£20, 5% back" />
-        <Row gold left="Longer than that" right="Talk to us" note="Nothing automatic" last />
+        <Copy style={{ marginBottom: 6 }}>Every 11 weeks earns half points. Every 9 weeks, three quarters. Every 7 weeks, full points.</Copy>
+        <SRow gold left="Every 7 weeks" right="All 400" note="£40, full points" />
+        <SRow gold left="Every 9 weeks" right="300" note="£30, three quarters" />
+        <SRow gold left="Every 11 weeks" right="200" note="£20, half points" last />
       </View>
 
       <Gap />
       <Sect>Toppers, Wigs and Clip-ins</Sect>
       <Gap size="s" />
-      <Copy>Topper care, wig care and clip-in care work differently. Points are earned and released in full, whenever you come in. There is no clock on them, so you always get the whole 10%.</Copy>
+      <Copy>Topper care, wig care and clip-in care work differently. There is no clock on them, so whenever you come in for your next maintenance your points are released in full.</Copy>
 
       <Gap />
       <Sect>Your Care Date</Sect>
       <Gap size="s" />
-      <Copy>Your stylist sets it at the end of every visit, based on your hair rather than a calendar. Toppers, wigs and clip-ins have no care date, because it depends on how much you wear the piece. Come in when it needs it and your points are released in full.</Copy>
+      <Copy>Your stylist sets it at the end of every visit, based on your preference, rather than a calendar. Toppers, wigs and clip-ins have no care date, because it depends on how much you wear the piece.</Copy>
       <Gap size="s" />
-      <Row left="Micro rings, micro bonds and wefts" right="8 weeks" />
-      <Row left="Tapes" right="6 weeks" />
-      <Row left="Toppers, wigs and clip-ins" right="No care date" last />
+      <Copy>Optimal care cadence is:</Copy>
+      <SRow left="Micro rings, micro bonds and wefts" right="8 weeks" />
+      <SRow left="Tapes" right="6 weeks" last />
 
       <Gap size="l" />
       <Sect>Worth Knowing</Sect>
       <Gap size="s" />
-      <Know title="Pending points are not yours yet" body="How many are released is set by how often you come in for care. They belong to your next visit, not the one you are in." />
-      <Know title="Booking is worth 100 points" body="Book your next visit at the desk before you leave. That is the only way to earn it, and it is released when you arrive." />
-      <Know title="Keeping it is worth another 100" body="Come to the appointment you booked, on the day you booked it, and you get a second 100. Move it and you keep the first but not the second." />
+      <Know title="Pending points belong to your next maintenance" body="They are released when you come in for it, and the earlier you come, the more are released." />
       <Know
         last
-        title="When you come in decides what you get"
-        body="Micro rings, micro bonds and wefts: come in for your maintenance at 8 weeks, or within a week after, and you get the full 10% back. By 11 weeks it is 7.5%, by 13 weeks 5%. After 13 weeks you get nothing, and the booking points go with them. Tapes: come in for your maintenance at 6 weeks, or within a week after, and you get the full 10% back. By 9 weeks it is 7.5%, by 11 weeks 5%. After 11 weeks you get nothing, and the booking points go with them."
+        title="Booking is worth 100 points"
+        body="Book your next visit at the desk on the day of your maintenance, and come in on that exact date. That is the only way to earn it, and it is released when you arrive."
       />
-
-      <Gap />
-      <Small>Once released, points last 24 months, and we tell you 3 months before any run out.</Small>
     </Screen>
   );
 }
@@ -103,12 +104,4 @@ export default function HowPointsWork() {
 const s = StyleSheet.create({
   egbox: { borderWidth: 1, borderColor: C.gold, borderRadius: 12, paddingVertical: 16, paddingHorizontal: 18 },
   eyebrow: { fontFamily: F.med, fontSize: 9, letterSpacing: ls(0.2, 9), textTransform: 'uppercase', color: C.gold, marginBottom: 8 },
-  srow: { flexDirection: 'row', justifyContent: 'space-between', gap: 16, paddingVertical: 11, borderBottomWidth: 1, borderBottomColor: C.hairSoft },
-  srowGold: { borderBottomColor: 'rgba(169,131,81,0.22)' },
-  srowLeft: { flex: 1, fontFamily: F.reg, fontSize: 12.5, lineHeight: 18.75, color: C.grey },
-  srowRight: { fontFamily: F.reg, fontSize: 12.5, lineHeight: 18.75, color: C.ink, textAlign: 'right' },
-  srowNote: { fontFamily: F.reg, fontSize: 10.5, color: C.gold, marginTop: 3, textAlign: 'right' },
-  know: { paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: C.hairSoft },
-  knowTitle: { fontFamily: F.reg, fontSize: 13, color: C.ink, marginBottom: 4 },
-  knowBody: { fontFamily: F.reg, fontSize: 13, lineHeight: 21.5, color: C.grey, textAlign: 'justify' },
 });

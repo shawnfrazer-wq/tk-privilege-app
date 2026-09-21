@@ -164,7 +164,7 @@ export default function Details() {
       <View style={d.goldpanel}>
         <Text style={d.goldTitle}>Complete your card</Text>
         <Text style={d.goldBody}>
-          The first time you sign in, we ask for anything the salon does not have yet, and you go in once your card is complete. Only your birthday and occupation are optional. After that you can change anything here whenever you like.
+          The first time you sign in, we ask for anything the salon does not have yet, and you go in once your card is complete. Only your birthday and occupation are optional, but they help us recognise you properly when your special day arrives.
         </Text>
       </View>
 
@@ -236,8 +236,8 @@ export default function Details() {
       <Gap size="l" />
       <Sect>How We Reach You</Sect>
       <Gap size="s" />
-      <Field label="Best way to contact you">
-        <Select value={contact} options={CONTACT} placeholder="Choose" onChange={setContact} accessibilityLabel="Best way to contact you" />
+      <Field label="Choose one as your preferred way to reach out">
+        <Select value={contact} options={CONTACT} placeholder="Choose" onChange={setContact} accessibilityLabel="Choose one as your preferred way to reach out" />
       </Field>
       <SwitchRow label="By email" on={byEmail} onChange={setByEmail} />
       <SwitchRow label="By text" on={byText} onChange={setByText} />

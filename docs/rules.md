@@ -1,6 +1,6 @@
 # TK Privilege, the rules as they now stand
 
-Final, 21 September 2026, after a final sweep of the wireframes against the live database. This
+Final, 21 September 2026, after a final sweep of the wireframes against the live database. Updated 22 September 2026 for counted maintenance, 1 booking bonus and the new tiers; where this file and claude/tk-privilege-tiers-app-brief.md disagree, the tiers brief wins. This
 supersedes the build specification v2 of 19 September wherever the two disagree, and every rule
 handed over in chat before today. Each rule says whether it is already built or still to do.
 
@@ -9,6 +9,8 @@ New client, empty profile: https://claude.ai/artifact/Byv749sPKtwrimD5RKra9t
 The app is being built in React Native, one codebase for iOS and Android.
 
 ## 1 Earning
+
+COUNTED MAINTENANCE, 22 September: a care visit counts as a maintenance only if it is £200 or more AND at least 5 weeks (tapes) or 7 weeks (everything else) after her last counted maintenance. Only counted maintenances fill Care Card boxes, count towards tiers, earn the booking bonus and release pending points. Smaller or closer visits are top ups: they still earn, their points are added to what is pending and released with her next counted maintenance. New sets and new pieces no longer fill a Care Card box.
 
 1 point for every £1 at a care visit, 10 points is £1 when spent.
 A care visit is any maintenance appointment for micro rings, micro bonds, tapes or wefts, and any
@@ -40,18 +42,10 @@ privilege_band_on, rule 12 withdrawn and no unlock_deadline anywhere.
 BUILT 21 September: care_date_days for topper, wig and clip_in at 0, and privilege_summary returns a
 null next_care_date, so the app shows no countdown.
 
-## 3 The two booking bonuses
+## 3 The booking bonus
 
-100 points for booking the next visit at the desk at checkout, on the day of the care visit. That is
-the only way to earn it. A booking made later, by phone, by email or requested in the app, earns nothing.
+Changed 22 September: 1 booking bonus of 100 points, not 2. She earns it only if she books her next visit at the desk on the day of a counted maintenance AND comes in on that exact date. Booking later, by phone, by email or through an app request, or moving the date, means no bonus. Released at check in, never banded.
 The app cannot book. It can only send a request, see section 12.
-A further 100 points for attending that appointment on the date originally booked. Moving it cancels
-this second 100 only.
-Both are pending from booking, released in full at check in, never banded, 100 or 0, one of each per
-care visit, and both die with the visit's points at band 3. A manager awarding by hand awards all
-three together or none.
-BUILT on 20 September per the CMS log: bonus_rebook 100, bonus_kept 100, the bonus lives and dies
-with its visit, privilege_award and privilege_writeoff carry it both ways.
 
 ## 4 Referrals
 
@@ -59,6 +53,9 @@ with its visit, privilege_award and privilege_writeoff carry it both ways.
 visit, including against a new set. It is an acquisition cost and is treated as one. No cap on how
 many friends she refers.
 The app cannot see who she sent her code to. It shows only people who arrived with it.
+Referral codes never contain a space: first name then 2 digits, written together, for example SHAWN36. Codes are always shown, copied and shared that way, and a code typed with a space still matches.
+The referral message has no links in it. It reads: "Come to Tatiana Karelina with my code SHAWN36 and you will get 1,000 points, £100, to use on your first visit. Message the salon on WhatsApp on 07714 392999 or call 020 3645 1761 and give them my code." Decided by Shawn on 21 September.
+TO DO: privilege_referral_code issues codes with no space, the 2 existing codes (SHAWN 36, APP 35) have the space taken out, and code lookup ignores spaces.
 BUILT 21 September: referrer 500, referred 1,000, and can_redeem allows the referred friend's
 1,000 on her first visit whatever it is.
 
@@ -85,10 +82,12 @@ BUILT 21 September: bonus_review_share 250.
 ## 6 Complete client card
 
 Every client is already in the CRM, so there is no sign up. She signs in with her mobile and a one time code.
-The sign in screen has a "Keep me signed in for 90 days" switch, on by default, under the mobile number and above Send me a code. With it on, she stays signed in on that phone for 90 days from the code and then needs a new one. With it off, she needs a new code each time the app is opened.
+Sign in: her mobile and a one time code by text. The sign in screen has "Keep me signed in for 90 days", on by default. With it on, she stays signed in on that phone for 90 days and then needs a new code. With it off, she needs a new code each time she opens the app. This keeps text messages, and their cost, to a minimum.
+The opening screen (video, logo and Privilege) plays every time the app is opened and never moves on by itself. She always presses the button. Signed out, it reads Log in and goes to Your Mobile Number. Signed in within her 90 days, it reads Enter and goes straight to Home. Decided by Shawn on 21 September.
+
 The first time she signs in, the app shows Your Details with whatever the salon is missing, and she cannot go in until her card is complete. If her card is already complete she goes straight to Home.
 Required: first and last name, mobile, email, address, postcode, preferred stylist, how she likes her hair, and best way to contact her.
-Optional: birthday, day and month only, never the year, and occupation. The birthday hint reads "Having it lets us recognise your birthday." No birthday gift is promised or run by the system.
+Optional: birthday, day and month only, never the year, and occupation. The birthday hint reads "Having it lets us recognise your birthday." Gold and Black get birthday points (section 11).
 No points for a complete card. The 100 is removed.
 BUILT: occupation column, and profile_complete computed by trigger.
 TO DO: set bonus_profile_setup to 0 so nothing is paid, and have profile_complete count the required fields only, leaving out birthday and occupation.
@@ -105,7 +104,8 @@ micro_bonds, as set out on 20 September.
 Rewards filter to her family by default, with a link to the whole price list. Rewards opens on the
 Colour filter, with Hair, Davines and All one tap away.
 The Care Card is the same for everyone: 4 care visits fill it, and a full card is 500 points, £50.
-Every visit that is a care visit or a new set fills a box.
+Each box shows the TK mark: white on black when filled, faded in a dashed box when empty. No figure is printed in the last box.
+Every counted maintenance fills a box. New sets and top ups do not.
 TO DO: set bonus_card_complete back to 500 and care_card_boxes to 4 for every family, and stop
 recording a free service owed in salon.care_card_rewards.
 All reward prices and points round to the nearest £5.
@@ -131,14 +131,14 @@ so they can be changed without an app release.
 
 ## 11 Tiers
 
-Tiers count care visits in a rolling 12 months, never spend.
-Silver, where everyone starts: 1 point for every £1 at a care visit, and the Care Card.
-Gold, 4 care visits: 1.25 points for every £1 at a care visit, and the Care Card.
-Black, 6 care visits: 1.5 points for every £1 at a care visit, and the Care Card.
-Tier never changes the bands. Every tier is on the same bands in section 2.
-No birthday gift in the system. No discount on new sets. No extra days.
-BUILT 21 September: salon.tiers.earn_rate 1, 1.25 and 1.5, applied by privilege_set_aside using her tier on the day of the visit.
-TO DO: delete the black_saturday_priority_days setting, Saturday priority is removed.
+Changed 22 September. Tiers are earned by a full Care Card plus tier points, on a calendar year. Everyone starts at Silver on the day they join.
+Gold: a full Care Card and 1,500 tier points. Black: a full Care Card and 3,000 tier points. Toppers, wigs and clip-ins: tier points only, no Care Card needed.
+Tier points: 1 for every £1 spent with the salon, on anything. They measure progress and are not spendable.
+She moves up the moment she qualifies and holds the tier for the rest of that year and all of the next. To stay, during that next year she fills a Care Card and earns 1,250 tier points (Gold) or 2,500 (Black); otherwise on 1 January she moves to the tier her year supports. Joining in 2026: everything from the day she joins counts towards 2027.
+Earn rates: Silver 1, Gold 1.25, Black 1.5 points per £1 at a maintenance.
+Perks (from app_tier_perks): colour discount 10, 15, 30%; Davines discount 10, 15, 20%; free colour none, £100, £200 a year; maintenance perk (complimentary wash and blow dry) none, every second maintenance, every maintenance; birthday points none, 250, 500; Davines gift none, £50, £100 a year. Every member: booking bonus, Care Card, refer a friend, review points, 50% off first colour, free piece check.
+Every figure in the app comes from app_tier_rules() and app_tier_perks(), never typed in.
+Client facing copy about points never uses keep, lose, lapse or miss. Bands are described as "Come Back Earlier. Earn More" (Shawn, 22 September).
 
 ## 12 Booking requests
 
@@ -164,7 +164,7 @@ corrected both on 19 September to 350 points, £35.
 No referral cap. The referred friend's 1,000 is usable on her first visit, new set included.
 A complete card is required to go in, birthday and occupation optional, no points for it.
 Care Card is 500 points for a full card of 4, the same for everyone.
-Tier benefits set on 21 September: no birthday gift, no discount on new sets, no extra days.
+Tier benefits replaced on 22 September by the perks in section 11.
 No disclosure line on reviews.
 Blow dry and trim earn. Earning is on the cash part only. Points are earned at care visits and spent on anything, at any visit.
 FAQs are 9, retitled FAQs, including what happens if she comes in late (the bands, in weeks), how the 2 booking bonuses work with no exceptions, how the Care Card works, and what the different tiers give. Bottom menu on every signed in screen.
@@ -173,3 +173,12 @@ The Holiday screen is removed. Holidays are handled at the salon's discretion.
 ## 15 Still open
 
 Nothing. The diary is open about 4 months ahead, confirmed by Shawn on 21 September.
+
+## 16 Wording and empty states, 22 September
+
+Two kinds of points, always named: TK Points are hers to spend (10 TK Points is £1). Tier Points move her up a tier, 1 for every £1 spent on anything, and are never spendable. The Card screen shows both side by side.
+Rewards lists only what she can have today with her TK Points, filtered to her hair, with no link to the whole price list. With nothing to spend it shows "Your Rewards" and one line saying her next maintenance earns TK Points, with a link to How points work.
+"First" or "next": the app says "your first maintenance" only when she has never had a maintenance with the salon. Every existing client, the usual case, sees "your next maintenance". TO DO for the CRM: a has_had_maintenance flag in app_summary so the app can choose.
+Visits is titled Your Recent Visits and shows only her last 5 visits, newest first: service, date, stylist, the TK Points from that visit and whether they are pending or when they were released, and the top up line where it applies. The next appointment is on Home. Visits from before the scheme began show the service, date and stylist only, with no points column and never "No points".
+Share your code opens the phone's own share sheet. Nothing in the app says "Choose an app".
+Tier Perks top line: "Every member gets: the booking bonus, the Care Card, refer a friend, review points and 50% off your first colour." No free piece check (Shawn, 22 September).

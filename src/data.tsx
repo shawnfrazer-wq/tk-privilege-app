@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { BookingRequest, crm, LedgerLine, Settings, Summary, Visits } from './crm';
+import { BookingRequest, crm, LedgerLine, Settings, Summary, TierPerk, TierRules, Visits } from './crm';
 import { signOut, supabase } from './supabase';
 
 // gate: her card is incomplete, so Your Details is the only screen she can see (rules.md section 6)
@@ -39,6 +39,9 @@ type Data = {
   ledger: LedgerLine[] | null;
   visits: Visits | null;
   requests: BookingRequest[] | null;
+  // null until the CRM carries app_tier_rules and app_tier_perks; the screens show the layout without figures
+  tierRules: TierRules | null;
+  tierPerks: TierPerk[] | null;
   failed: boolean;
   ledgerFailed: boolean;
   visitsFailed: boolean;
@@ -55,6 +58,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const { signedIn, setGate, setLinked } = useAuth();
   const [summary, setSummary] = useState<Summary | null>(null);
   const [requests, setRequests] = useState<BookingRequest[] | null>(null);
+  const [tierRules, setTierRules] = useState<TierRules | null>(null);
+  const [tierPerks, setTierPerks] = useState<TierPerk[] | null>(null);
   const [settings, setSettings] = useState<Settings | null>(null);
   const [ledger, setLedger] = useState<LedgerLine[] | null>(null);
   const [visits, setVisits] = useState<Visits | null>(null);
@@ -90,14 +95,24 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const refresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      const [s, st, rq] = await Promise.all([
+      const [s, st, rq, tr, tp] = await Promise.all([
         crm.summary(),
         settings ? Promise.resolve(settings) : crm.settings(),
         crm.bookingRequests().catch(() => [] as BookingRequest[]),
+        crm.tierRules().catch((e) => {
+          console.warn('app_tier_rules not available', e?.message);
+          return null;
+        }),
+        crm.tierPerks().catch((e) => {
+          console.warn('app_tier_perks not available', e?.message);
+          return null;
+        }),
       ]);
       setSummary(s);
       setSettings(st);
       setRequests(rq);
+      setTierRules(tr);
+      setTierPerks(tp);
       setUpdatedAt(Date.now());
       setFailed(false);
       const extra: Promise<void>[] = [];
@@ -120,6 +135,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       setLedger(null);
       setVisits(null);
       setRequests(null);
+      setTierRules(null);
+      setTierPerks(null);
       setFailed(false);
       setLedgerFailed(false);
       setVisitsFailed(false);
@@ -147,8 +164,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   }, [signedIn]);
 
   const value = useMemo(
-    () => ({ summary, settings, ledger, visits, requests, failed, ledgerFailed, visitsFailed, updatedAt, refreshing, refresh, loadLedger, loadVisits }),
-    [summary, settings, ledger, visits, requests, failed, ledgerFailed, visitsFailed, updatedAt, refreshing, refresh, loadLedger, loadVisits],
+    () => ({ summary, settings, ledger, visits, requests, tierRules, tierPerks, failed, ledgerFailed, visitsFailed, updatedAt, refreshing, refresh, loadLedger, loadVisits }),
+    [summary, settings, ledger, visits, requests, tierRules, tierPerks, failed, ledgerFailed, visitsFailed, updatedAt, refreshing, refresh, loadLedger, loadVisits],
   );
   return <DataCtx.Provider value={value}>{children}</DataCtx.Provider>;
 }

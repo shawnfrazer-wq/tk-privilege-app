@@ -81,7 +81,7 @@ export default function Refer() {
       <Small>Tap the button and choose WhatsApp, Messages, email or any app on your phone. The message and your code go with it. Your friend gives the code at reception, or puts it in her own app.</Small>
 
       <Gap size="l" />
-      <Eyebrow>Recently earned</Eyebrow>
+      <Eyebrow>Referrals</Eyebrow>
       <Gap size="s" />
       {rows.length === 0 && list !== null && <LedgerRow title="Nobody yet" detail="Friends who use your code will show here" right="" last />}
       {rows.map((x, i) =>
@@ -98,7 +98,7 @@ export default function Refer() {
           <LedgerRow key={i} title={x.friend} detail="Used your code, not been in yet" right="Waiting" muted last={i === rows.length - 1} />
         ),
       )}
-      <Small>Only shows once someone gives your code at reception or puts it in their own app. We have no way of knowing who you sent it to.</Small>
+      <Small>Only shows once someone gives your code at reception or puts it in their own app.</Small>
     </Screen>
   );
 }

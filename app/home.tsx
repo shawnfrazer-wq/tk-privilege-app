@@ -10,12 +10,10 @@ import { CareCardBoxes } from '../src/ui/CareCardBoxes';
 import { Gap } from '../src/ui/Gap';
 import { NextAppt } from '../src/ui/NextAppt';
 import { PrivilegeCard } from '../src/ui/PrivilegeCard';
-import { Screen } from '../src/ui/Screen';
+import { RowBtn } from '../src/ui/Rows';
+import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Disp, Sect, Stale } from '../src/ui/T';
-import { DetailsIcon, PointsIcon, ReferIcon, ReviewIcon } from '../src/ui/Icons';
-import { RowLink } from '../src/ui/RowLink';
-import { statusOf } from '../src/ui/Screen';
-import { tierTile } from '../src/ui/tiers';
+import { track } from '../src/ui/tiers';
 import { Waiting } from '../src/ui/Waiting';
 
 function greeting(now: number, name: string) {
@@ -24,10 +22,13 @@ function greeting(now: number, name: string) {
   return `${g}, ${name}`;
 }
 
+// "first" only when she has never had a maintenance with the salon; the usual case is "next"
+export const firstOrNext = (s: Summary) => (s.has_had_maintenance === false ? 'first' : 'next');
+
 function careCardLine(s: Summary, rate: number): string {
   const pts = num(s.card_reward_points);
   const gbp = pounds(s.card_reward_pounds ?? s.card_reward_points / (rate || 10));
-  if (!s.card_boxes) return `Your first care visit fills the first box. A full card is ${pts} points, ${gbp}.`;
+  if (!s.card_boxes) return `Your ${firstOrNext(s)} maintenance fills the first box. A full card is ${pts} points, ${gbp}.`;
   return `${num(s.card_boxes)} of ${num(s.card_target)}. A full card is ${pts} points, ${gbp}.`;
 }
 
@@ -43,14 +44,13 @@ export default function Home() {
 
   const rate = Number(settings?.redeem_rate_points_per_pound) || 10;
   const next = s.next_appointment_at;
-  // a booking request she has sent that the desk has not yet put in the diary (decisions-21-sep.md section 1)
   const waiting = !next && requests && requests.length > 0 ? requests[0] : null;
-  const isNew = !next && !waiting && !s.balance_points && !s.pending_points && !s.visits_12m;
-  const tile = tierTile(s);
-  const target = s.card_target || 4;
+  const isNew = !next && !waiting && !s.balance_points && !s.pending_points && s.has_had_maintenance === false;
+  const t = track(s);
   const who = [s.next_appointment_services, s.next_appointment_stylists].filter(Boolean).join(' with ');
   const where = s.next_appointment_location ? `, ${s.next_appointment_location}` : '';
   const days = s.days_to_care_date;
+  const freeColour = s.free_colour_left_pounds ?? 0;
 
   return (
     <Screen tab="home" brand refreshing={refreshing} onRefresh={refresh}>
@@ -58,21 +58,10 @@ export default function Home() {
       <Disp>{greeting(now, s.first_name ?? '')}</Disp>
       <Gap />
 
-      <Pressable onPress={() => router.navigate('/card')} accessibilityRole="button" accessibilityLabel="Open your card">
-        <PrivilegeCard
-          tier={s.tier}
-          name={[s.first_name, s.last_name].filter(Boolean).join(' ')}
-          since={`Client since ${monthYear(s.client_since)}`}
-          right={`${num(s.balance_points)} PTS`}
-        />
-      </Pressable>
+      <PrivilegeCardButton onPress={() => router.navigate('/card')} s={s} />
 
-      {!!s.pending_points && (
-        <>
-          <Gap />
-          <Waiting summary={s} />
-        </>
-      )}
+      <Gap />
+      <Waiting summary={s} />
 
       {!isNew && (
         <>
@@ -84,6 +73,7 @@ export default function Home() {
               month={monthShort(next)}
               what={who}
               detail={`${weekday(next)} at ${time(next)}${where}. Please arrive with clean, dry hair.`}
+              included={s.maintenance_perk_next ? 'Wash and blow dry included' : undefined}
             />
           ) : waiting ? (
             <NextAppt
@@ -117,25 +107,49 @@ export default function Home() {
           )}
         </View>
         <View style={h.tile}>
-          <Text style={h.tileBig}>{tile.big}</Text>
-          <Text style={h.tileSmall}>{tile.small}</Text>
+          <Text style={h.tileBig}>{s.tier_points != null ? num(s.tier_points) : ' '}</Text>
+          <Text style={h.tileSmall}>{t.tileSmall}</Text>
         </View>
       </View>
+      {(freeColour > 0 || s.davines_gift_owed) && (
+        <View style={h.perklines}>
+          {freeColour > 0 && (
+            <View style={h.perkline}>
+              <View style={h.dot} />
+              <Text style={h.perkText}>You have {pounds(freeColour)} of free colour</Text>
+            </View>
+          )}
+          {s.davines_gift_owed && (
+            <View style={h.perkline}>
+              <View style={h.dot} />
+              <Text style={h.perkText}>Your Davines gift is waiting at the salon</Text>
+            </View>
+          )}
+        </View>
+      )}
 
       <Gap size="l" />
       <Sect>Care Card</Sect>
       <Gap size="s" />
       <Copy>{careCardLine(s, rate)}</Copy>
-      <CareCardBoxes filled={s.card_boxes || 0} target={target} />
-
-      {/* the way to the 4 screens the bottom menu does not carry, in the Contact row style (Shawn, 21 September) */}
+      <CareCardBoxes filled={s.card_boxes || 0} target={s.card_target || 4} />
       <Gap size="l" />
-      <RowLink Icon={PointsIcon} title="Your Points" sub="Every line, pending and released" onPress={() => router.push('/points')} />
-      <RowLink Icon={ReferIcon} title="Refer a Friend" sub="500 points for you, 1,000 for her" onPress={() => router.push('/refer')} />
-      <RowLink Icon={ReviewIcon} title="Leave a Review" sub="250 points per platform" onPress={() => router.push('/review')} />
-      <RowLink Icon={DetailsIcon} title="Your Details" sub="What the salon has for you" onPress={() => router.push('/details')} last />
+      <View>
+        <RowBtn title="Your TK Points" sub="Every line, pending and released" onPress={() => router.push('/points')} />
+        <RowBtn title="Refer a Friend" sub="500 points for you, 1,000 for her" onPress={() => router.push('/refer')} />
+        <RowBtn title="Leave a Review" sub="250 points per platform" onPress={() => router.push('/review')} />
+        <RowBtn title="Your Details" sub="What the salon has for you" onPress={() => router.push('/details')} last />
+      </View>
       <Stale>{updatedAgo(updatedAt, now)}</Stale>
     </Screen>
+  );
+}
+
+function PrivilegeCardButton({ s, onPress }: { s: Summary; onPress: () => void }) {
+  return (
+    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel="Open your card">
+      <PrivilegeCard tier={s.tier} name={[s.first_name, s.last_name].filter(Boolean).join(' ')} since={`Client since ${monthYear(s.client_since)}`} right={`${num(s.balance_points)} PTS`} />
+    </Pressable>
   );
 }
 
@@ -144,4 +158,8 @@ const h = StyleSheet.create({
   tile: { flex: 1, backgroundColor: C.band, borderRadius: 10, paddingVertical: 14, paddingHorizontal: 16, gap: 5 },
   tileBig: { fontFamily: F.serif, fontSize: 22, lineHeight: 24, color: C.ink },
   tileSmall: { fontFamily: F.reg, fontSize: 10.5, lineHeight: 15.75, color: C.mute },
+  perklines: { gap: 6, marginTop: 12 },
+  perkline: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: C.gold },
+  perkText: { fontFamily: F.reg, fontSize: 12.5, color: C.grey },
 });

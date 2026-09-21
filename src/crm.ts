@@ -18,8 +18,6 @@ export type Summary = {
   band_today: number | null;
   full_until: string | null;
   booking_bonus: number;
-  kept_bonus: number;
-  kept_bonus_date: string | null;
   care_date: string | null;
   days_to_care_date: number | null;
   next_appointment_at: string | null;
@@ -30,8 +28,6 @@ export type Summary = {
   card_target: number;
   card_reward_points: number;
   tier: Tier;
-  visits_12m: number;
-  visits_to_next_tier: number;
   earn_rate: number | null;
   method: string | null;
   hair_type: string | null;
@@ -44,13 +40,56 @@ export type Summary = {
   pending_pounds_band3: number | null;
   pending_pounds_at_next_appointment: number | null;
   card_reward_pounds: number | null;
-  next_tier_visits: number | null;
   family: string | null;
   care_service_id: string | null;
   care_service_name: string | null;
   // the dearest colour service her balance covers, and what is left over; both null when nothing is covered
   best_reward_name: string | null;
   best_reward_spare_pounds: number | null;
+  // 22 September contract (docs/tiers-app-brief.md section 6). Optional until the CRM carries them.
+  tier_until?: string | null;
+  tier_points?: number | null;
+  tier_points_from?: string | null;
+  care_card_needed?: boolean | null;
+  next_tier?: Tier | null;
+  next_tier_points?: number | null;
+  keep_year_next?: number | null;
+  keep_points?: number | null;
+  free_colour_left_pounds?: number | null;
+  davines_gift_owed?: boolean | null;
+  davines_gift_pounds?: number | null;
+  maintenance_perk_next?: boolean | null;
+  first_colour_offer?: boolean | null;
+  booking_bonus_date?: string | null;
+  has_had_maintenance?: boolean | null;
+  // kept by the CRM for now, no longer shown
+  kept_bonus?: number | null;
+  kept_bonus_date?: string | null;
+  visits_12m?: number | null;
+  visits_to_next_tier?: number | null;
+  next_tier_visits?: number | null;
+};
+
+export type TierRules = {
+  gold_achieve: number;
+  gold_keep: number;
+  black_achieve: number;
+  black_keep: number;
+  care_card_boxes: number;
+  care_visit_min_pounds: number;
+  gap_weeks_tapes: number;
+  gap_weeks_other: number;
+};
+
+export type TierPerk = {
+  tier: Tier;
+  earn_rate: number | string;
+  colour_discount_pct: number;
+  davines_discount_pct: number;
+  free_colour_pounds: number;
+  maintenance_perk: boolean;
+  birthday_points: number;
+  davines_gift_pounds: number;
 };
 
 export type Profile = {
@@ -119,6 +158,8 @@ export type Visit = {
   new_set: boolean | null;
   points: number | null;
   status: string | null;
+  // false for a top up (22 September); missing until the CRM carries it
+  counted?: boolean | null;
 };
 
 export type Visits = {
@@ -155,6 +196,8 @@ export const crm = {
   saveProfile: (p: ProfilePatch) => rpc<Profile>('app_save_profile', { p }),
   stylists: () => rpc<Stylist[]>('app_stylists'),
   priceList: () => rpc<PriceRow[]>('app_price_list'),
+  tierRules: () => rpc<TierRules>('app_tier_rules'),
+  tierPerks: () => rpc<TierPerk[]>('app_tier_perks'),
   freeTimes: (staff: string, service: string, from: string, days: number) =>
     rpc<FreeTime[]>('app_free_times', { p_staff: staff, p_service: service, p_from: from, p_days: days }),
   requestBooking: (service: string, staff: string, start: string, note: string | null) =>

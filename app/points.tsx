@@ -33,26 +33,22 @@ export default function Points() {
   };
 
   return (
-    <Screen tab="card" back title="Your Points" refreshing={refreshing} onRefresh={retry} status={status}>
+    <Screen tab="card" back title="Your TK Points" refreshing={refreshing} onRefresh={retry} status={status}>
       <Gap />
-      <Disp>Your Points</Disp>
+      <Disp>Your TK Points</Disp>
       <Gap size="s" />
       {s && (
         <>
           <View style={p.balance}>
             <View style={p.left}>
               <Text style={p.big}>{num(s.balance_points)}</Text>
-              <Text style={p.unit}>points</Text>
+              <Text style={p.unit}>TK Points</Text>
             </View>
             <Text style={p.gbp}>{pounds(s.balance_pounds)}</Text>
           </View>
-          <Copy>Yours to spend on anything, at any visit. 10 points is £1.</Copy>
-          {!!s.pending_points && (
-            <>
-              <Gap />
-              <Waiting summary={s} />
-            </>
-          )}
+          <Copy>Yours to spend on anything, at any visit. 10 TK Points is £1.</Copy>
+          <Gap />
+          <Waiting summary={s} />
         </>
       )}
 

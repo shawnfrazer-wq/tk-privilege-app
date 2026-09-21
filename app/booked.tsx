@@ -29,8 +29,8 @@ export default function Booked() {
         <>
           <Gap />
           <Note
-            title={`${num(pending)} points still pending`}
-            body={`Worth ${pounds(s.pending_pounds_full)} in full if you come in by ${dayMonth(s.full_until)}. It is the day you come in that decides.`}
+            title={`${num(pending)} points pending`}
+            body={`Come back by ${dayMonth(s.full_until)} to earn full points, ${pounds(s.pending_pounds_full)}. It is the day you come in that decides.`}
           />
         </>
       )}

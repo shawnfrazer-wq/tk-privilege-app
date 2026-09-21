@@ -116,7 +116,7 @@ export default function Book() {
   }
 
   const pending = s?.pending_points ?? 0;
-  const isNew = !!s && !s.balance_points && !pending && !s.visits_12m;
+  const isNew = !!s && s.has_had_maintenance === false;
 
   return (
     <Screen tab="home" back title="Book" status={statusOf(s && staff, loadFailed)} refreshing={false} onRefresh={() => setAttempt((a) => a + 1)}>
