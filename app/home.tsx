@@ -1,11 +1,12 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Summary } from '../src/crm';
 import { useData, useNow } from '../src/data';
 import { dayMonth, dayNumber, monthShort, monthYear, num, pounds, time, updatedAgo, weekday } from '../src/format';
 import { C, F } from '../src/theme';
 import { Btn } from '../src/ui/Btn';
+import { CareCardBoxes } from '../src/ui/CareCardBoxes';
 import { Gap } from '../src/ui/Gap';
 import { NextAppt } from '../src/ui/NextAppt';
 import { PrivilegeCard } from '../src/ui/PrivilegeCard';
@@ -16,8 +17,6 @@ import { RowLink } from '../src/ui/RowLink';
 import { statusOf } from '../src/ui/Screen';
 import { tierTile } from '../src/ui/tiers';
 import { Waiting } from '../src/ui/Waiting';
-
-const tkmark = require('../assets/tkmark_white.png');
 
 function greeting(now: number, name: string) {
   const h = new Date(now).getHours();
@@ -127,16 +126,7 @@ export default function Home() {
       <Sect>Care Card</Sect>
       <Gap size="s" />
       <Copy>{careCardLine(s, rate)}</Copy>
-      <View style={h.boxes}>
-        {Array.from({ length: target }).map((_, i) => {
-          const filled = i < (s.card_boxes || 0);
-          return (
-            <View key={i} style={[h.box, filled && h.boxFilled]}>
-              {filled && <Image source={tkmark} style={{ width: 26, height: 26 }} />}
-            </View>
-          );
-        })}
-      </View>
+      <CareCardBoxes filled={s.card_boxes || 0} target={target} rewardPoints={s.card_reward_points} />
 
       {/* the way to the 4 screens the bottom menu does not carry, in the Contact row style (Shawn, 21 September) */}
       <Gap size="l" />
@@ -154,7 +144,4 @@ const h = StyleSheet.create({
   tile: { flex: 1, backgroundColor: C.band, borderRadius: 10, paddingVertical: 14, paddingHorizontal: 16, gap: 5 },
   tileBig: { fontFamily: F.serif, fontSize: 22, lineHeight: 24, color: C.ink },
   tileSmall: { fontFamily: F.reg, fontSize: 10.5, lineHeight: 15.75, color: C.mute },
-  boxes: { flexDirection: 'row', gap: 8, marginTop: 12 },
-  box: { flex: 1, height: 44, borderWidth: 1, borderColor: C.hair, borderRadius: 8, alignItems: 'center', justifyContent: 'center' },
-  boxFilled: { backgroundColor: C.ink, borderColor: C.ink },
 });
