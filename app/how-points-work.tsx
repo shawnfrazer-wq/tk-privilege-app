@@ -110,5 +110,5 @@ const s = StyleSheet.create({
   srowNote: { fontFamily: F.reg, fontSize: 10.5, color: C.gold, marginTop: 3, textAlign: 'right' },
   know: { paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: C.hairSoft },
   knowTitle: { fontFamily: F.reg, fontSize: 13, color: C.ink, marginBottom: 4 },
-  knowBody: { fontFamily: F.reg, fontSize: 12, lineHeight: 19.8, color: C.grey, textAlign: 'justify' },
+  knowBody: { fontFamily: F.reg, fontSize: 13, lineHeight: 21.5, color: C.grey, textAlign: 'justify' },
 });

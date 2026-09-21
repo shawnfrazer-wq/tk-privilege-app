@@ -114,17 +114,18 @@ export default function Details() {
       });
       setP(saved);
       const complete = (saved.missing ?? []).length === 0;
+      // app_summary is what Home, Card and every other screen show, so it is refetched before leaving
       if (gate) {
         if (complete) {
+          await refresh();
           setGate(false);
-          refresh();
           router.replace('/home');
         } else {
           setProblem(`Still needed: ${saved.missing.join(', ')}.`);
         }
       } else {
-        refresh();
-        router.back();
+        await refresh();
+        router.navigate('/more');
       }
     } catch (e) {
       setProblem(e instanceof Error ? e.message : 'Your details could not be saved.');
@@ -146,14 +147,15 @@ export default function Details() {
             setProblem(e instanceof Error ? e.message : 'Your account could not be deleted.');
             return;
           }
-          await signOut();
+          // the CRM has already deleted her sign in user, so only the phone's copy of the session is left to clear
+          await signOut(true);
         },
       },
     ]);
   }
 
   return (
-    <Screen tab={gate ? undefined : 'home'} back={!gate} title="Your Details" status={statusOf(p, loadFailed)} refreshing={false} onRefresh={() => setAttempt((a) => a + 1)}>
+    <Screen tab={gate ? undefined : 'more'} back={!gate} onBack={() => router.navigate('/more')} title="Your Details" status={statusOf(p, loadFailed)} refreshing={false} onRefresh={() => setAttempt((a) => a + 1)}>
       <Gap />
       <Disp>Your Details</Disp>
       <Gap size="s" />
@@ -274,7 +276,7 @@ function Ro({ label, value }: { label: string; value: string }) {
 const d = StyleSheet.create({
   goldpanel: { backgroundColor: C.band, borderLeftWidth: 2, borderLeftColor: C.gold, borderRadius: 8, paddingVertical: 14, paddingHorizontal: 16, marginTop: 20 },
   goldTitle: { fontFamily: F.reg, fontSize: 12.5, color: C.ink, marginBottom: 3 },
-  goldBody: { fontFamily: F.reg, fontSize: 11.5, lineHeight: 17.8, color: C.grey },
+  goldBody: { fontFamily: F.reg, fontSize: 13, lineHeight: 20, color: C.grey },
   two: { flexDirection: 'row', gap: 18 },
   ro: { flexDirection: 'row', justifyContent: 'space-between', gap: 16, paddingVertical: 11, borderBottomWidth: 1, borderBottomColor: C.hairSoft },
   roLabel: { fontFamily: F.reg, fontSize: 13, color: C.grey },

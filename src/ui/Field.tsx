@@ -77,7 +77,7 @@ export function Select({ value, options, placeholder, onChange, accessibilityLab
 const s = StyleSheet.create({
   field: { gap: 6, marginTop: 20 },
   label: { fontFamily: F.med, fontSize: 10, letterSpacing: ls(0.18, 10), textTransform: 'uppercase', color: C.mute },
-  fieldHint: { fontFamily: F.reg, fontSize: 11, color: C.mute, marginTop: 2 },
+  fieldHint: { fontFamily: F.reg, fontSize: 11.5, color: C.mute, marginTop: 2 },
   input: {
     fontFamily: F.reg,
     fontSize: 15,

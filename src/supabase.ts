@@ -75,7 +75,8 @@ export async function sessionStillGood(): Promise<boolean> {
   return true;
 }
 
-export async function signOut(): Promise<void> {
+// localOnly: the sign in user is already gone on the server (Delete my account), so only the phone is cleared
+export async function signOut(localOnly = false): Promise<void> {
   await AsyncStorage.removeItem(SIGNED_IN_AT_KEY);
-  await supabase.auth.signOut();
+  await supabase.auth.signOut(localOnly ? { scope: 'local' } : undefined);
 }

@@ -37,17 +37,20 @@ export type Summary = {
   hair_type: string | null;
   details_complete: boolean;
   details_missing: string[];
-  // Asked for in docs/crm-requests.md. Read when present, with a fallback until then.
-  next_appointment_location?: string | null;
-  band2_last_day?: string | null;
-  band3_last_day?: string | null;
-  pending_pounds_band2?: number | null;
-  pending_pounds_band3?: number | null;
-  pending_pounds_at_next_appointment?: number | null;
-  card_reward_pounds?: number | null;
-  next_tier_visits?: number | null;
-  care_service_id?: string | null;
-  care_service_name?: string | null;
+  next_appointment_location: string | null;
+  band2_last_day: string | null;
+  band3_last_day: string | null;
+  pending_pounds_band2: number | null;
+  pending_pounds_band3: number | null;
+  pending_pounds_at_next_appointment: number | null;
+  card_reward_pounds: number | null;
+  next_tier_visits: number | null;
+  family: string | null;
+  care_service_id: string | null;
+  care_service_name: string | null;
+  // the dearest colour service her balance covers, and what is left over; both null when nothing is covered
+  best_reward_name: string | null;
+  best_reward_spare_pounds: number | null;
 };
 
 export type Profile = {
@@ -94,8 +97,8 @@ export type ProfilePatch = Partial<{
 }>;
 
 export type Stylist = { id: string; name: string };
-// for_me is asked for in docs/crm-requests.md: true when the service suits her family
-export type PriceRow = { id: string; name: string; price: number | string; points: number; section: 'colour' | 'hair' | 'davines' | 'other'; for_me?: boolean | null };
+// family is 'all' or a family name (micro, tapes, wefts, topper, clip_in); her own family's rows come first
+export type PriceRow = { id: string; name: string; price: number | string; points: number; section: 'colour' | 'hair' | 'davines' | 'other'; family: string | null };
 export type FreeTime = { slot_start: string };
 export type BookingRequest = { id: number; requested_start: string; service: string | null; stylist: string | null; status: string };
 export type Referral = { friend: string; status: 'paid' | 'waiting'; happened_on: string | null; points: number; pounds: number | string | null };

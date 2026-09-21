@@ -13,11 +13,12 @@ import { Copy, Disp, Sect } from '../src/ui/T';
 export default function Contact() {
   const router = useRouter();
   const { settings, failed, refreshing, refresh } = useData();
+  const toMore = () => router.navigate('/more');
   const open = (url?: string) => {
     if (url) Linking.openURL(url).catch(() => {});
   };
   return (
-    <Screen tab="contact" title="Contact" refreshing={refreshing} onRefresh={refresh} status={statusOf(settings, failed)}>
+    <Screen tab="more" back onBack={toMore} title="Contact" refreshing={refreshing} onRefresh={refresh} status={statusOf(settings, failed)}>
       <Gap />
       <Disp>We Are Here for Your Hair</Disp>
       <Gap size="s" />

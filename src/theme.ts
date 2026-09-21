@@ -1,10 +1,10 @@
 // Colours, fonts and spacing from the :root block of wireframes/all-screens.html,
-// with the greys darkened and Poppins 300 replaced by 400 after testing on the phone (21 September).
+// with the greys darkened, body text enlarged and Poppins 300 replaced by 400 after testing on the phone (21 September).
 export const C = {
   ink: '#141413',
   paper: '#FFFFFF',
-  grey: '#3E3A36',
-  mute: '#6E6A64',
+  grey: '#2E2A27',
+  mute: '#5A5650',
   band: '#F6F4F1',
   hair: '#E8E5E0',
   hairSoft: '#F1EEEA',

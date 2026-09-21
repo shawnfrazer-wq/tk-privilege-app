@@ -21,10 +21,11 @@ Everything the app reads or writes goes through the functions below. They live i
 
 ## Reading
 
-app_summary(): Home, Card, pending block. jsonb: first_name, last_name, client_since, card_number, referral_code, balance_points, balance_pounds, pending_points, pending_pounds_full, pending_pounds_today, pending_status, band_today (1, 2, 3 or 0), full_until, booking_bonus, kept_bonus, kept_bonus_date, care_date (null for toppers, wigs and clip-ins: show no countdown), days_to_care_date, next_appointment_at, next_appointment_services, next_appointment_stylists, next_appointment_band, card_boxes, card_target, card_reward_points, tier, visits_12m, visits_to_next_tier, earn_rate, method, hair_type, details_complete, details_missing
+app_summary(): Home, Card, pending block, Book, Rewards. jsonb: first_name, last_name, client_since, card_number, referral_code, balance_points, balance_pounds, pending_points, pending_pounds_full, pending_pounds_band2, pending_pounds_band3, pending_pounds_today, pending_pounds_at_next_appointment, pending_status, band_today (1, 2, 3 or 0), full_until, band2_last_day, band3_last_day, booking_bonus, kept_bonus, kept_bonus_date, care_date (null for toppers, wigs and clip-ins: show no countdown), days_to_care_date, next_appointment_at, next_appointment_services, next_appointment_stylists, next_appointment_location, next_appointment_band, card_boxes, card_target, card_reward_points, card_reward_pounds, tier, visits_12m, visits_to_next_tier, next_tier_visits, earn_rate, method, hair_type, family (micro, tapes, wefts, topper or clip_in), care_service_id and care_service_name (the maintenance service for her method, for Book), best_reward_name and best_reward_spare_pounds (the dearest colour service her balance covers and what is left over, both null when nothing is covered), details_complete, details_missing. Read again from the database on 21 September.
 app_ledger(): Your Points. rows: line_date, title, detail, points, pounds, status (pending, done, lapsed). Pending first, then newest first. Titles and details are ready to show.
 app_visits(): Visits. jsonb: method, hair_type, fitted_on, fitted_what, fitted_by, care_every_weeks (null when no clock), visits: [{ d, title, stylists, new_set, points, status }].
-app_price_list(): Rewards. rows: id, name, price, points, section (colour, hair, davines, other). Open on colour; All shows every row.
+app_price_list(): Rewards. rows: id, name, price, points, section (colour, hair, davines, other), family (all, micro, tapes, wefts, topper or clip_in). Open on colour; show her family's rows and the rows for all first; All shows every row.
+app_family(p_method): the family a method code belongs to. Used inside the CRM; the app reads family from app_summary.
 app_referrals(): Refer a Friend. rows: friend, status (paid or waiting), happened_on, points, pounds
 app_profile(): Your Details. jsonb of every field on the screen, plus missing.
 app_settings(): Contact, Review, How Points Work. jsonb: contact_whatsapp, contact_phone, contact_email, google_review_link, trustpilot_review_link and the scheme figures. Hide a button whose link is empty.
@@ -37,7 +38,7 @@ app_booking_requests(): Home, Requested. her waiting requests: id, requested_sta
 app_save_profile(p jsonb): Save on Your Details. Any of: first_name, last_name, email, birth_day, birth_month, occupation, address, postcode, preferred_staff_id, no_preferred_stylist, how_she_likes_her_hair, preferred_contact (Text, WhatsApp, Email or Call), email_marketing, sms_marketing, whatsapp_marketing. Mobile cannot be changed in the app. Returns the saved profile with missing.
 app_request_booking(p_service, p_staff, p_start, p_note): Request this booking. Checks the time is still free, saves the request and the CRM emails info@tatianakarelina.co.uk. At most 3 waiting at once. Closes itself when a booking goes into the diary, or after 7 days.
 app_review_tap(p_platform): google or trustpilot. Records the tap for the desk's Review claims list.
-app_delete_account(): Delete my account. Removes her points and ends her membership. Her client record stays with the salon. The app's own server must then delete her sign in user with the Supabase admin API.
+app_delete_account(): Delete my account. Removes her points, ends her membership and deletes her sign in user. Her client record stays with the salon. The app then clears only the phone's copy of the session. Signing in again creates a new sign in user and app_link starts a fresh membership.
 
 ## Test accounts
 

@@ -61,7 +61,7 @@ export default function Review() {
   const trustpilot = settings?.trustpilot_review_link;
 
   return (
-    <Screen tab="home" back title="Review" status={statusOf(settings, failed)} refreshing={refreshing} onRefresh={refresh}>
+    <Screen tab="more" back onBack={() => router.navigate('/more')} title="Review" status={statusOf(settings, failed)} refreshing={refreshing} onRefresh={refresh}>
       <Gap />
       <Disp>Tell Us How It Went</Disp>
       <Gap size="s" />

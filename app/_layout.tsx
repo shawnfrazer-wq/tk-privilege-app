@@ -25,7 +25,8 @@ function Routes() {
         <Stack.Screen name="card" options={tab} />
         <Stack.Screen name="rewards" options={tab} />
         <Stack.Screen name="visits" options={tab} />
-        <Stack.Screen name="contact" options={tab} />
+        <Stack.Screen name="more" options={tab} />
+        <Stack.Screen name="contact" />
         <Stack.Screen name="how-points-work" />
         <Stack.Screen name="points" />
         <Stack.Screen name="faqs" />

@@ -38,14 +38,23 @@ export default function Rewards() {
       });
   }, [attempt]);
 
-  // rows carry for_me once the CRM adds it (docs/crm-requests.md); until then every row suits her
-  const hasFamily = useMemo(() => (rows ?? []).some((r) => r.for_me !== undefined && r.for_me !== null), [rows]);
+  // her family's rows and the rows for everyone by default; the link shows the whole price list, hers first
+  const fam = s?.family ?? null;
+  const suits = (r: PriceRow) => r.family === 'all' || r.family === fam;
   const shown = useMemo(() => {
     let mine = rows ?? [];
-    if (hasFamily && !every) mine = mine.filter((r) => r.for_me);
+    if (!every) mine = mine.filter(suits);
+    else mine = [...mine.filter(suits), ...mine.filter((r) => !suits(r))];
     if (mode !== 'all') mine = mine.filter((r) => r.section === mode || (mode === 'hair' && r.section === 'other'));
     return ORDER.map((k) => ({ key: k, rows: mine.filter((r) => r.section === k) })).filter((g) => g.rows.length);
-  }, [rows, hasFamily, every, mode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows, fam, every, mode]);
+
+  const lead = !s?.balance_points
+    ? '0 points. Your first care visit starts your balance.'
+    : s.best_reward_name
+      ? `${num(s.balance_points)} points. That is a free ${s.best_reward_name} today, with ${pounds(s.best_reward_spare_pounds)} to spare.`
+      : `${num(s.balance_points)} points. Anything on the price list, at any visit.`;
 
   const retry = () => {
     refresh();
@@ -57,7 +66,7 @@ export default function Rewards() {
       <Gap />
       <Disp>You Have {pounds(s?.balance_pounds)} to Spend</Disp>
       <Gap size="s" />
-      <Copy>{s?.balance_points ? `${num(s.balance_points)} points. Anything on the price list, at any visit.` : '0 points. Your first care visit starts your balance.'}</Copy>
+      <Copy>{lead}</Copy>
       <View style={r.filters}>
         {FILTERS.map(([m, label]) => {
           const on = m === mode;
@@ -83,12 +92,8 @@ export default function Rewards() {
           ))}
         </View>
       ))}
-      {hasFamily && (
-        <>
-          <Gap size="s" />
-          <TextLink label={every ? 'Show what suits my hair' : 'See everything on the price list'} onPress={() => setEvery((e) => !e)} />
-        </>
-      )}
+      <Gap size="s" />
+      <TextLink label={every ? 'Show what suits my hair' : 'See everything on the price list'} onPress={() => setEvery((e) => !e)} />
       <Gap />
       <Small>Spend them on anything, at any visit, new sets and pieces included. Pay part in points if you like, and at a care visit the cash part still earns as normal.</Small>
     </Screen>

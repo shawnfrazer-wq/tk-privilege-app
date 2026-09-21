@@ -3,16 +3,16 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { C, F, ls } from '../theme';
-import { CardIcon, ContactIcon, HomeIcon, RewardsIcon, VisitsIcon } from './Icons';
+import { CardIcon, HomeIcon, MoreIcon, RewardsIcon, VisitsIcon } from './Icons';
 
-export type Tab = 'home' | 'card' | 'rewards' | 'visits' | 'contact';
+export type Tab = 'home' | 'card' | 'rewards' | 'visits' | 'more';
 
-const TABS: { key: Tab; label: string; href: '/home' | '/card' | '/rewards' | '/visits' | '/contact'; Icon: typeof HomeIcon }[] = [
+const TABS: { key: Tab; label: string; href: '/home' | '/card' | '/rewards' | '/visits' | '/more'; Icon: typeof HomeIcon }[] = [
   { key: 'home', label: 'Home', href: '/home', Icon: HomeIcon },
   { key: 'card', label: 'Card', href: '/card', Icon: CardIcon },
   { key: 'rewards', label: 'Rewards', href: '/rewards', Icon: RewardsIcon },
   { key: 'visits', label: 'Visits', href: '/visits', Icon: VisitsIcon },
-  { key: 'contact', label: 'Contact', href: '/contact', Icon: ContactIcon },
+  { key: 'more', label: 'More', href: '/more', Icon: MoreIcon },
 ];
 
 // nav.nav: the bottom menu on every signed in screen

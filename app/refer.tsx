@@ -1,4 +1,5 @@
 import * as Clipboard from 'expo-clipboard';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Share, StyleSheet, Text, View } from 'react-native';
 import { crm, Referral } from '../src/crm';
@@ -14,6 +15,7 @@ import { Copy, Disp, Eyebrow, Small } from '../src/ui/T';
 
 // 12 REFER
 export default function Refer() {
+  const router = useRouter();
   const { summary: s, failed } = useData();
   const [listFailed, setListFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -53,7 +55,7 @@ export default function Refer() {
   }
 
   return (
-    <Screen tab="home" back title="Refer a Friend" status={statusOf(s && list, failed || listFailed)} refreshing={false} onRefresh={() => setAttempt((a) => a + 1)}>
+    <Screen tab="more" back onBack={() => router.navigate('/more')} title="Refer a Friend" status={statusOf(s && list, failed || listFailed)} refreshing={false} onRefresh={() => setAttempt((a) => a + 1)}>
       <Gap />
       <Disp>Refer a Friend</Disp>
       <Gap size="s" />

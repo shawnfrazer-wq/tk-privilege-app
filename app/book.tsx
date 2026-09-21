@@ -36,7 +36,7 @@ export default function Book() {
   const [loadFailed, setLoadFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
 
-  // asked for in docs/crm-requests.md: the maintenance service for her method
+  // the maintenance service for her method, from app_summary
   const service = s?.care_service_id ?? null;
   const serviceName = s?.care_service_name ?? '';
 

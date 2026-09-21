@@ -27,7 +27,6 @@ function greeting(now: number, name: string) {
 
 function careCardLine(s: Summary, rate: number): string {
   const pts = num(s.card_reward_points);
-  // card_reward_pounds is asked for in docs/crm-requests.md; until then the rate from app_settings converts it
   const gbp = pounds(s.card_reward_pounds ?? s.card_reward_points / (rate || 10));
   if (!s.card_boxes) return `Your first care visit fills the first box. A full card is ${pts} points, ${gbp}.`;
   return `${num(s.card_boxes)} of ${num(s.card_target)}. A full card is ${pts} points, ${gbp}.`;

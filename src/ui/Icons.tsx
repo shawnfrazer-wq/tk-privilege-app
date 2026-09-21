@@ -14,6 +14,18 @@ const base = (size: number, color: string, width: number) => ({
 });
 
 // nav icons, stroke 1.3
+export const MoreIcon = ({ color, size = 20 }: P) => (
+  <Svg {...base(size, color, 1.3)}>
+    <Path d="M4 7h16M4 12h16M4 17h16" />
+  </Svg>
+);
+export const InfoIcon = ({ color, size = 20 }: P) => (
+  <Svg {...base(size, color, 1.3)}>
+    <Circle cx="12" cy="12" r="9" />
+    <Path d="M12 11v5" />
+    <Path d="M12 8h.01" />
+  </Svg>
+);
 export const HomeIcon = ({ color, size = 20 }: P) => (
   <Svg {...base(size, color, 1.3)}>
     <Path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z" />

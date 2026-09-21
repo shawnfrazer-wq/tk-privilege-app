@@ -34,12 +34,7 @@ All of these are SECURITY DEFINER, granted to authenticated, and salon.api_guard
 
 ## Still needed from the CRM
 
-Delivered by the CRM chat on 21 September and already read by the app: next_appointment_location, band2_last_day, band3_last_day, pending_pounds_band2, pending_pounds_band3, pending_pounds_at_next_appointment, card_reward_pounds and next_tier_visits on app_summary, and the test numbers.
-
-1. **app_summary: care_service_id and care_service_name** (the maintenance service for her method, for example Micro Ring Maintenance for micro_rings). app_free_times and app_request_booking both take a service id, and nothing the app may call returns which service is her care visit. salon.services carries a method_code and privilege_role, so the CRM can pick it. **Until this lands the Book screen shows no days or times and Request this booking stays off.** The summary line "What you are booking" shows care_service_name.
-2. **Deleting the sign in user after app_delete_account.** The guide says the app's own server must delete her auth user with the admin API, but there is no app server. As it stands her sign in user remains, and app_link would reactivate a membership marked left the next time she signs in. The CRM chat needs to decide where that deletion runs (an edge function called by the app, or a job that removes auth users whose membership has ended).
-3. **app_price_list: for_me** (boolean, true when the service suits her family). rules.md section 8 says Rewards filters to her family by default with a link to the whole price list. The app reads for_me when present and shows the link; until then it shows every row and no link.
-4. **app_summary: a line for the top of Rewards.** The wireframe reads "1,240 points. That is a free Tint Regrowth today, with £16 to spare." That needs the dearest colour service she can cover and the pounds left over, which the app must not work out. Until the CRM returns them the app shows "1,240 points. Anything on the price list, at any visit."
+Nothing, as of the second read of every app_ function on 21 September. Delivered and wired: next_appointment_location, band2_last_day, band3_last_day, pending_pounds_band2, pending_pounds_band3, pending_pounds_at_next_appointment, card_reward_pounds, next_tier_visits, family, care_service_id, care_service_name, best_reward_name and best_reward_spare_pounds on app_summary; family on app_price_list; app_delete_account now deletes the sign in user itself; and the test numbers.
 
 ## Wireframe questions, not CRM
 
@@ -48,6 +43,7 @@ Stage 2 additions, built as described and open to change:
 - Home carries 4 rows under the Care Card (Your Points, Refer a Friend, Leave a Review, Your Details) in the Contact row style, as Shawn asked on 21 September. The 4 line icons are the app's own.
 - Home while a booking request is waiting: decisions-21-sep.md says the app shows it as Requested. The app shows the heading "Requested" (the Requested screen's own word) with the request's date, service, stylist and time in the next appointment layout, and no Book button.
 - Book for a client with no care date (toppers, wigs and clip-ins): the wireframe heading "Your Care Date Is 14 November" has nothing to fill it, so the app shows "Your Next Visit".
+- Home rows, the More tab and its 7 rows, and the back arrows to More on Contact, FAQs, Refer a Friend, Review and Your Details are as Shawn set them on 21 September. The line icons on those rows are the app's own.
 - Book with no preferred stylist: the wireframe shows only "Tatiana's times". The app uses her preferred stylist, or the first stylist app_stylists returns when she has no preference.
 - Selects on Your Details (birthday, stylist, best way to contact you) open a bottom sheet of choices, since native has no dropdown control. Delete my account asks once in the phone's own confirm dialogue, using the wireframe's own sentence, before calling the CRM.
 - The share button on Refer a Friend copies the message and opens the phone's share sheet, so "Copied, now pick an app" is literal.

@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { C, F } from '../src/theme';
@@ -62,10 +63,11 @@ function Item({ q, a, open, onPress }: { q: string; a: string; open: boolean; on
 
 // 16 QUESTIONS, fixed text
 export default function Faqs() {
+  const router = useRouter();
   const [open, setOpen] = useState<string | null>(HAIR[0][0]);
   const toggle = (q: string) => setOpen((cur) => (cur === q ? null : q));
   return (
-    <Screen tab="contact" back title="FAQs">
+    <Screen tab="more" back onBack={() => router.navigate('/more')} title="FAQs">
       <Gap />
       <Disp>FAQs</Disp>
       <Gap size="s" />
@@ -95,5 +97,5 @@ const f = StyleSheet.create({
   summary: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 14 },
   q: { flex: 1, fontFamily: F.reg, fontSize: 13, color: C.ink },
   mark: { fontFamily: F.reg, fontSize: 16, lineHeight: 18, color: C.mute },
-  a: { fontFamily: F.reg, fontSize: 12, lineHeight: 20.4, color: C.grey, marginTop: 10, textAlign: 'justify' },
+  a: { fontFamily: F.reg, fontSize: 13, lineHeight: 22, color: C.grey, marginTop: 10, textAlign: 'justify' },
 });
