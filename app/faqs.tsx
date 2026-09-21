@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
+import Animated, { FadeIn, FadeOut, LinearTransition } from 'react-native-reanimated';
 import { C, F } from '../src/theme';
 import { Gap } from '../src/ui/Gap';
 import { Screen } from '../src/ui/Screen';
@@ -48,16 +49,27 @@ const POINTS: [string, string][] = [
   ],
 ];
 
-// details / summary
+// details / summary as an accordion: one answer open at a time, the first open to start, + closed and a dash open.
+// The row moves and the answer fades with Reanimated, so opening and closing are smooth.
 function Item({ q, a, open, onPress }: { q: string; a: string; open: boolean; onPress: () => void }) {
   return (
-    <View style={f.details}>
-      <Pressable onPress={onPress} accessibilityRole="button" accessibilityState={{ expanded: open }} style={f.summary}>
+    <Animated.View layout={LinearTransition.duration(220)} style={f.details}>
+      <Pressable
+        onPress={onPress}
+        accessibilityRole="button"
+        accessibilityState={{ expanded: open }}
+        hitSlop={{ top: 10, bottom: 10 }}
+        style={({ pressed }) => [f.summary, pressed && { opacity: 0.6 }]}
+      >
         <Text style={f.q}>{q}</Text>
         <Text style={f.mark}>{open ? '–' : '+'}</Text>
       </Pressable>
-      {open && <Text style={f.a}>{a}</Text>}
-    </View>
+      {open && (
+        <Animated.View entering={FadeIn.duration(180)} exiting={FadeOut.duration(120)}>
+          <Text style={f.a}>{a}</Text>
+        </Animated.View>
+      )}
+    </Animated.View>
   );
 }
 
@@ -79,23 +91,25 @@ export default function Faqs() {
         <Item key={q} q={q} a={a} open={open === q} onPress={() => toggle(q)} />
       ))}
 
-      <Gap size="l" />
-      <Eyebrow>Your points</Eyebrow>
-      <Gap size="s" />
-      {POINTS.map(([q, a]) => (
-        <Item key={q} q={q} a={a} open={open === q} onPress={() => toggle(q)} />
-      ))}
+      <Animated.View layout={LinearTransition.duration(220)}>
+        <Gap size="l" />
+        <Eyebrow>Your points</Eyebrow>
+        <Gap size="s" />
+        {POINTS.map(([q, a]) => (
+          <Item key={q} q={q} a={a} open={open === q} onPress={() => toggle(q)} />
+        ))}
 
-      <Gap size="l" />
-      <Small>Anything else, message the salon from the Contact tab and we will answer it.</Small>
+        <Gap size="l" />
+        <Small>Anything else, message the salon from the Contact tab and we will answer it.</Small>
+      </Animated.View>
     </Screen>
   );
 }
 
 const f = StyleSheet.create({
   details: { borderBottomWidth: 1, borderBottomColor: C.hairSoft, paddingVertical: 15 },
-  summary: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 14 },
+  summary: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 14, minHeight: 24 },
   q: { flex: 1, fontFamily: F.reg, fontSize: 13, color: C.ink },
-  mark: { fontFamily: F.reg, fontSize: 16, lineHeight: 18, color: C.mute },
+  mark: { fontFamily: F.reg, fontSize: 16, lineHeight: 18, color: C.mute, width: 14, textAlign: 'right' },
   a: { fontFamily: F.reg, fontSize: 13, lineHeight: 22, color: C.grey, marginTop: 10, textAlign: 'justify' },
 });
