@@ -46,28 +46,30 @@ export type Summary = {
   // the dearest colour service her balance covers, and what is left over; both null when nothing is covered
   best_reward_name: string | null;
   best_reward_spare_pounds: number | null;
-  // 22 September contract (docs/tiers-app-brief.md section 6). Optional until the CRM carries them.
-  tier_until?: string | null;
-  tier_points?: number | null;
-  tier_points_from?: string | null;
-  care_card_needed?: boolean | null;
-  next_tier?: Tier | null;
-  next_tier_points?: number | null;
-  keep_year_next?: number | null;
-  keep_points?: number | null;
-  free_colour_left_pounds?: number | null;
-  davines_gift_owed?: boolean | null;
-  davines_gift_pounds?: number | null;
-  maintenance_perk_next?: boolean | null;
-  first_colour_offer?: boolean | null;
-  booking_bonus_date?: string | null;
-  has_had_maintenance?: boolean | null;
-  // kept by the CRM for now, no longer shown
-  kept_bonus?: number | null;
-  kept_bonus_date?: string | null;
-  visits_12m?: number | null;
-  visits_to_next_tier?: number | null;
-  next_tier_visits?: number | null;
+  // the 22 September contract (docs/tiers-app-brief.md section 6), live in the CRM
+  tier_until: string | null;
+  tier_points: number;
+  tier_points_from: string | null;
+  care_card_needed: boolean;
+  next_tier: Tier | null;
+  next_tier_points: number | null;
+  keep_year_next: number | null;
+  keep_points: number | null;
+  // counted maintenances this tier year, and whether the Care Card condition for the tier is met
+  tier_card_boxes: number;
+  tier_card_done: boolean;
+  free_colour_left_pounds: number;
+  davines_gift_owed: boolean;
+  davines_gift_pounds: number;
+  maintenance_perk_next: boolean;
+  first_colour_offer: boolean;
+  booking_bonus_date: string | null;
+  has_had_maintenance: boolean;
+  // her own method's weeks, null for toppers, wigs and clip-ins
+  care_weeks: number | null;
+  full_weeks: number | null;
+  three_quarter_weeks: number | null;
+  half_weeks: number | null;
 };
 
 export type TierRules = {
@@ -79,11 +81,13 @@ export type TierRules = {
   care_visit_min_pounds: number;
   gap_weeks_tapes: number;
   gap_weeks_other: number;
-  // asked for in docs/crm-requests.md: the band weeks behind the general copy; the wireframe's figures are the fallback
-  band_weeks?: { micro?: BandWeeks | null; tapes?: BandWeeks | null } | null;
+  booking_bonus_points: number;
+  first_colour_discount_pct: number;
+  // the band weeks by method code; null for toppers, wigs and clip-ins, which have no clock
+  band_weeks: Record<string, BandWeeks | undefined>;
 };
 
-export type BandWeeks = { full: number; three_quarters: number; half: number };
+export type BandWeeks = { care_weeks: number | null; full_weeks: number | null; three_quarter_weeks: number | null; half_weeks: number | null };
 
 export type TierPerk = {
   tier: Tier;
@@ -162,8 +166,8 @@ export type Visit = {
   new_set: boolean | null;
   points: number | null;
   status: string | null;
-  // false for a top up (22 September); missing until the CRM carries it
-  counted?: boolean | null;
+  // false for a top up
+  counted: boolean | null;
 };
 
 export type Visits = {

@@ -24,13 +24,13 @@ const ROWS: Row[] = [
   { label: 'Davines gift', cell: (p) => (p.davines_gift_pounds ? pounds(p.davines_gift_pounds) : NO) },
 ];
 
-// 8 TIER PERKS. The table is app_tier_perks, her column highlighted. Without it the table stands empty.
+// 8 TIER PERKS. The table is app_tier_perks, her column highlighted.
 export default function TierPerks() {
   const { summary: s, tierPerks, failed, refreshing, refresh } = useData();
-  if (!s) {
-    return <Screen tab="card" back title="Tier Perks" refreshing={refreshing} onRefresh={refresh} status={statusOf(s, failed)}>{null}</Screen>;
+  if (!s || !tierPerks) {
+    return <Screen tab="card" back title="Tier Perks" refreshing={refreshing} onRefresh={refresh} status={statusOf(s && tierPerks, failed)}>{null}</Screen>;
   }
-  const perk = (t: Tier) => tierPerks?.find((p) => p.tier === t) ?? null;
+  const perk = (t: Tier) => tierPerks.find((p) => p.tier === t) ?? null;
   const mine = (t: Tier) => t === s.tier;
 
   return (

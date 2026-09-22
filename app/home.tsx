@@ -23,7 +23,7 @@ function greeting(now: number, name: string) {
 }
 
 // "first" only when she has never had a maintenance with the salon; the usual case is "next"
-export const firstOrNext = (s: Summary) => (s.has_had_maintenance === false ? 'first' : 'next');
+export const firstOrNext = (s: Summary) => (s.has_had_maintenance ? 'next' : 'first');
 
 function careCardLine(s: Summary, rate: number): string {
   const pts = num(s.card_reward_points);
@@ -45,12 +45,12 @@ export default function Home() {
   const rate = Number(settings?.redeem_rate_points_per_pound) || 10;
   const next = s.next_appointment_at;
   const waiting = !next && requests && requests.length > 0 ? requests[0] : null;
-  const isNew = !next && !waiting && !s.balance_points && !s.pending_points && s.has_had_maintenance === false;
+  const isNew = !next && !waiting && !s.balance_points && !s.pending_points && !s.has_had_maintenance;
   const t = track(s);
   const who = [s.next_appointment_services, s.next_appointment_stylists].filter(Boolean).join(' with ');
   const where = s.next_appointment_location ? `, ${s.next_appointment_location}` : '';
   const days = s.days_to_care_date;
-  const freeColour = s.free_colour_left_pounds ?? 0;
+  const freeColour = s.free_colour_left_pounds;
 
   return (
     <Screen tab="home" brand refreshing={refreshing} onRefresh={refresh}>
@@ -107,7 +107,7 @@ export default function Home() {
           )}
         </View>
         <View style={h.tile}>
-          <Text style={h.tileBig}>{s.tier_points != null ? num(s.tier_points) : ' '}</Text>
+          <Text style={h.tileBig}>{num(s.tier_points)}</Text>
           <Text style={h.tileSmall}>{t.tileSmall}</Text>
         </View>
       </View>

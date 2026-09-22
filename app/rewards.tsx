@@ -60,7 +60,7 @@ export default function Rewards() {
         <Disp>Your Rewards</Disp>
         <Gap size="s" />
         <Copy>
-          Nothing to spend yet. Your {s.has_had_maintenance === false ? 'first' : 'next'} maintenance earns TK Points, and everything you can have with them will show here.
+          Nothing to spend yet. Your {s.has_had_maintenance ? 'next' : 'first'} maintenance earns TK Points, and everything you can have with them will show here.
         </Copy>
         <Gap size="s" />
         <TextLink label="How points work" onPress={() => router.push('/how-points-work')} />

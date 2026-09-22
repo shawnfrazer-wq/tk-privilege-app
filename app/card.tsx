@@ -59,7 +59,7 @@ export default function Card() {
       <Gap />
       <Kinds>
         <Kind label="TK Points" big={num(s.balance_points)} sub={`${pounds(s.balance_pounds)} to spend`} />
-        <Kind label="Tier Points" big={s.tier_points != null ? num(s.tier_points) : ' '} sub={normal.sub} />
+        <Kind label="Tier Points" big={num(s.tier_points)} sub={normal.sub} />
       </Kinds>
       <Gap size="s" />
       <Copy>10 TK Points is £1, off anything on our price list, at any visit. Tier Points move you up a tier and are not for spending.</Copy>

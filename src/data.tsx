@@ -39,7 +39,6 @@ type Data = {
   ledger: LedgerLine[] | null;
   visits: Visits | null;
   requests: BookingRequest[] | null;
-  // null until the CRM carries app_tier_rules and app_tier_perks; the screens show the layout without figures
   tierRules: TierRules | null;
   tierPerks: TierPerk[] | null;
   failed: boolean;
@@ -99,14 +98,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         crm.summary(),
         settings ? Promise.resolve(settings) : crm.settings(),
         crm.bookingRequests().catch(() => [] as BookingRequest[]),
-        crm.tierRules().catch((e) => {
-          console.warn('app_tier_rules not available', e?.message);
-          return null;
-        }),
-        crm.tierPerks().catch((e) => {
-          console.warn('app_tier_perks not available', e?.message);
-          return null;
-        }),
+        crm.tierRules(),
+        crm.tierPerks(),
       ]);
       setSummary(s);
       setSettings(st);

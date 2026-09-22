@@ -34,18 +34,20 @@ All of these are SECURITY DEFINER, granted to authenticated, and salon.api_guard
 
 ## Still needed from the CRM
 
-### 22 September check: the tiers contract (docs/tiers-app-brief.md section 6)
+Nothing, as of 22 September. The whole tiers contract is live and wired.
 
-Every app_ function was read again from the database on 22 September after the tiers brief. None of the new contract is live yet. The app reads every item below as optional: each screen shows its layout, and the figures appear as soon as the CRM sends them. Nothing is typed into the app.
+### Done on 22 September (the tiers contract, docs/tiers-app-brief.md section 6)
 
-1. **app_tier_rules()**: jsonb with gold_achieve, gold_keep, black_achieve, black_keep, care_card_boxes, care_visit_min_pounds, gap_weeks_tapes, gap_weeks_other. Used on How Points Work, How Tiers Work and the Card screen (tapping a tier chip). Until it lands, the sentences that carry those figures are shown without them ("Fill a Care Card and earn Tier Points.") and the Example note on How Tiers Work is left out.
-2. **app_tier_perks()**: rows tier, earn_rate, colour_discount_pct, davines_discount_pct, free_colour_pounds, maintenance_perk, birthday_points, davines_gift_pounds. Used for the Tier Perks table and the earn rates on How Points Work. Until it lands the table shows its headings, row labels and her highlighted column with empty cells.
-3. **app_summary gains**: tier_until, tier_points, tier_points_from, care_card_needed, next_tier, next_tier_points, keep_year_next, keep_points, free_colour_left_pounds, davines_gift_owed, davines_gift_pounds, maintenance_perk_next, first_colour_offer, booking_bonus_date. Used on Home (Tier Points tile, free colour and Davines gift lines, "Wash and blow dry included"), Card (Tier Points box, "Gold until", the tier line and bar, "Reviewed on 1 January") and How Tiers Work (status line, Your Next Tier or Staying Black, the 2 bars). Until they land the Tier Points figures are blank and those lines are hidden.
-4. **app_summary: has_had_maintenance** (boolean). The app says "your first maintenance" only when this is false, and "your next maintenance" otherwise, on Home (Care Card line), Rewards (nothing to spend yet) and Book. Until it lands every client sees "next".
-5. **app_summary loses** kept_bonus, kept_bonus_date, visits_12m, visits_to_next_tier and next_tier_visits. The app no longer reads them. The pending block's booking line reads "Plus 100 booking points when you come in on [booking_bonus_date]", and uses next_appointment_at until booking_bonus_date lands.
-6. **app_visits rows gain counted** (boolean). Your Recent Visits shows "Top up. Points added to your next maintenance." when it is false. Until it lands no visit is marked a top up.
-7. **app_ledger wording**: the ledger titles still read "Pending until your next visit", "Keeping it, pending" and "Kept your appointment". The wireframe reads "Pending until your next maintenance" and the booking bonus line "Booked at the desk on 19 September. Yours when you come in on 14 November." The app shows the titles as the CRM sends them, so these are for the CRM chat.
-8. **app_tier_rules: band_weeks** for the general copy on How Points Work and in the FAQ "When should I come in to earn the most?": `band_weeks: { micro: { full, three_quarters, half }, tapes: { full, three_quarters, half } }` in weeks, where micro covers micro rings, micro bonds and wefts. The app uses these when sent and the wireframe's figures as the fallback (micro 9, 11, 13 shown as 3 months; tapes 7, 9, 11). Her own dates and values in the pending block already come from app_summary.
+- app_tier_rules(): gold_achieve, gold_keep, black_achieve, black_keep, care_card_boxes, care_visit_min_pounds, gap_weeks_tapes, gap_weeks_other, booking_bonus_points, first_colour_discount_pct, and band_weeks by method code (care_weeks, full_weeks, three_quarter_weeks, half_weeks; null for toppers, wigs and clip-ins). Used on How Points Work, How Tiers Work, the FAQ band answer and the Card tier counter. The wireframe fallback for the band weeks is retired; 13 weeks reads as 3 months as the wireframe has it.
+- app_tier_perks(): the Tier Perks table and the earn rates on How Points Work.
+- app_summary: tier_until, tier_points, tier_points_from, care_card_needed, next_tier, next_tier_points, keep_year_next, keep_points, tier_card_boxes and tier_card_done (the Care Card bar on How Tiers Work), free_colour_left_pounds, davines_gift_owed, davines_gift_pounds, maintenance_perk_next, first_colour_offer, booking_bonus_date, has_had_maintenance, and her method's care_weeks, full_weeks, three_quarter_weeks and half_weeks.
+- app_summary no longer returns kept_bonus, kept_bonus_date, visits_12m, visits_to_next_tier or next_tier_visits, and the app no longer reads them.
+- app_visits rows carry counted; a top up says so on Your Recent Visits.
+- Referral codes without spaces (APPLE86).
+
+### For the CRM chat, wording only
+
+- app_ledger titles still read "Pending until your next visit", "Keeping it, pending" and "Kept your appointment". The wireframe reads "Pending until your next maintenance" and the booking bonus line "Booked at the desk on 19 September. Yours when you come in on 14 November." The app shows the titles as the CRM sends them.
 
 ### Delivered earlier and wired
 

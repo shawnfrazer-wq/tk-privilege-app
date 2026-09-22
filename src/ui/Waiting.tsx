@@ -17,7 +17,7 @@ export function Waiting({ summary: s }: { summary: Summary }) {
   const late = booked && apptBand > 1;
   const runOut = !noClock && ![1, 2, 3].includes(band);
 
-  if (!pending && s.has_had_maintenance === false) return null;
+  if (!pending && !s.has_had_maintenance) return null;
 
   const showFig = pending > 0 && !runOut;
   const ladder = pending > 0 && !noClock && !runOut;
