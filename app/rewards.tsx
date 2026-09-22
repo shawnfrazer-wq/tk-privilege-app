@@ -10,24 +10,36 @@ import { Gap } from '../src/ui/Gap';
 import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Disp, Small } from '../src/ui/T';
 
-type Mode = 'colour' | 'hair' | 'davines' | 'all';
+type Mode = 'hair' | 'colour' | 'davines' | 'all';
 const FILTERS: [Mode, string][] = [
-  ['colour', 'Colour'],
   ['hair', 'Hair'],
+  ['colour', 'Colour'],
   ['davines', 'Davines'],
   ['all', 'All'],
 ];
 const ORDER: PriceRow['section'][] = ['colour', 'other', 'hair', 'davines'];
 const SECTION: Record<PriceRow['section'], string> = { colour: 'Colour', other: 'For Your Hair', hair: 'Cuts, Styling and Treatments', davines: 'Davines' };
 
-// 8 REWARDS. Only what she can have today with her TK Points, filtered to her hair. Opens on Colour.
+// Maintenance and re-do services are never rewards, whatever app_price_list sends: their price varies.
+const NEVER = /\b(care|re-?do|refit|maintenance)\b/i;
+const isService = (r: PriceRow) => r.section !== 'davines';
+const allowed = (r: PriceRow) => !(isService(r) && NEVER.test(r.name));
+
+// A capital on every word of a reward name, the rest of each word as the CRM sends it
+export function titleCase(name: string): string {
+  return name.replace(/(^|[\s\-/("'])([a-z])/g, (_m, before: string, ch: string) => before + ch.toUpperCase());
+}
+
+const inMode = (r: PriceRow, mode: Mode) => mode === 'all' || r.section === mode || (mode === 'hair' && r.section === 'other');
+
+// 8 REWARDS. Only what she can have today with her TK Points, filtered to her hair. Opens on Hair.
 export default function Rewards() {
   const router = useRouter();
   const { summary: s, failed, refreshing, refresh } = useData();
   const [rows, setRows] = useState<PriceRow[] | null>(null);
   const [listFailed, setListFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
-  const [mode, setMode] = useState<Mode>('colour');
+  const [mode, setMode] = useState<Mode>('hair');
 
   useEffect(() => {
     setListFailed(false);
@@ -41,11 +53,11 @@ export default function Rewards() {
 
   const fam = s?.family ?? null;
   const balance = s?.balance_points ?? 0;
+  const mine = useMemo(() => (rows ?? []).filter((r) => (r.family === 'all' || r.family === fam) && r.points <= balance && allowed(r)), [rows, fam, balance]);
   const shown = useMemo(() => {
-    let mine = (rows ?? []).filter((r) => (r.family === 'all' || r.family === fam) && r.points <= balance);
-    if (mode !== 'all') mine = mine.filter((r) => r.section === mode || (mode === 'hair' && r.section === 'other'));
-    return ORDER.map((k) => ({ key: k, rows: mine.filter((r) => r.section === k) })).filter((g) => g.rows.length);
-  }, [rows, fam, balance, mode]);
+    const list = mine.filter((r) => inMode(r, mode));
+    return ORDER.map((k) => ({ key: k, rows: list.filter((r) => r.section === k) })).filter((g) => g.rows.length);
+  }, [mine, mode]);
 
   const retry = () => {
     refresh();
@@ -68,9 +80,17 @@ export default function Rewards() {
     );
   }
 
-  const lead = s?.best_reward_name
-    ? `${num(balance)} TK Points. That is a free ${s.best_reward_name} today, with ${pounds(s.best_reward_spare_pounds)} to spare.`
-    : `${num(balance)} TK Points. Anything on the price list, at any visit.`;
+  // The lead line picks from the chosen filter: the dearest reward in it her balance covers. On Colour that is
+  // app_summary's best_reward_name and best_reward_spare_pounds. For the other filters the CRM sends no best
+  // reward yet (docs/crm-requests.md), so the app picks the dearest row shown and the spare is her balance in
+  // pounds less its price, the same figure app_summary gives for Colour.
+  let lead = `${num(balance)} TK Points. Anything on the price list, at any visit.`;
+  if (mode === 'colour' && s?.best_reward_name) {
+    lead = `${num(balance)} TK Points. That is a free ${titleCase(s.best_reward_name)} today, with ${pounds(s.best_reward_spare_pounds)} to spare.`;
+  } else if (mode !== 'colour' && s) {
+    const best = mine.filter((r) => inMode(r, mode)).reduce<PriceRow | null>((b, r) => (!b || Number(r.price) > Number(b.price) ? r : b), null);
+    if (best) lead = `${num(balance)} TK Points. That is a free ${titleCase(best.name)} today, with ${pounds(Number(s.balance_pounds) - Number(best.price))} to spare.`;
+  }
 
   return (
     <Screen tab="rewards" title="Rewards" status={status} refreshing={refreshing} onRefresh={retry}>
@@ -94,7 +114,7 @@ export default function Rewards() {
           {mode === 'all' && <Text style={r.famnote}>{SECTION[g.key]}</Text>}
           {g.rows.map((row, i) => (
             <View key={row.id} style={[r.reward, i === g.rows.length - 1 && { borderBottomWidth: 0 }]}>
-              <Text style={r.name}>{row.name}</Text>
+              <Text style={r.name}>{titleCase(row.name)}</Text>
               <View style={{ alignItems: 'flex-end' }}>
                 <Text style={r.pts}>{num(row.points)}</Text>
                 <Text style={r.price}>{pounds(row.price)}</Text>

@@ -35,7 +35,7 @@ function careCardLine(s: Summary, rate: number): string {
 // 4 HOME
 export default function Home() {
   const router = useRouter();
-  const { summary: s, settings, requests, failed, updatedAt, refreshing, refresh } = useData();
+  const { summary: s, settings, requests, tierPerks, failed, updatedAt, refreshing, refresh } = useData();
   const now = useNow();
 
   if (!s) {
@@ -51,6 +51,9 @@ export default function Home() {
   const where = s.next_appointment_location ? `, ${s.next_appointment_location}` : '';
   const days = s.days_to_care_date;
   const freeColour = s.free_colour_left_pounds;
+  // "left" once the desk has used some of her tier's free colour (app_tier_perks gives the tier's full amount)
+  const colourFull = tierPerks?.find((p) => p.tier === s.tier)?.free_colour_pounds;
+  const colourUsed = colourFull != null && freeColour < Number(colourFull);
 
   return (
     <Screen tab="home" brand refreshing={refreshing} onRefresh={refresh}>
@@ -116,7 +119,7 @@ export default function Home() {
           {freeColour > 0 && (
             <View style={h.perkline}>
               <View style={h.dot} />
-              <Text style={h.perkText}>You have {pounds(freeColour)} of free colour</Text>
+              <Text style={h.perkText}>You have {pounds(freeColour)} of free colour{colourUsed ? ' left' : ''}</Text>
             </View>
           )}
           {s.davines_gift_owed && (

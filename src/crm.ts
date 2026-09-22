@@ -39,6 +39,12 @@ export type Summary = {
   pending_pounds_band2: number | null;
   pending_pounds_band3: number | null;
   pending_pounds_at_next_appointment: number | null;
+  // the TK Points behind each date on the pending block, live since 22 September
+  pending_points_full: number;
+  pending_points_band2: number;
+  pending_points_band3: number;
+  // the TK Points her booked appointment would release; asked of the CRM chat (docs/crm-requests.md)
+  pending_points_at_next_appointment?: number | null;
   card_reward_pounds: number | null;
   family: string | null;
   care_service_id: string | null;

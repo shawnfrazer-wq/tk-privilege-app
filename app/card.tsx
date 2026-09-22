@@ -44,7 +44,8 @@ export default function Card() {
       <Gap size="s" />
       <Small style={c.centre}>Reception will find you by name. Nothing to scan.</Small>
 
-      {/* Wallet passes are stage 3. The badges are drawn as the wireframe shows them and are wired then. */}
+      {/* Wallet passes are stage 3. The badges are drawn as the wireframe shows them and are wired then. Once the
+          card is in Apple Wallet or Google Wallet on this phone, that button is hidden (docs/build-and-release-plan.md). */}
       <View style={c.wallets}>
         <Pressable accessibilityRole="button" accessibilityLabel="Add to Apple Wallet">
           <Image source={badgeApple} style={{ height: 44, width: 44 * (738 / 228) }} resizeMode="contain" />

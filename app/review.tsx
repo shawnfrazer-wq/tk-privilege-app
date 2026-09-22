@@ -6,6 +6,7 @@ import { Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native'
 import { crm } from '../src/crm';
 import { useData } from '../src/data';
 import { openOutside } from '../src/links';
+import { draftKey } from '../src/supabase';
 import { C, F, ls } from '../src/theme';
 import { CopyBtn } from '../src/ui/CopyBtn';
 import { TextArea } from '../src/ui/Field';
@@ -15,21 +16,24 @@ import { Copy, Disp, Hint, Small } from '../src/ui/T';
 
 const markGoogle = require('../assets/mark_google.png');
 const markTrustpilot = require('../assets/mark_trustpilot.png');
-const DRAFT_KEY = 'tk_review';
 const GOOGLE_FALLBACK = 'https://g.page/r/CWVX24-xJAz7EBM/review';
 const LONG_ENOUGH = 60;
 
-// 13 REVIEW. The draft is kept on the phone, so it survives leaving the app, backgrounding and a force quit.
+// 13 REVIEW. The draft is kept on the phone under the signed in client's own key, so it survives leaving the app,
+// backgrounding and a force quit, is cleared on sign out, and is never shown to another account.
 export default function Review() {
   const router = useRouter();
   const { settings, failed, refreshing, refresh } = useData();
   const [text, setText] = useState('');
   const [copyLabel, setCopyLabel] = useState('Copy');
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const key = useRef<string | null>(null);
 
   useEffect(() => {
-    AsyncStorage.getItem(DRAFT_KEY)
-      .then((v) => {
+    draftKey()
+      .then(async (k) => {
+        key.current = k;
+        const v = k ? await AsyncStorage.getItem(k) : null;
         if (v !== null) setText(v);
       })
       .catch(() => {});
@@ -40,7 +44,7 @@ export default function Review() {
 
   function change(v: string) {
     setText(v);
-    AsyncStorage.setItem(DRAFT_KEY, v).catch(() => {});
+    if (key.current) AsyncStorage.setItem(key.current, v).catch(() => {});
   }
 
   async function copy() {

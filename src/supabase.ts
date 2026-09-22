@@ -8,6 +8,9 @@ export const SUPABASE_KEY = 'sb_publishable_jWITKqsg98dIrBIw3Y0DCQ_K1NNBKc2';
 
 const REMEMBER_KEY = 'tk_remember';
 const SIGNED_IN_AT_KEY = 'tk_signed_in_at';
+// the review draft, one key per client (tk_review_draft_<user id>); 'tk_review' is the old build's shared key
+export const DRAFT_PREFIX = 'tk_review_draft_';
+const OLD_DRAFT_KEYS = ['tk_review'];
 export const NINETY_DAYS_MS = 90 * 24 * 60 * 60 * 1000;
 
 // "Keep me signed in for 90 days". On by default.
@@ -75,8 +78,25 @@ export async function sessionStillGood(): Promise<boolean> {
   return true;
 }
 
+// the signed in client's own draft key, or null when nobody is signed in
+export async function draftKey(): Promise<string | null> {
+  const { data } = await supabase.auth.getSession();
+  const id = data.session?.user.id;
+  return id ? DRAFT_PREFIX + id : null;
+}
+
+// every review draft on the phone, this client's and any older build's
+export async function clearDrafts(): Promise<void> {
+  try {
+    const keys = await AsyncStorage.getAllKeys();
+    const mine = keys.filter((k) => k.startsWith(DRAFT_PREFIX) || OLD_DRAFT_KEYS.includes(k));
+    if (mine.length) await AsyncStorage.multiRemove(mine);
+  } catch {}
+}
+
 // localOnly: the sign in user is already gone on the server (Delete my account), so only the phone is cleared
 export async function signOut(localOnly = false): Promise<void> {
   await AsyncStorage.removeItem(SIGNED_IN_AT_KEY);
+  await clearDrafts();
   await supabase.auth.signOut(localOnly ? { scope: 'local' } : undefined);
 }

@@ -15,22 +15,14 @@ export function spell(weeks: number | null | undefined): string {
   return `${num(weeks)} weeks`;
 }
 
-// "Every 3 months earns half points. Every 11 weeks, three quarters. Every 9 weeks, full points."
-export function bandSentence(rules: TierRules | null, family: 'micro' | 'tapes'): string {
-  const w = bandWeeks(rules, family);
-  if (!w) return '';
-  return `Every ${spell(w.half_weeks)} earns half points. Every ${spell(w.three_quarter_weeks)}, three quarters. Every ${spell(w.full_weeks)}, full points.`;
-}
-
-// the FAQ answer "When should I come in to earn the most?"
+// the FAQ answer "When should I come in to earn the most?": numbers only, never half, three quarters or full
 export function bandFaq(rules: TierRules | null): string {
   const m = bandWeeks(rules, 'micro');
   const t = bandWeeks(rules, 'tapes');
   if (!m || !t) return 'Come back earlier, earn more.';
   return (
-    `Come back earlier, earn more. Micro rings, micro bonds and wefts: come in for your maintenance within ${spell(m.full_weeks)} of your last one and you earn full points, 10% back. ` +
-    `Within ${spell(m.three_quarter_weeks)}, three quarters, 7.5% back. Within ${spell(m.half_weeks)}, half, 5% back. ` +
-    `Tapes: within ${spell(t.full_weeks)}, full points. Within ${spell(t.three_quarter_weeks)}, three quarters. Within ${spell(t.half_weeks)}, half. ` +
-    `So if you always come in at 12 weeks for micro rings, you earn half points every time.`
+    `Come back earlier, earn more. Take a £400 maintenance at Silver. Micro rings, micro bonds and wefts: come in for your next maintenance within ${spell(m.full_weeks)} and it earns 400 TK Points, £40. ` +
+    `Within ${spell(m.three_quarter_weeks)}, 300 TK Points, £30. Within ${spell(m.half_weeks)}, 200 TK Points, £20. ` +
+    `Tapes: within ${spell(t.full_weeks)}, 400 TK Points. Within ${spell(t.three_quarter_weeks)}, 300. Within ${spell(t.half_weeks)}, 200.`
   );
 }

@@ -9,7 +9,7 @@ import { Kind, Kinds } from '../src/ui/Kinds';
 import { Know, RowBtn, SRow } from '../src/ui/Rows';
 import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Disp, Sect } from '../src/ui/T';
-import { bandSentence, bandWeeks, spell } from '../src/ui/bands';
+import { bandWeeks, spell } from '../src/ui/bands';
 
 // 6 HOW POINTS WORK. The fixed text is the wireframe's; the figures in it come from app_tier_rules and app_tier_perks.
 export default function HowPointsWork() {
@@ -63,18 +63,16 @@ export default function HowPointsWork() {
       <Gap size="s" />
       <View style={s.egbox}>
         <Text style={s.eyebrow}>Micro rings, micro bonds and wefts</Text>
-        <Copy style={{ marginBottom: 6 }}>{bandSentence(r, 'micro')}</Copy>
-        <SRow gold left={`Every ${spell(micro?.full_weeks)}`} right="All 400" note="£40, full points" />
-        <SRow gold left={`Every ${spell(micro?.three_quarter_weeks)}`} right="300" note="£30, three quarters" />
-        <SRow gold left={`Every ${spell(micro?.half_weeks)}`} right="200" note="£20, half points" last />
+        <SRow gold left={`Every ${spell(micro?.full_weeks)}`} right="400 TK Points" note="£40" />
+        <SRow gold left={`Every ${spell(micro?.three_quarter_weeks)}`} right="300 TK Points" note="£30" />
+        <SRow gold left={`Every ${spell(micro?.half_weeks)}`} right="200 TK Points" note="£20" last />
       </View>
       <Gap size="s" />
       <View style={s.egbox}>
         <Text style={s.eyebrow}>Tapes</Text>
-        <Copy style={{ marginBottom: 6 }}>{bandSentence(r, 'tapes')}</Copy>
-        <SRow gold left={`Every ${spell(tapes?.full_weeks)}`} right="All 400" note="£40, full points" />
-        <SRow gold left={`Every ${spell(tapes?.three_quarter_weeks)}`} right="300" note="£30, three quarters" />
-        <SRow gold left={`Every ${spell(tapes?.half_weeks)}`} right="200" note="£20, half points" last />
+        <SRow gold left={`Every ${spell(tapes?.full_weeks)}`} right="400 TK Points" note="£40" />
+        <SRow gold left={`Every ${spell(tapes?.three_quarter_weeks)}`} right="300 TK Points" note="£30" />
+        <SRow gold left={`Every ${spell(tapes?.half_weeks)}`} right="200 TK Points" note="£20" last />
       </View>
 
       <Gap />

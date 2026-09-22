@@ -30,7 +30,7 @@ export default function Booked() {
           <Gap />
           <Note
             title={`${num(pending)} points pending`}
-            body={`Come back by ${dayMonth(s.full_until)} to earn full points, ${pounds(s.pending_pounds_full)}. It is the day you come in that decides.`}
+            body={`Come back by ${dayMonth(s.full_until)} to earn ${num(s.pending_points_full)} TK Points, ${pounds(s.pending_pounds_full)}. It is the day you come in that decides.`}
           />
         </>
       )}

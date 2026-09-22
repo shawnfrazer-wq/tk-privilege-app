@@ -6,8 +6,9 @@ import { C, F, ls } from '../theme';
 
 const NO_CLOCK = ['topper', 'wig', 'clip_in'];
 
-// .waiting: the gold box with the pending TK Points. "Come Back Earlier. Earn More" with her 3 dated lines,
-// a line whose date has passed hidden, then the booking bonus line. Every date and value is app_summary's.
+// .waiting: the gold box with the pending TK Points. "Come Back Earlier. Earn More" lists each date, earliest
+// first, with the TK Points and pound value the CRM sends for it; a date that has passed drops off. Then the
+// booking bonus line. Every date and figure is app_summary's. Never half, three quarters or full points.
 export function Waiting({ summary: s }: { summary: Summary }) {
   const pending = s.pending_points || 0;
   const noClock = NO_CLOCK.includes(s.method ?? '');
@@ -24,18 +25,20 @@ export function Waiting({ summary: s }: { summary: Summary }) {
   let line: string | null = null;
   if (!pending || runOut) line = 'Earn points on your next maintenance.';
   else if (noClock) line = `Worth ${pounds(s.pending_pounds_full)}, released in full with your next maintenance.`;
-  else if (late) {
-    const share = apptBand === 2 ? 'three quarters' : apptBand === 3 ? 'half points' : null;
-    if (share) line = `Your appointment on ${dayMonth(s.next_appointment_at)} earns ${share}.`;
+  else if (late && s.pending_pounds_at_next_appointment != null) {
+    const pts = s.pending_points_at_next_appointment;
+    const earns = pts != null ? `${num(pts)} TK Points, ${pounds(s.pending_pounds_at_next_appointment)}` : pounds(s.pending_pounds_at_next_appointment);
+    line = `Your appointment on ${dayMonth(s.next_appointment_at)} earns ${earns}.`;
   }
   const bonusDate = s.booking_bonus_date ?? s.next_appointment_at;
   const bonus = showFig && booked && s.booking_bonus > 0 && bonusDate ? `Plus ${num(s.booking_bonus)} booking points when you come in on ${dayMonth(bonusDate)}.` : null;
 
+  // earliest date first; a row shows while its date is still ahead (band_today at or before it)
   const rows = [
-    { show: band <= 3, text: `Come back by ${dayMonth(s.band3_last_day)}: earn half points on your last maintenance.`, value: pounds(s.pending_pounds_band3) },
-    { show: band <= 2, text: `By ${dayMonth(s.band2_last_day)}: earn three quarters.`, value: pounds(s.pending_pounds_band2) },
-    { show: band <= 1, text: `By ${dayMonth(s.full_until)}: earn full points.`, value: pounds(s.pending_pounds_full) },
-  ].filter((r) => r.show);
+    { show: band <= 1, date: s.full_until, points: s.pending_points_full, value: s.pending_pounds_full },
+    { show: band <= 2, date: s.band2_last_day, points: s.pending_points_band2, value: s.pending_pounds_band2 },
+    { show: band <= 3, date: s.band3_last_day, points: s.pending_points_band3, value: s.pending_pounds_band3 },
+  ].filter((r) => r.show && r.date);
 
   return (
     <View style={w.box}>
@@ -46,14 +49,20 @@ export function Waiting({ summary: s }: { summary: Summary }) {
           <Text style={w.unit}>TK Points</Text>
         </View>
       )}
-      {ladder && (
+      {ladder && rows.length > 0 && (
         <>
           <Text style={w.ladhead}>Come Back Earlier. Earn More</Text>
           <View style={w.ladder}>
             {rows.map((r, i) => (
               <View key={i} style={[w.srow, i === rows.length - 1 && !line && !bonus && { borderBottomWidth: 0 }]}>
-                <Text style={w.srowText}>{r.text}</Text>
-                <Text style={w.srowValue}>{r.value}</Text>
+                <Text style={w.srowText}>
+                  {i === 0 ? 'Come back by ' : 'By '}
+                  {dayMonth(r.date)}
+                </Text>
+                <View style={{ alignItems: 'flex-end' }}>
+                  <Text style={w.srowValue}>{num(r.points)} TK Points</Text>
+                  <Text style={w.srowNote}>{pounds(r.value)}</Text>
+                </View>
               </View>
             ))}
           </View>
@@ -76,6 +85,7 @@ const w = StyleSheet.create({
   srow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 16, paddingVertical: 9, borderBottomWidth: 1, borderBottomColor: 'rgba(169,131,81,0.22)' },
   srowText: { flex: 1, fontFamily: F.reg, fontSize: 12, lineHeight: 18, color: C.grey },
   srowValue: { fontFamily: F.reg, fontSize: 13, color: C.ink, textAlign: 'right' },
+  srowNote: { fontFamily: F.reg, fontSize: 10.5, color: C.gold, marginTop: 3, textAlign: 'right' },
   p: { fontFamily: F.reg, fontSize: 12, lineHeight: 19.2, color: C.grey },
   bonus: { marginTop: 8, paddingTop: 8, borderTopWidth: 1, borderTopColor: 'rgba(169,131,81,0.28)', fontSize: 11.5 },
 });

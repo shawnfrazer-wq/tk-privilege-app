@@ -137,6 +137,12 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       loaded.current = { ledger: false, visits: false };
       return;
     }
+    // nothing from an earlier sign in is shown: every screen loads afresh for this client
+    setSummary(null);
+    setLedger(null);
+    setVisits(null);
+    setRequests(null);
+    loaded.current = { ledger: false, visits: false };
     (async () => {
       try {
         // app_link records the visit and confirms the phone still maps to a live client

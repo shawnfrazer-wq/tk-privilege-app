@@ -34,7 +34,13 @@ All of these are SECURITY DEFINER, granted to authenticated, and salon.api_guard
 
 ## Still needed from the CRM
 
-Nothing, as of 22 September. The whole tiers contract is live and wired.
+Asked on 22 September, round 5. The app is built to read these and works without them until they are live:
+
+- app_summary: pending_points_at_next_appointment, the TK Points her booked appointment would release, beside pending_pounds_at_next_appointment. For the Home line "Your appointment on 2 December earns 525 TK Points, £52.50." Until it is sent the line reads "Your appointment on 2 December earns £52.50."
+- app_summary: the best reward for each Rewards filter, not only Colour. The Rewards lead line now picks from the chosen filter (Hair, Colour, Davines, All), so the app needs best_reward_name and best_reward_spare_pounds for hair (cuts, styling, treatments and her hair pieces), davines and all, or one pair keyed by filter. Until then the app picks the dearest row it shows for that filter and takes the spare as balance_pounds less the row's price, the figure app_summary gives for Colour.
+- app_price_list: never send maintenance or re-do services (care, re-do, refit) as rewards. The app drops any such name it sees, but the list should not carry them.
+
+Live on 22 September and wired: pending_points_full, pending_points_band2 and pending_points_band3 on app_summary, the TK Points behind each date on the pending block.
 
 ### Done on 22 September (the tiers contract, docs/tiers-app-brief.md section 6)
 
@@ -45,9 +51,9 @@ Nothing, as of 22 September. The whole tiers contract is live and wired.
 - app_visits rows carry counted; a top up says so on Your Recent Visits.
 - Referral codes without spaces (APPLE86).
 
-### For the CRM chat, wording only
+### Ledger titles, checked 22 September
 
-- app_ledger titles still read "Pending until your next visit", "Keeping it, pending" and "Kept your appointment". The wireframe reads "Pending until your next maintenance" and the booking bonus line "Booked at the desk on 19 September. Yours when you come in on 14 November." The app shows the titles as the CRM sends them.
+The app has never held a ledger title: Your TK Points prints app_ledger's title and detail exactly as sent, and nothing is cached between sign ins. Read through the app's connection on 22 September, app_ledger sends "Waiting for your next maintenance", "Booking bonus, waiting", "Booking bonus", "Released", "Spent at the till", "Review posted, Google", "Referral, Olivia T" and "Care Card complete" for the reviewer's card, which is the CRM's list. The wireframe's line titles are placeholders only.
 
 ### Delivered earlier and wired
 

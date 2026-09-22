@@ -255,6 +255,8 @@ export default function Details() {
       <Gap size="s" />
       <Small style={d.centre}>Changes go to the desk, nothing is overwritten silently.</Small>
       <Gap size="l" />
+      <Btn variant="line" label="Sign out" onPress={() => signOut().catch((e) => console.error('sign out', e))} />
+      <Gap size="l" />
       <View style={{ alignItems: 'center' }}>
         <TextLink label="Delete my account" onPress={remove} style={{ alignSelf: 'center' }} />
       </View>
