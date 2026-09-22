@@ -1,7 +1,7 @@
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Share, StyleSheet, Text, View } from 'react-native';
+import { Linking, Share, StyleSheet, Text, View } from 'react-native';
 import { crm, Referral } from '../src/crm';
 import { useData } from '../src/data';
 import { dayMonth, pounds, signedPoints } from '../src/format';
@@ -16,7 +16,7 @@ import { Copy, Disp, Eyebrow, Small } from '../src/ui/T';
 // 12 REFER
 export default function Refer() {
   const router = useRouter();
-  const { summary: s, failed } = useData();
+  const { summary: s, settings, failed } = useData();
   const [listFailed, setListFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const [list, setList] = useState<Referral[] | null>(null);
@@ -39,10 +39,12 @@ export default function Refer() {
   // the code is app_summary referral_code with every space removed (SHAWN 36 is shown, copied and shared as SHAWN36);
   // the CRM makes it once from her first name at the time and keeps it
   const code = (s?.referral_code ?? '').replace(/\s+/g, '');
-  // what is shared, copied and shown in the What she will see box. No links.
-  const message =
-    `Come to Tatiana Karelina with my code ${code} and you will get 1,000 points, £100, to use on your first visit.\n\n` +
-    `Message the salon on WhatsApp on 07714 392999 or call 020 3645 1761 and give them my code.`;
+  // what is shared and copied. The What she will see panel shows the same words, with WhatsApp and email us as links.
+  const line1 = `Come to Tatiana Karelina with my code ${code} and you will get 1,000 points, £100, to use on your first visit.`;
+  const message = `${line1}\n\nMessage the salon on WhatsApp, call 020 3645 1761 or email us, and give them my code.`;
+  const waLink = settings?.contact_whatsapp || 'https://wa.me/447714392999';
+  const emailLink = settings?.contact_email || 'mailto:info@tatianakarelina.co.uk';
+  const open = (url: string) => Linking.openURL(url).catch((e) => console.error('open link', url, e));
 
   async function copyCode() {
     await Clipboard.setStringAsync(code);
@@ -74,7 +76,19 @@ export default function Refer() {
       <Gap size="l" />
       <Eyebrow>What she will see</Eyebrow>
       <Gap size="s" />
-      <Text style={r.said}>{message}</Text>
+      <Text style={r.said}>
+        {line1}
+        {'\n\n'}
+        Message the salon on{' '}
+        <Text style={r.ul} onPress={() => open(waLink)} accessibilityRole="link">
+          WhatsApp
+        </Text>
+        , call 020 3645 1761 or{' '}
+        <Text style={r.ul} onPress={() => open(emailLink)} accessibilityRole="link">
+          email us
+        </Text>
+        , and give them my code.
+      </Text>
       <Gap />
       <Btn label={shareLabel} onPress={share} />
       <Gap size="s" />
@@ -109,4 +123,5 @@ const r = StyleSheet.create({
   refcopy: { position: 'absolute', right: 0, top: '50%', marginTop: -12 },
   centre: { textAlign: 'center' },
   said: { backgroundColor: C.band, borderRadius: 10, paddingVertical: 16, paddingHorizontal: 18, fontFamily: F.serif, fontSize: 15, lineHeight: 23, color: C.ink },
+  ul: { textDecorationLine: 'underline' },
 });

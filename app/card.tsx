@@ -4,7 +4,7 @@ import { Image, Platform, Pressable, StyleSheet, Text, View } from 'react-native
 import { Tier } from '../src/crm';
 import { useData } from '../src/data';
 import { fullDate, monthYear, num, pounds } from '../src/format';
-import { C, F } from '../src/theme';
+import { C, F, ls } from '../src/theme';
 import { TextLink } from '../src/ui/Btn';
 import { Gap } from '../src/ui/Gap';
 import { Kind, Kinds } from '../src/ui/Kinds';
@@ -12,7 +12,7 @@ import { PrivilegeCard, TierSurface } from '../src/ui/PrivilegeCard';
 import { Bar } from '../src/ui/Rows';
 import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Sect, Small } from '../src/ui/T';
-import { cardNeeded, tierName, track, trackFor } from '../src/ui/tiers';
+import { cardNeeded, counter, tierName, track } from '../src/ui/tiers';
 import { Waiting } from '../src/ui/Waiting';
 
 const badgeApple = require('../assets/badge_apple.png');
@@ -30,9 +30,7 @@ export default function Card() {
     return <Screen tab="card" title="Your Card" refreshing={refreshing} onRefresh={refresh} status={statusOf(s, failed)}>{null}</Screen>;
   }
   const normal = track(s);
-  const tapped = chip ? trackFor(chip, s, tierRules) : null;
-  const line = tapped?.line ?? normal.line;
-  const fill = tapped?.fill ?? normal.fill;
+  const ct = counter(s, tierRules, chip);
 
   return (
     <Screen tab="card" title="Your Card" refreshing={refreshing} onRefresh={refresh}>
@@ -89,10 +87,14 @@ export default function Card() {
         })}
       </View>
       <View style={c.track}>
-        <Text style={c.trackLine}>{line}</Text>
-        <Bar fill={fill} style={{ marginTop: 13 }} />
+        <Text style={c.label}>{ct.label}</Text>
+        <View style={c.count}>
+          <Text style={c.have}>{ct.have}</Text>
+          <Text style={c.need}>{ct.need}</Text>
+        </View>
+        <Bar fill={ct.fill} style={{ marginTop: 13 }} />
         {cardNeeded(s) && <Text style={c.trackSub}>{normal.card}</Text>}
-        {normal.note && <Text style={c.note}>Reviewed on 1 January</Text>}
+        {ct.note && <Text style={c.note}>Reviewed on 1 January</Text>}
       </View>
       <Gap size="s" />
       <Small>Tier Points: 1 for every £1 you spend with us, on anything. Tap a tier to see the Tier Points it needs.</Small>
@@ -115,7 +117,10 @@ const c = StyleSheet.create({
   chip: { paddingVertical: 16, paddingHorizontal: 10, borderRadius: 10, alignItems: 'center', overflow: 'hidden' },
   chipText: { fontFamily: F.serif, fontSize: 16, color: '#fff' },
   track: { marginTop: 20 },
-  trackLine: { fontFamily: F.reg, fontSize: 13.5, color: C.ink },
+  label: { fontFamily: F.med, fontSize: 10, letterSpacing: ls(0.2, 10), textTransform: 'uppercase', color: C.gold },
+  count: { flexDirection: 'row', alignItems: 'baseline', gap: 8, marginTop: 6 },
+  have: { fontFamily: F.serif, fontSize: 28, lineHeight: 30, color: C.ink },
+  need: { fontFamily: F.reg, fontSize: 12.5, color: C.grey, flexShrink: 1 },
   trackSub: { fontFamily: F.reg, fontSize: 11.5, color: C.mute, marginTop: 3 },
   note: { fontFamily: F.reg, fontSize: 11.5, color: C.mute, marginTop: 8 },
 });

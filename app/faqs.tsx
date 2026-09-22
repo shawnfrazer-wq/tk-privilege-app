@@ -23,7 +23,7 @@ const HAIR: [string, string][] = [
 const POINTS: [string, string][] = [
   [
     'How does the booking bonus work?',
-    'There is 1, and there are no exceptions. You get 100 points when you book your next visit at the desk on the day of your maintenance, and then come in on that exact date. Book it later, by phone or by email, or move the appointment to another day, and you do not get it. Coming on your booked date is what lets the salon plan the diary ahead, and this is our thank you for it.',
+    'Booking your next visit before you leave lets us keep the time that suits your hair best and plan the diary ahead. To thank you for it, we add 100 TK Points. To earn them, book your next visit at the desk on the day of your maintenance, and come in on that date. A visit booked later, by phone or by email, or moved to another day, does not qualify.',
   ],
   [
     'If I pay with points, do I still earn?',
@@ -31,7 +31,7 @@ const POINTS: [string, string][] = [
   ],
   [
     'Does a new set or hair piece earn points?',
-    'No. Points come from what you spend at a care appointment, the maintenance itself, colour, a blow dry, a trim, Davines products, anything you buy that day. A new set or a new piece earns nothing, and you can spend your points on one.',
+    'TK Points come from what you spend at a maintenance: the maintenance itself, colour, a blow dry, a trim, Davines products, anything you buy that day. A new set or a new piece does not qualify for TK Points, but you can spend your TK Points on one.',
   ],
   [
     'How does the Care Card work?',
@@ -42,12 +42,12 @@ const POINTS: [string, string][] = [
     'A visit under £200, or one sooner than 5 weeks after your last maintenance for tapes, or 7 weeks for everything else. It still earns points. They are added to what is pending and released with your next maintenance. A top up does not fill a Care Card box.',
   ],
   [
-    'Do they run out?',
+    'Do points expire?',
     'After 24 months from the day they land, and we tell you 3 months before anything does. They are never taken away for anything you do.',
   ],
   [
-    'How do I move up a tier?',
-    'Everyone starts at Silver. Fill a Care Card and earn 1,500 Tier Points for Gold, or 3,000 for Black. Tier points are 1 for every £1 you spend with us, on anything. You move up the moment you qualify, and keep your tier for the rest of that year and all of the next. How Tiers Work has the detail.',
+    'How do I progress to the next Tier?',
+    'Everyone starts at Silver. Fill a Care Card and earn 1,500 Tier Points for Gold, or 3,000 for Black. Tier points are 1 for every £1 you spend with us, on anything. You move up the moment you qualify, and keep your tier for the rest of that year and all of the next. The How Tiers Work section has more details.',
   ],
   [
     'What do the different tiers give me?',

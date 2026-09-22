@@ -98,6 +98,11 @@ p.copy{font-size:14px;line-height:1.7;font-weight:400;color:var(--grey);margin:0
 .phone[data-tier="silver"] .card .logo-w{display:none}
 .phone:not([data-tier="silver"]) .card .logo-k{display:none}
 .tiername::after{content:"Gold"}
+.said a.ul{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.track .tk-label{color:var(--gold);display:block;font-size:10px;margin-top:0}
+.tk-count{display:flex;align-items:baseline;gap:8px;margin-top:6px}
+.track .tk-count b{display:inline;font-family:var(--serif);font-size:28px;line-height:1;font-weight:400;color:var(--ink)}
+.track .tk-count span{display:inline;margin-top:0;font-size:12.5px;color:var(--grey)}
 .kinds{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .kind{background:var(--band);border-radius:12px;padding:14px 14px 13px;display:flex;flex-direction:column;gap:4px}
 .kind .eyebrow{color:var(--gold)}
@@ -672,7 +677,8 @@ details p{margin:10px 0 0;font-size:13px;line-height:1.7;color:var(--grey);font-
           <button class="t-black" data-tierbar="black"><b>Black</b></button>
         </div>
         <div class="track">
-          <b class="tk-line">Black: 1,860 of 3,000 Tier Points</b>
+          <span class="eyebrow tk-label">Next Tier: Black</span>
+          <div class="tk-count"><b class="tk-have">1,860</b><span class="tk-need">of 3,000 Tier Points needed</span></div>
           <div class="bar"><i class="tk-bar" style="width:62%"></i></div>
           <span class="tk-card">Care Card: 3 of 4</span>
           <p class="tk-note" hidden>Reviewed on 1 January</p>
@@ -714,7 +720,7 @@ details p{margin:10px 0 0;font-size:13px;line-height:1.7;color:var(--grey);font-
         <div class="gap"></div>
         <h3 class="sect">What You Earn</h3>
         <div class="gap-s"></div>
-        <p class="copy">TK Points for every £1 you spend at a maintenance or a top up: 1 at Silver, 1.25 at Gold and 1.5 at Black. The maintenance itself, colour, a blow dry, a trim, Davines products, anything you buy that day. 10 TK Points is £1. New sets and hair pieces do not earn points.</p>
+        <p class="copy">TK Points for every £1 you spend at a maintenance or a top up: 1 at Silver, 1.25 at Gold and 1.5 at Black. The maintenance itself, colour, a blow dry, a trim, Davines products, anything you buy that day. 10 TK Points is £1. New sets and hair pieces do not qualify for TK Points.</p>
 
         <div class="gap"></div>
         <h3 class="sect">Come Back Earlier. Earn More</h3>
@@ -1031,7 +1037,7 @@ details p{margin:10px 0 0;font-size:13px;line-height:1.7;color:var(--grey);font-
         <div class="gap-l"></div>
         <span class="eyebrow">What she will see</span>
         <div class="gap-s"></div>
-        <div class="said">Come to Tatiana Karelina with my code SOPHIE24 and you will get 1,000 points, £100, to use on your first visit.<br><br>Message the salon on WhatsApp on 07714 392999 or call 020 3645 1761 and give them my code.</div>
+        <div class="said">Come to Tatiana Karelina with my code SOPHIE24 and you will get 1,000 points, £100, to use on your first visit.<br><br>Message the salon on <a class="ul" href="https://wa.me/447714392999" target="_blank" rel="noopener">WhatsApp</a>, call 020 3645 1761 or <a class="ul" href="mailto:info@tatianakarelina.co.uk" target="_blank" rel="noopener">email us</a>, and give them my code.</div>
         <div class="gap"></div>
         <button class="btn solid" id="rf-share">Share your code</button>
         <div class="gap-s"></div>
@@ -1230,13 +1236,13 @@ details p{margin:10px 0 0;font-size:13px;line-height:1.7;color:var(--grey);font-
         <span class="eyebrow">Your points</span>
         <div class="gap-s"></div>
         <details><summary>When should I come in to earn the most?</summary><p>Come back earlier, earn more. Micro rings, micro bonds and wefts: come in for your maintenance within 9 weeks of your last one and you earn full points, 10% back. Within 11 weeks, three quarters, 7.5% back. Within 3 months, half, 5% back. Tapes: within 7 weeks, full points. Within 9 weeks, three quarters. Within 11 weeks, half. So if you always come in at 12 weeks for micro rings, you earn half points every time.</p></details>
-        <details><summary>How does the booking bonus work?</summary><p>There is 1, and there are no exceptions. You get 100 points when you book your next visit at the desk on the day of your maintenance, and then come in on that exact date. Book it later, by phone or by email, or move the appointment to another day, and you do not get it. Coming on your booked date is what lets the salon plan the diary ahead, and this is our thank you for it.</p></details>
+        <details><summary>How does the booking bonus work?</summary><p>Booking your next visit before you leave lets us keep the time that suits your hair best and plan the diary ahead. To thank you for it, we add 100 TK Points. To earn them, book your next visit at the desk on the day of your maintenance, and come in on that date. A visit booked later, by phone or by email, or moved to another day, does not qualify.</p></details>
         <details><summary>If I pay with points, do I still earn?</summary><p>You earn on the amount you pay in cash. Pay part of the bill with points and the rest in money, and the money part earns as normal.</p></details>
-        <details><summary>Does a new set or hair piece earn points?</summary><p>No. Points come from what you spend at a care appointment, the maintenance itself, colour, a blow dry, a trim, Davines products, anything you buy that day. A new set or a new piece earns nothing, and you can spend your points on one.</p></details>
+        <details><summary>Does a new set or hair piece earn points?</summary><p>TK Points come from what you spend at a maintenance: the maintenance itself, colour, a blow dry, a trim, Davines products, anything you buy that day. A new set or a new piece does not qualify for TK Points, but you can spend your TK Points on one.</p></details>
         <details><summary>How does the Care Card work?</summary><p>Every maintenance fills a box on your Care Card. Fill all 4 boxes and we add 500 points, worth £50, to your balance. A full card also counts towards Gold and Black.</p></details>
         <details><summary>What is a top up?</summary><p>A visit under £200, or one sooner than 5 weeks after your last maintenance for tapes, or 7 weeks for everything else. It still earns points. They are added to what is pending and released with your next maintenance. A top up does not fill a Care Card box.</p></details>
-        <details><summary>Do they run out?</summary><p>After 24 months from the day they land, and we tell you 3 months before anything does. They are never taken away for anything you do.</p></details>
-        <details><summary>How do I move up a tier?</summary><p>Everyone starts at Silver. Fill a Care Card and earn 1,500 Tier Points for Gold, or 3,000 for Black. Tier points are 1 for every £1 you spend with us, on anything. You move up the moment you qualify, and keep your tier for the rest of that year and all of the next. How Tiers Work has the detail.</p></details>
+        <details><summary>Do points expire?</summary><p>After 24 months from the day they land, and we tell you 3 months before anything does. They are never taken away for anything you do.</p></details>
+        <details><summary>How do I progress to the next Tier?</summary><p>Everyone starts at Silver. Fill a Care Card and earn 1,500 Tier Points for Gold, or 3,000 for Black. Tier points are 1 for every £1 you spend with us, on anything. You move up the moment you qualify, and keep your tier for the rest of that year and all of the next. The How Tiers Work section has more details.</p></details>
         <details><summary>What do the different tiers give me?</summary><p>More points on every maintenance, bigger discounts on colour and Davines, free colour, a wash and blow dry with your maintenance, birthday points and a Davines gift. Tier Perks shows exactly what each tier gives.</p></details>
 
         <div class="gap-l"></div>
@@ -1331,10 +1337,10 @@ details p{margin:10px 0 0;font-size:13px;line-height:1.7;color:var(--grey);font-
 
 
   var TRACK={
-    silver:{pts:'640',boxes:'3',keepYear:'',until:'',line:'Gold: 640 of 1,500 Tier Points',pct:43,card:'Care Card: 3 of 4',note:false,tile:['640','of 1,500 Tier Points to Gold'],colour:0,gift:false,incl:false},
-    gold:{pts:'1,860',boxes:'3',keepYear:'',until:'31 December 2027',line:'Black: 1,860 of 3,000 Tier Points',pct:62,card:'Care Card: 3 of 4',note:false,tile:['1,860','of 3,000 Tier Points to Black'],colour:100,gift:true,incl:true},
-    black:{pts:'1,240',boxes:'3',keepYear:'2028',until:'31 December 2027',line:'To stay Black for 2028: 1,240 of 2,500 Tier Points',pct:50,card:'Care Card: 3 of 4',note:true,tile:['1,240','of 2,500 Tier Points to stay Black'],colour:200,gift:true,incl:true},
-    fresh:{pts:'0',boxes:'0',keepYear:'',until:'',line:'Gold: 0 of 1,500 Tier Points',pct:0,card:'Care Card: 0 of 4',note:false,tile:['0','of 1,500 Tier Points to Gold'],colour:0,gift:false,incl:false}
+    silver:{label:'Next Tier: Gold',need:'1,500',pts:'640',boxes:'3',keepYear:'',until:'',line:'Gold: 640 of 1,500 Tier Points',pct:43,card:'Care Card: 3 of 4',note:false,tile:['640','of 1,500 Tier Points to Gold'],colour:0,gift:false,incl:false},
+    gold:{label:'Next Tier: Black',need:'3,000',pts:'1,860',boxes:'3',keepYear:'',until:'31 December 2027',line:'Black: 1,860 of 3,000 Tier Points',pct:62,card:'Care Card: 3 of 4',note:false,tile:['1,860','of 3,000 Tier Points to Black'],colour:100,gift:true,incl:true},
+    black:{label:'Tier Points to Retain Black',need:'2,500',pts:'1,240',boxes:'3',keepYear:'2028',until:'31 December 2027',line:'To stay Black for 2028: 1,240 of 2,500 Tier Points',pct:50,card:'Care Card: 3 of 4',note:true,tile:['1,240','of 2,500 Tier Points to stay Black'],colour:200,gift:true,incl:true},
+    fresh:{label:'Next Tier: Gold',need:'1,500',pts:'0',boxes:'0',keepYear:'',until:'',line:'Gold: 0 of 1,500 Tier Points',pct:0,card:'Care Card: 0 of 4',note:false,tile:['0','of 1,500 Tier Points to Gold'],colour:0,gift:false,incl:false}
   };
   function applyTrack(){
     var tier=phone.getAttribute('data-tier')||'gold';
@@ -1346,6 +1352,7 @@ details p{margin:10px 0 0;font-size:13px;line-height:1.7;color:var(--grey);font-
       e.textContent = e.closest('.tb-head') ? ('until '+t.until) : (nm+' until '+t.until);
     });
     document.querySelectorAll('.tk-line').forEach(function(e){e.textContent=t.line;});
+    setCounter(t.label,t.pts,t.need,t.pct,t.note?'Reviewed on 1 January':'');
     document.querySelectorAll('.tk-bar').forEach(function(e){e.style.width=t.pct+'%';});
     document.querySelectorAll('.tk-card').forEach(function(e){e.textContent=t.card; e.hidden=!f.clock;});
     document.querySelectorAll('.tk-note').forEach(function(e){e.hidden=!t.note;});
@@ -1373,18 +1380,27 @@ details p{margin:10px 0 0;font-size:13px;line-height:1.7;color:var(--grey);font-
     }
   }
   var RULES={gold:{achieve:'1,500',n:1500},black:{achieve:'3,000',n:3000}};
+  function setCounter(label,have,need,pct,note){
+    document.querySelectorAll('#s-card .tk-label').forEach(function(e){e.textContent=label;});
+    document.querySelectorAll('#s-card .tk-have').forEach(function(e){e.textContent=have;});
+    document.querySelectorAll('#s-card .tk-need').forEach(function(e){e.textContent='of '+need+' Tier Points needed';});
+    document.querySelectorAll('#s-card .tk-bar').forEach(function(e){e.style.width=pct+'%';});
+    document.querySelectorAll('#s-card .tk-note').forEach(function(e){e.textContent=note||'Reviewed on 1 January'; e.hidden=!note;});
+  }
   function tierBar(chip){
     var tier=phone.getAttribute('data-tier')||'gold';
-    var t=(phone.getAttribute('data-state')==='new')?TRACK.fresh:(TRACK[tier]||TRACK.gold);
+    var isNew=phone.getAttribute('data-state')==='new';
+    var t=isNew?TRACK.fresh:(TRACK[tier]||TRACK.gold);
     var rank={silver:0,gold:1,black:2};
-    var line=t.line, pct=t.pct;
-    if(rank[chip]>rank[tier]){
-      var nm=chip.charAt(0).toUpperCase()+chip.slice(1);
-      line=nm+': '+t.pts+' of '+RULES[chip].achieve+' Tier Points';
-      pct=Math.round(parseInt(t.pts.replace(/,/g,''),10)/RULES[chip].n*100);
+    var nm=chip.charAt(0).toUpperCase()+chip.slice(1);
+    if(rank[chip]>rank[tier] || (isNew && chip!=='silver')){
+      var pct=Math.round(parseInt(t.pts.replace(/,/g,''),10)/RULES[chip].n*100);
+      setCounter('Next Tier: '+nm,t.pts,RULES[chip].achieve,pct,'');
+    } else if(chip===tier && chip==='gold'){
+      setCounter('Tier Points to Retain Gold','0','1,250',0,'Counted during 2027. Reviewed on 1 January');
+    } else {
+      setCounter(t.label,t.pts,t.need,t.pct,t.note?'Reviewed on 1 January':'');
     }
-    document.querySelectorAll('#s-card .tk-line').forEach(function(e){e.textContent=line;});
-    document.querySelectorAll('#s-card .tk-bar').forEach(function(e){e.style.width=pct+'%';});
   }
 
   // ---- type of client -------------------------------------------------

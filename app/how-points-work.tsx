@@ -55,7 +55,7 @@ export default function HowPointsWork() {
       <Sect>What You Earn</Sect>
       <Gap size="s" />
       <Copy>
-        TK Points for every £1 you spend at a maintenance or a top up{rates}. The maintenance itself, colour, a blow dry, a trim, Davines products, anything you buy that day. 10 TK Points is £1. New sets and hair pieces do not earn points.
+        TK Points for every £1 you spend at a maintenance or a top up{rates}. The maintenance itself, colour, a blow dry, a trim, Davines products, anything you buy that day. 10 TK Points is £1. New sets and hair pieces do not qualify for TK Points.
       </Copy>
 
       <Gap />

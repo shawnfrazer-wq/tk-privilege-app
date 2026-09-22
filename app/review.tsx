@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 import { crm } from '../src/crm';
 import { useData } from '../src/data';
 import { openOutside } from '../src/links';
@@ -16,6 +16,7 @@ import { Copy, Disp, Hint, Small } from '../src/ui/T';
 const markGoogle = require('../assets/mark_google.png');
 const markTrustpilot = require('../assets/mark_trustpilot.png');
 const DRAFT_KEY = 'tk_review';
+const GOOGLE_FALLBACK = 'https://g.page/r/CWVX24-xJAz7EBM/review';
 const LONG_ENOUGH = 60;
 
 // 13 REVIEW. The draft is kept on the phone, so it survives leaving the app, backgrounding and a force quit.
@@ -48,14 +49,25 @@ export default function Review() {
     timer.current = setTimeout(() => setCopyLabel('Copy'), 1600);
   }
 
-  // copies the review, records the tap for the desk's Review claims list, then opens the site in the
-  // in-app browser so Done brings her straight back here. The link is whatever app_settings returns.
+  // copies the review and records the tap for the desk's Review claims list, then opens the site.
+  // Google goes to Safari or the Google app (the in-app browser would not open it), with the g.page link
+  // as the fallback if the CRM's link cannot be opened. Trustpilot opens in the in-app browser, so Done
+  // brings her straight back here. The links are whatever app_settings returns.
   async function share(platform: 'google' | 'trustpilot', link: string) {
     await Clipboard.setStringAsync(text.trim());
     try {
       await crm.reviewTap(platform);
     } catch (e) {
       console.error('app_review_tap', e);
+    }
+    if (platform === 'google') {
+      try {
+        await Linking.openURL(link);
+      } catch (e) {
+        console.error('google review link', link, e);
+        await Linking.openURL(GOOGLE_FALLBACK).catch((e2) => console.error('google review fallback', e2));
+      }
+      return;
     }
     await openOutside(link);
   }

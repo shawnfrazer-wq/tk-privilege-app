@@ -53,11 +53,30 @@ export function track(s: Summary): { line: string; fill: number; card: string; n
   };
 }
 
-// tapping a tier chip above hers on the Card screen: her Tier Points against what that tier takes
-export function trackFor(chip: Tier, s: Summary, rules: TierRules | null): { line: string; fill: number } | null {
-  if (rank(chip) <= rank(s.tier)) return null;
-  const need = achieve(chip, s, rules);
+// the Tier Points a tier takes to keep, from app_tier_rules, or from app_summary in her stay year
+export function keepFor(tier: Tier, s: Summary, rules: TierRules | null): number | null {
+  if (rules) return tier === 'gold' ? rules.gold_keep : tier === 'black' ? rules.black_keep : null;
+  return tier === s.tier ? (s.keep_points ?? null) : null;
+}
+
+export type Counter = { label: string; have: string; need: string; fill: number; note: boolean };
+
+// The tier counter on the Card screen. With no chip tapped: her next tier, or Tier Points to Retain when she is
+// holding Gold or Black in her stay year. A higher tier tapped shows that tier. Her own tier tapped, as Gold or
+// Black, shows what keeps it. Every figure is app_summary's or app_tier_rules'; the layout stands without them.
+export function counter(s: Summary, rules: TierRules | null, chip: Tier | null): Counter {
   const tp = s.tier_points;
-  if (need == null || tp == null) return { line: `${tierName(chip)}: ${tp != null ? num(tp) : ''} Tier Points`, fill: 0 };
-  return { line: `${tierName(chip)}: ${num(tp)} of ${num(need)} Tier Points`, fill: pct(tp, need) };
+  const have = tp != null ? num(tp) : '';
+  const asNeed = (n: number | null | undefined) => `of ${n != null ? num(n) : ''} Tier Points needed`;
+  if (chip && rank(chip) > rank(s.tier)) {
+    const need = achieve(chip, s, rules);
+    return { label: `Next Tier: ${tierName(chip)}`, have, need: asNeed(need), fill: pct(tp, need), note: false };
+  }
+  if ((chip && chip === s.tier && s.tier !== 'silver') || (!chip && staying(s))) {
+    const need = keepFor(s.tier, s, rules);
+    return { label: `Tier Points to Retain ${tierName(s.tier)}`, have, need: asNeed(need), fill: pct(tp, need), note: true };
+  }
+  const next = nextTierOf(s) ?? 'gold';
+  const need = s.next_tier_points ?? achieve(next, s, rules);
+  return { label: `Next Tier: ${tierName(next)}`, have, need: asNeed(need), fill: pct(tp, need), note: false };
 }
