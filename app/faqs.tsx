@@ -6,6 +6,8 @@ import { C, F } from '../src/theme';
 import { Gap } from '../src/ui/Gap';
 import { Screen } from '../src/ui/Screen';
 import { Copy, Disp, Eyebrow, Small } from '../src/ui/T';
+import { useData } from '../src/data';
+import { bandFaq } from '../src/ui/bands';
 
 const HAIR: [string, string][] = [
   [
@@ -19,10 +21,6 @@ const HAIR: [string, string][] = [
 ];
 
 const POINTS: [string, string][] = [
-  [
-    'When should I come in to earn the most?',
-    'Come back earlier, earn more. Micro rings, micro bonds and wefts: come in for your maintenance within 9 weeks of your last one and you earn full points, 10% back. Within 11 weeks, three quarters, 7.5% back. Within 3 months, half, 5% back. Tapes: within 7 weeks, full points. Within 9 weeks, three quarters. Within 11 weeks, half. So if you always come in at 12 weeks for micro rings, you earn half points every time.',
-  ],
   [
     'How does the booking bonus work?',
     'There is 1, and there are no exceptions. You get 100 points when you book your next visit at the desk on the day of your maintenance, and then come in on that exact date. Book it later, by phone or by email, or move the appointment to another day, and you do not get it. Coming on your booked date is what lets the salon plan the diary ahead, and this is our thank you for it.',
@@ -84,8 +82,11 @@ function Item({ q, a, open, onPress }: { q: string; a: string; open: boolean; on
 // 16 QUESTIONS, fixed text
 export default function Faqs() {
   const router = useRouter();
+  const { tierRules } = useData();
   const [open, setOpen] = useState<string | null>(HAIR[0][0]);
   const toggle = (q: string) => setOpen((cur) => (cur === q ? null : q));
+  // the band weeks answer comes first, with the CRM's weeks when it sends them
+  const points: [string, string][] = [['When should I come in to earn the most?', bandFaq(tierRules)], ...POINTS];
   return (
     <Screen tab="more" back onBack={() => router.navigate('/more')} title="FAQs">
       <Gap />
@@ -103,7 +104,7 @@ export default function Faqs() {
         <Gap size="l" />
         <Eyebrow>Your points</Eyebrow>
         <Gap size="s" />
-        {POINTS.map(([q, a]) => (
+        {points.map(([q, a]) => (
           <Item key={q} q={q} a={a} open={open === q} onPress={() => toggle(q)} />
         ))}
 

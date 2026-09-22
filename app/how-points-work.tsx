@@ -9,6 +9,7 @@ import { Kind, Kinds } from '../src/ui/Kinds';
 import { Know, RowBtn, SRow } from '../src/ui/Rows';
 import { Screen } from '../src/ui/Screen';
 import { Copy, Disp, Sect } from '../src/ui/T';
+import { bandSentence, bandWeeks, spell } from '../src/ui/bands';
 
 // 6 HOW POINTS WORK. The fixed text is the wireframe's; the figures in it come from app_tier_rules and
 // app_tier_perks, and a sentence that needs a figure the CRM has not sent yet is left out.
@@ -18,6 +19,10 @@ export default function HowPointsWork() {
   const rate = (t: string) => perks?.find((p) => p.tier === t)?.earn_rate;
   const rates = rate('silver') != null && rate('gold') != null && rate('black') != null ? `: ${rate('silver')} at Silver, ${rate('gold')} at Gold and ${rate('black')} at Black` : '';
   const tierKind = r ? `1 Tier Point for each £1 you spend. ${num(r.gold_achieve)} for Gold and ${num(r.black_achieve)} for Black.` : '1 Tier Point for each £1 you spend.';
+  const micro = bandWeeks(r, 'micro');
+  const tapes = bandWeeks(r, 'tapes');
+  const mw = (n: number) => spell(n, micro.fromCrm);
+  const tw = (n: number) => spell(n, tapes.fromCrm);
   const maintenance = r
     ? `A maintenance of £${num(r.care_visit_min_pounds)} or more, at least ${num(r.gap_weeks_tapes)} weeks after your last one for tapes, or ${num(r.gap_weeks_other)} weeks for everything else. It fills a box on your Care Card, counts towards your tier and releases the points pending from your last one.`
     : 'A maintenance fills a box on your Care Card, counts towards your tier and releases the points pending from your last one.';
@@ -60,18 +65,18 @@ export default function HowPointsWork() {
       <Gap size="s" />
       <View style={s.egbox}>
         <Text style={s.eyebrow}>Micro rings, micro bonds and wefts</Text>
-        <Copy style={{ marginBottom: 6 }}>Every 3 months earns half points. Every 11 weeks, three quarters. Every 9 weeks, full points.</Copy>
-        <SRow gold left="Every 9 weeks" right="All 400" note="£40, full points" />
-        <SRow gold left="Every 11 weeks" right="300" note="£30, three quarters" />
-        <SRow gold left="Every 3 months" right="200" note="£20, half points" last />
+        <Copy style={{ marginBottom: 6 }}>{bandSentence(r, 'micro')}</Copy>
+        <SRow gold left={`Every ${mw(micro.weeks.full)}`} right="All 400" note="£40, full points" />
+        <SRow gold left={`Every ${mw(micro.weeks.three_quarters)}`} right="300" note="£30, three quarters" />
+        <SRow gold left={`Every ${mw(micro.weeks.half)}`} right="200" note="£20, half points" last />
       </View>
       <Gap size="s" />
       <View style={s.egbox}>
         <Text style={s.eyebrow}>Tapes</Text>
-        <Copy style={{ marginBottom: 6 }}>Every 11 weeks earns half points. Every 9 weeks, three quarters. Every 7 weeks, full points.</Copy>
-        <SRow gold left="Every 7 weeks" right="All 400" note="£40, full points" />
-        <SRow gold left="Every 9 weeks" right="300" note="£30, three quarters" />
-        <SRow gold left="Every 11 weeks" right="200" note="£20, half points" last />
+        <Copy style={{ marginBottom: 6 }}>{bandSentence(r, 'tapes')}</Copy>
+        <SRow gold left={`Every ${tw(tapes.weeks.full)}`} right="All 400" note="£40, full points" />
+        <SRow gold left={`Every ${tw(tapes.weeks.three_quarters)}`} right="300" note="£30, three quarters" />
+        <SRow gold left={`Every ${tw(tapes.weeks.half)}`} right="200" note="£20, half points" last />
       </View>
 
       <Gap />

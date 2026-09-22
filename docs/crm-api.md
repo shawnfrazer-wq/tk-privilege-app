@@ -51,5 +51,5 @@ Not yet live on 22 September. The app reads all of it as optional and shows the 
 app_summary gains: tier_until, tier_points, tier_points_from, care_card_needed, next_tier, next_tier_points, keep_year_next, keep_points, free_colour_left_pounds, davines_gift_owed, davines_gift_pounds, maintenance_perk_next, first_colour_offer, booking_bonus (0 or 100), booking_bonus_date, has_had_maintenance.
 app_summary loses: kept_bonus, kept_bonus_date, visits_12m, visits_to_next_tier, next_tier_visits.
 app_visits rows gain: counted (bool).
-app_tier_rules(): jsonb with gold_achieve, gold_keep, black_achieve, black_keep, care_card_boxes, care_visit_min_pounds, gap_weeks_tapes, gap_weeks_other.
+app_tier_rules(): jsonb with gold_achieve, gold_keep, black_achieve, black_keep, care_card_boxes, care_visit_min_pounds, gap_weeks_tapes, gap_weeks_other, and asked for by the app: band_weeks { micro { full, three_quarters, half }, tapes { full, three_quarters, half } }.
 app_tier_perks(): rows tier, earn_rate, colour_discount_pct, davines_discount_pct, free_colour_pounds, maintenance_perk, birthday_points, davines_gift_pounds.

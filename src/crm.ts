@@ -79,7 +79,11 @@ export type TierRules = {
   care_visit_min_pounds: number;
   gap_weeks_tapes: number;
   gap_weeks_other: number;
+  // asked for in docs/crm-requests.md: the band weeks behind the general copy; the wireframe's figures are the fallback
+  band_weeks?: { micro?: BandWeeks | null; tapes?: BandWeeks | null } | null;
 };
+
+export type BandWeeks = { full: number; three_quarters: number; half: number };
 
 export type TierPerk = {
   tier: Tier;
