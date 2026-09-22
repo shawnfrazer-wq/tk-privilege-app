@@ -91,6 +91,10 @@ export type TierRules = {
   first_colour_discount_pct: number;
   // the band weeks by method code; null for toppers, wigs and clip-ins, which have no clock
   band_weeks: Record<string, BandWeeks | undefined>;
+  // the first tier year: launch to 31 December 2027, and a tier reached in it lasts to 31 December 2028.
+  // Asked of the CRM chat (docs/crm-requests.md); the wireframe's dates are the fallback until sent.
+  first_tier_year_until?: string | null;
+  first_tier_until?: string | null;
 };
 
 export type BandWeeks = { care_weeks: number | null; full_weeks: number | null; three_quarter_weeks: number | null; half_weeks: number | null };

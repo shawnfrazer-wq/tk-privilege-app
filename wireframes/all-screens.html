@@ -670,7 +670,7 @@ details p{margin:10px 0 0;font-size:13px;line-height:1.7;color:var(--grey);font-
 
         <div class="gap-l"></div>
         <h3 class="sect">You Are <span class="tiername"></span></h3>
-        <p class="small tk-until">Gold until 31 December 2027</p>
+        <p class="small tk-until">Gold until 31 December 2028</p>
         <div class="chips">
           <button class="t-silver" data-tierbar="silver"><b>Silver</b></button>
           <button class="t-gold" data-tierbar="gold"><b>Gold</b></button>
@@ -774,7 +774,7 @@ details p{margin:10px 0 0;font-size:13px;line-height:1.7;color:var(--grey);font-
         <div class="gap"></div>
         <h2 class="disp">How Tiers Work</h2>
         <div class="gap"></div>
-        <p class="tstatus" id="tw-status">You are Gold until 31 December 2027</p>
+        <p class="tstatus" id="tw-status">You are Gold until 31 December 2028</p>
 
         <div class="gap-l"></div>
         <h3 class="sect" id="tw-head">Your Next Tier</h3>
@@ -829,7 +829,7 @@ details p{margin:10px 0 0;font-size:13px;line-height:1.7;color:var(--grey);font-
         <div class="gap"></div>
         <h3 class="sect">Joining in 2026</h3>
         <div class="gap-s"></div>
-        <p class="copy">You move up as soon as you qualify, even this year, and keep your tier until 31 December 2027. If you do not qualify in 2026, everything you spend from the day you join still counts towards 2027.</p>
+        <p class="copy">Your first tier year runs from the day you join to 31 December 2027. Move up at any point in it and you keep your tier until 31 December 2028. After that, every tier year runs from 1 January to 31 December.</p>
 
       </div></div>
       <nav class="nav" data-tab="card"></nav>
@@ -1339,8 +1339,8 @@ details p{margin:10px 0 0;font-size:13px;line-height:1.7;color:var(--grey);font-
 
   var TRACK={
     silver:{label:'Next Tier: Gold',need:'1,500',pts:'640',boxes:'3',keepYear:'',until:'',line:'Gold: 640 of 1,500 Tier Points',pct:43,card:'Care Card: 3 of 4',note:false,tile:['640','of 1,500 Tier Points to Gold'],colour:0,gift:false,incl:false},
-    gold:{label:'Next Tier: Black',need:'3,000',pts:'1,860',boxes:'3',keepYear:'',until:'31 December 2027',line:'Black: 1,860 of 3,000 Tier Points',pct:62,card:'Care Card: 3 of 4',note:false,tile:['1,860','of 3,000 Tier Points to Black'],colour:100,gift:true,incl:true},
-    black:{label:'Tier Points to Retain Black',need:'2,500',pts:'1,240',boxes:'3',keepYear:'2028',until:'31 December 2027',line:'To stay Black for 2028: 1,240 of 2,500 Tier Points',pct:50,card:'Care Card: 3 of 4',note:true,tile:['1,240','of 2,500 Tier Points to stay Black'],colour:200,gift:true,incl:true},
+    gold:{label:'Next Tier: Black',need:'3,000',pts:'1,860',boxes:'3',keepYear:'',until:'31 December 2028',line:'Black: 1,860 of 3,000 Tier Points',pct:62,card:'Care Card: 3 of 4',note:false,tile:['1,860','of 3,000 Tier Points to Black'],colour:100,gift:true,incl:true},
+    black:{label:'Tier Points to Retain Black',need:'2,500',pts:'1,240',boxes:'3',keepYear:'2029',until:'31 December 2028',line:'To stay Black for 2029: 1,240 of 2,500 Tier Points',pct:50,card:'Care Card: 3 of 4',note:true,tile:['1,240','of 2,500 Tier Points to stay Black'],colour:200,gift:true,incl:true},
     fresh:{label:'Next Tier: Gold',need:'1,500',pts:'0',boxes:'0',keepYear:'',until:'',line:'Gold: 0 of 1,500 Tier Points',pct:0,card:'Care Card: 0 of 4',note:false,tile:['0','of 1,500 Tier Points to Gold'],colour:0,gift:false,incl:false}
   };
   function applyTrack(){
@@ -1366,8 +1366,8 @@ details p{margin:10px 0 0;font-size:13px;line-height:1.7;color:var(--grey);font-
     document.querySelectorAll('.incl').forEach(function(e){e.hidden=!t.incl;});
     var N={
       silver:{status:'You are Silver',head:'Your Next Tier',card:'gold',word:'Gold',sub:'Your next tier',need:'What you need',box:'3 of 4',boxp:75,label:'Earn 1,500 Tier Points',val:'640 of 1,500',p:43,note:false},
-      gold:{status:'You are Gold until 31 December 2027',head:'Your Next Tier',card:'black',word:'Black',sub:'Your next tier',need:'What you need',box:'3 of 4',boxp:75,label:'Earn 3,000 Tier Points',val:'1,860 of 3,000',p:62,note:false},
-      black:{status:'You are Black until 31 December 2027',head:'Staying Black',card:'black',word:'Black',sub:'Black for 2028',need:'What you need during 2027',box:'3 of 4',boxp:75,label:'Earn 2,500 Tier Points',val:'1,240 of 2,500',p:50,note:true},
+      gold:{status:'You are Gold until 31 December 2028',head:'Your Next Tier',card:'black',word:'Black',sub:'Your next tier',need:'What you need',box:'3 of 4',boxp:75,label:'Earn 3,000 Tier Points',val:'1,860 of 3,000',p:62,note:false},
+      black:{status:'You are Black until 31 December 2028',head:'Staying Black',card:'black',word:'Black',sub:'Black for 2029',need:'What you need during 2028',box:'3 of 4',boxp:75,label:'Earn 2,500 Tier Points',val:'1,240 of 2,500',p:50,note:true},
       fresh:{status:'You are Silver',head:'Your Next Tier',card:'gold',word:'Gold',sub:'Your next tier',need:'What you need',box:'0 of 4',boxp:0,label:'Earn 1,500 Tier Points',val:'0 of 1,500',p:0,note:false}
     }[(phone.getAttribute('data-state')==='new')?'fresh':tier]||null;
     if(N && document.getElementById('tw-card')){
@@ -1398,7 +1398,7 @@ details p{margin:10px 0 0;font-size:13px;line-height:1.7;color:var(--grey);font-
       var pct=Math.round(parseInt(t.pts.replace(/,/g,''),10)/RULES[chip].n*100);
       setCounter('Next Tier: '+nm,t.pts,RULES[chip].achieve,pct,'');
     } else if(chip===tier && chip==='gold'){
-      setCounter('Tier Points to Retain Gold','0','1,250',0,'Counted during 2027. Reviewed on 1 January');
+      setCounter('Tier Points to Retain Gold','0','1,250',0,'Counted during 2028. Reviewed on 1 January');
     } else {
       setCounter(t.label,t.pts,t.need,t.pct,t.note?'Reviewed on 1 January':'');
     }

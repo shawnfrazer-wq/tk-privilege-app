@@ -28,6 +28,9 @@ export default function HowTiersWork() {
   const boxTarget = r.care_card_boxes || s.card_target;
   const status = s.tier === 'silver' ? 'You are Silver' : `You are ${tierName(s.tier)}${s.tier_until ? ` until ${fullDate(s.tier_until)}` : ''}`;
   const name = [s.first_name, s.last_name].filter(Boolean).join(' ');
+  // the first tier year's dates from app_tier_rules when it sends them, the wireframe's until then
+  const firstYearEnd = r.first_tier_year_until ? fullDate(r.first_tier_year_until) : '31 December 2027';
+  const firstTierEnd = r.first_tier_until ? fullDate(r.first_tier_until) : '31 December 2028';
 
   return (
     <Screen tab="card" back title="How Tiers Work" refreshing={refreshing} onRefresh={refresh}>
@@ -99,7 +102,7 @@ export default function HowTiersWork() {
       <Gap />
       <Sect>Joining in 2026</Sect>
       <Gap size="s" />
-      <Copy>You move up as soon as you qualify, even this year, and keep your tier until 31 December 2027. If you do not qualify in 2026, everything you spend from the day you join still counts towards 2027.</Copy>
+      <Copy>{`Your first tier year runs from the day you join to ${firstYearEnd}. Move up at any point in it and you keep your tier until ${firstTierEnd}. After that, every tier year runs from 1 January to 31 December.`}</Copy>
     </Screen>
   );
 }

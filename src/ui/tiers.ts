@@ -1,5 +1,5 @@
 import { Summary, Tier, TierRules } from '../crm';
-import { capitalise, num } from '../format';
+import { capitalise, num, yearOf } from '../format';
 
 export const tierName = (t: Tier | string | null | undefined) => capitalise(t ?? '');
 const RANK: Record<Tier, number> = { silver: 0, gold: 1, black: 2 };
@@ -33,23 +33,30 @@ export function track(s: Summary): { card: string; sub: string; tileSmall: strin
   return { card, sub: `Towards ${tierName(next)}`, tileSmall: `of ${fig(s.next_tier_points)} Tier Points to ${tierName(next)}` };
 }
 
-export type Counter = { label: string; have: string; need: string; fill: number; note: boolean };
+export type Counter = { label: string; have: string; need: string; fill: number; note: string | null };
 
 // The tier counter on the Card screen. With no chip tapped: her next tier, or Tier Points to Retain when she is
 // holding Gold or Black in her stay year. A higher tier tapped shows that tier. Her own tier tapped, as Gold or
-// Black, shows what keeps it. Every figure is app_summary's or app_tier_rules'.
+// Black, shows what keeps it: in her stay year the count so far, before it nothing is counted yet, so 0 with
+// "Counted during [stay year]" as the wireframe has it. Every figure and date is app_summary's or app_tier_rules'.
 export function counter(s: Summary, rules: TierRules | null, chip: Tier | null): Counter {
   const tp = s.tier_points;
   const asNeed = (n: number | null | undefined) => `of ${fig(n)} Tier Points needed`;
   if (chip && rank(chip) > rank(s.tier)) {
     const need = achieve(chip, rules);
-    return { label: `Next Tier: ${tierName(chip)}`, have: num(tp), need: asNeed(need), fill: pct(tp, need), note: false };
+    return { label: `Next Tier: ${tierName(chip)}`, have: num(tp), need: asNeed(need), fill: pct(tp, need), note: null };
   }
-  if ((chip && chip === s.tier && s.tier !== 'silver') || (!chip && staying(s))) {
+  const stay = staying(s);
+  if (chip && chip === s.tier && s.tier !== 'silver' && !stay) {
+    const need = keepFor(s.tier, rules);
+    const year = yearOf(s.tier_until);
+    return { label: `Tier Points to Retain ${tierName(s.tier)}`, have: '0', need: asNeed(need), fill: 0, note: year ? `Counted during ${year}. Reviewed on 1 January` : 'Reviewed on 1 January' };
+  }
+  if ((chip && chip === s.tier && s.tier !== 'silver') || (!chip && stay)) {
     const need = s.keep_points ?? keepFor(s.tier, rules);
-    return { label: `Tier Points to Retain ${tierName(s.tier)}`, have: num(tp), need: asNeed(need), fill: pct(tp, need), note: true };
+    return { label: `Tier Points to Retain ${tierName(s.tier)}`, have: num(tp), need: asNeed(need), fill: pct(tp, need), note: 'Reviewed on 1 January' };
   }
   const next = s.next_tier ?? 'gold';
   const need = s.next_tier_points ?? achieve(next, rules);
-  return { label: `Next Tier: ${tierName(next)}`, have: num(tp), need: asNeed(need), fill: pct(tp, need), note: false };
+  return { label: `Next Tier: ${tierName(next)}`, have: num(tp), need: asNeed(need), fill: pct(tp, need), note: null };
 }

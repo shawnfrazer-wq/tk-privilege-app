@@ -95,7 +95,7 @@ export default function Card() {
         </View>
         <Bar fill={ct.fill} style={{ marginTop: 13 }} />
         {cardNeeded(s) && <Text style={c.trackSub}>{normal.card}</Text>}
-        {ct.note && <Text style={c.note}>Reviewed on 1 January</Text>}
+        {!!ct.note && <Text style={c.note}>{ct.note}</Text>}
       </View>
       <Gap size="s" />
       <Small>Tier Points: 1 for every £1 you spend with us, on anything. Tap a tier to see the Tier Points it needs.</Small>
