@@ -12,7 +12,7 @@ import { bandFaq } from '../src/ui/bands';
 const HAIR: [string, string][] = [
   [
     'Why do we encourage maintenance early?',
-    'Because it is the closest thing to having a brand new set every single time. Your own hair grows a little over a centimetre a month and the rings travel down with it, so they start to show around 8 weeks. Left longer, your own hair gathers and tangles at the root. Coming on time keeps it looking new, and it makes the appointment itself quicker and easier for both of us.',
+    'Because it keeps your own hair and scalp healthy, and it is the closest thing to having a brand new set every single time. Your own hair grows a little over a centimetre a month and the rings travel down with it, so they start to show around 8 weeks. As the extensions grow out, your own hair gathers and tangles at the root. That makes it harder to wash your scalp properly and to brush through, and over time it puts strain on your own hair. Coming on time keeps your hair healthy and looking new, and it makes the appointment itself quicker and easier for both of us.',
   ],
   [
     'What happens at a maintenance appointment?',
