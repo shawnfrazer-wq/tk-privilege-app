@@ -89,7 +89,7 @@ export default function Review() {
       <Gap />
       <Disp>Tell Us How It Went</Disp>
       <Gap size="s" />
-      <Copy>{`${num(f.review)} points for sharing it to one, 500 for both. Once every ${num(f.reviewMonths)} months.`}</Copy>
+      <Copy>{`${num(f.review)} points for sharing it to one, ${num(f.reviewBoth)} for both. Once every ${num(f.reviewMonths)} months.`}</Copy>
       <View style={v.field}>
         <View style={v.labrow}>
           <Text style={v.label}>Your review</Text>

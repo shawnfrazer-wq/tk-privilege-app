@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useData } from '../src/data';
-import { num } from '../src/format';
+import { num, pounds } from '../src/format';
 import { C, F, ls } from '../src/theme';
 import { Gap } from '../src/ui/Gap';
 import { Kind, Kinds } from '../src/ui/Kinds';
@@ -24,6 +24,8 @@ export default function HowPointsWork() {
   const rates = `: ${rate('silver')} at Silver, ${rate('gold')} at Gold and ${rate('black')} at Black`;
   const tierKind = `1 Tier Point for each £1 you spend. ${num(r.gold_achieve)} for Gold and ${num(r.black_achieve)} for Black.`;
   const micro = bandWeeks(r, 'micro');
+  // the £400 example is fixed text; its pound values are the example points at the redeem rate
+  const eg = (points: number) => pounds(f.examplePounds(points));
   const tapes = bandWeeks(r, 'tapes');
   const maintenance = `A maintenance of £${num(r.care_visit_min_pounds)} or more, at least ${num(r.gap_weeks_tapes)} weeks after your last one for tapes, or ${num(r.gap_weeks_other)} weeks for everything else. It fills a box on your Care Card, counts towards your tier and releases the points pending from your last one.`;
 
@@ -65,16 +67,16 @@ export default function HowPointsWork() {
       <Gap size="s" />
       <View style={s.egbox}>
         <Text style={s.eyebrow}>Micro rings, micro bonds and wefts</Text>
-        <SRow gold left={`Every ${spell(micro?.full_weeks)}`} right="400 TK Points" note="£40" />
-        <SRow gold left={`Every ${spell(micro?.three_quarter_weeks)}`} right="300 TK Points" note="£30" />
-        <SRow gold left={`Every ${spell(micro?.half_weeks)}`} right="200 TK Points" note="£20" last />
+        <SRow gold left={`Every ${spell(micro?.full_weeks)}`} right="400 TK Points" note={eg(400)} />
+        <SRow gold left={`Every ${spell(micro?.three_quarter_weeks)}`} right="300 TK Points" note={eg(300)} />
+        <SRow gold left={`Every ${spell(micro?.half_weeks)}`} right="200 TK Points" note={eg(200)} last />
       </View>
       <Gap size="s" />
       <View style={s.egbox}>
         <Text style={s.eyebrow}>Tapes</Text>
-        <SRow gold left={`Every ${spell(tapes?.full_weeks)}`} right="400 TK Points" note="£40" />
-        <SRow gold left={`Every ${spell(tapes?.three_quarter_weeks)}`} right="300 TK Points" note="£30" />
-        <SRow gold left={`Every ${spell(tapes?.half_weeks)}`} right="200 TK Points" note="£20" last />
+        <SRow gold left={`Every ${spell(tapes?.full_weeks)}`} right="400 TK Points" note={eg(400)} />
+        <SRow gold left={`Every ${spell(tapes?.three_quarter_weeks)}`} right="300 TK Points" note={eg(300)} />
+        <SRow gold left={`Every ${spell(tapes?.half_weeks)}`} right="200 TK Points" note={eg(200)} last />
       </View>
 
       <Gap />

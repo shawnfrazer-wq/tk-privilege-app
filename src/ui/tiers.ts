@@ -1,5 +1,5 @@
 import { Summary, Tier, TierRules } from '../crm';
-import { capitalise, fullDate, num, yearOf } from '../format';
+import { capitalise, fullDate, monthYear, num, yearOf } from '../format';
 
 export const tierName = (t: Tier | string | null | undefined) => capitalise(t ?? '');
 const RANK: Record<Tier, number> = { silver: 0, gold: 1, black: 2 };
@@ -45,7 +45,8 @@ export function track(s: Summary): { card: string; sub: string; tileBig: string;
     return { card, sub: `To stay ${tierName(s.tier)}`, tileBig: num(s.tier_points), tileSmall: `of ${fig(s.keep_points)} Tier Points to stay ${tierName(s.tier)}` };
   }
   if (state === 'top') {
-    return { card, sub: `To stay ${tierName(s.tier)}`, tileBig: tierName(s.tier), tileSmall: s.tier_until ? `until ${fullDate(s.tier_until)}` : '' };
+    // her Tier Points so far do not count towards keeping the tier, so the Card labels them by when they started
+    return { card, sub: s.tier_points_from ? `Earned since ${monthYear(s.tier_points_from)}` : 'Earned so far', tileBig: tierName(s.tier), tileSmall: s.tier_until ? `until ${fullDate(s.tier_until)}` : '' };
   }
   const next = s.next_tier ?? 'gold';
   return { card, sub: `Towards ${tierName(next)}`, tileBig: num(s.tier_points), tileSmall: `of ${fig(s.next_tier_points)} Tier Points to ${tierName(next)}` };

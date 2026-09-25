@@ -90,7 +90,7 @@ export default function Faqs() {
   const [open, setOpen] = useState<string | null>(HAIR[0][0]);
   const toggle = (q: string) => setOpen((cur) => (cur === q ? null : q));
   // the band weeks answer comes first, with the CRM's weeks when it sends them
-  const points: [string, string][] = [['When should I come in to earn the most?', bandFaq(tierRules)], ...pointsFaqs(f)];
+  const points: [string, string][] = [['When should I come in to earn the most?', bandFaq(tierRules, f)], ...pointsFaqs(f)];
   return (
     <Screen tab="more" back onBack={() => router.navigate('/more')} title="FAQs">
       <Gap />

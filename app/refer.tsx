@@ -42,8 +42,8 @@ export default function Refer() {
   // the CRM makes it once from her first name at the time and keeps it
   const code = (s?.referral_code ?? '').replace(/\s+/g, '');
   // what is shared and copied. The What she will see panel shows the same words, with WhatsApp and email us as links.
-  // the points are app_settings'; the pound values are the wireframe's until the CRM sends them (docs/crm-requests.md)
-  const line1 = `Come to Tatiana Karelina with my code ${code} and you will get ${num(f.referred)} points, £100, to use on your first visit.`;
+  // the points are app_settings'; the pound values are those points at the redeem rate
+  const line1 = `Come to Tatiana Karelina with my code ${code} and you will get ${num(f.referred)} points, ${pounds(f.referredPounds)}, to use on your first visit.`;
   const message = `${line1}\n\nMessage the salon on WhatsApp, call 020 3645 1761 or email us, and give them my code.`;
   const waLink = settings?.contact_whatsapp || 'https://wa.me/447714392999';
   const emailLink = settings?.contact_email || 'mailto:info@tatianakarelina.co.uk';
@@ -69,7 +69,7 @@ export default function Refer() {
       <Gap />
       <Disp>Refer a Friend</Disp>
       <Gap size="s" />
-      <Copy>{`${num(f.referrer)} points, £50, for you when she books and pays. She gets ${num(f.referred)} points, £100, to use on her first visit. No limit on how many friends you refer.`}</Copy>
+      <Copy>{`${num(f.referrer)} points, ${pounds(f.referrerPounds)}, for you when she books and pays. She gets ${num(f.referred)} points, ${pounds(f.referredPounds)}, to use on her first visit. No limit on how many friends you refer.`}</Copy>
       <View style={r.refbox}>
         <Text style={r.refcode}>{code}</Text>
         <CopyBtn label={copyLabel} onPress={copyCode} accessibilityLabel="Copy your code" style={r.refcopy} />
