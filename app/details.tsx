@@ -41,6 +41,8 @@ export default function Details() {
   const [problem, setProblem] = useState<string | null>(null);
   const [loadFailed, setLoadFailed] = useState(false);
   const [attempt, setAttempt] = useState(0);
+  // set once her card is complete while gated; Home opens as soon as the guard in app/_layout.tsx has lifted
+  const [through, setThrough] = useState(false);
 
   const [first, setFirst] = useState('');
   const [last, setLast] = useState('');
@@ -64,6 +66,14 @@ export default function Details() {
         const [prof, st] = await Promise.all([crm.profile(), crm.stylists().catch(() => [] as Stylist[])]);
         setP(prof);
         setStylists(st);
+        // The gate is app_link's answer at sign in. If the desk has since completed her card, app_profile says
+        // so (missing is empty) and she goes straight in, with no Continue needed. Pull to refresh re-asks.
+        if (gate && (prof.missing ?? []).length === 0) {
+          await refresh();
+          setThrough(true);
+          setGate(false);
+          return;
+        }
         setFirst(prof.first_name ?? '');
         setLast(prof.last_name ?? '');
         setEmail(prof.email ?? '');
@@ -83,7 +93,12 @@ export default function Details() {
         setLoadFailed(true);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attempt]);
+
+  useEffect(() => {
+    if (through && !gate) router.replace('/home');
+  }, [through, gate, router]);
 
   const stylistOptions = useMemo(() => [...stylists.map((s) => ({ label: s.name, value: s.id })), { label: 'No preference', value: NO_PREFERENCE }], [stylists]);
 
@@ -118,8 +133,8 @@ export default function Details() {
       if (gate) {
         if (complete) {
           await refresh();
+          setThrough(true);
           setGate(false);
-          router.replace('/home');
         } else {
           setProblem(`Still needed: ${saved.missing.join(', ')}.`);
         }
