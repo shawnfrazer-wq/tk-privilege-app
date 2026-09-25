@@ -1,21 +1,39 @@
 {
   "cli": {
-    "version": ">= 24.0.0",
-    "appVersionSource": "remote"
+    "version": ">= 16.0.0",
+    "appVersionSource": "local",
+    "promptToConfigurePushNotifications": false
   },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
-      "distribution": "internal"
+    "internal": {
+      "distribution": "store",
+      "android": {
+        "buildType": "app-bundle"
+      }
     },
     "production": {
-      "autoIncrement": true
+      "distribution": "store",
+      "android": {
+        "buildType": "app-bundle"
+      }
     }
   },
   "submit": {
-    "production": {}
+    "internal": {
+      "ios": {
+        "appleTeamId": "DHV5VVA328"
+      },
+      "android": {
+        "track": "internal"
+      }
+    },
+    "production": {
+      "ios": {
+        "appleTeamId": "DHV5VVA328"
+      },
+      "android": {
+        "track": "production"
+      }
+    }
   }
 }

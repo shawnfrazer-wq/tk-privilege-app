@@ -106,3 +106,24 @@ Google Play required information for a developer account: https://support.google
 Google Play testing requirements for new personal developer accounts: https://support.google.com/googleplay/android-developer/answer/14151465
 Expo EAS build setup: https://docs.expo.dev/build/setup/
 Supabase with Expo React Native: https://supabase.com/docs/guides/getting-started/tutorials/with-expo-react-native
+
+## 8. First EAS build, prepared 25 September 2026
+
+app.json: version 1.0.0, iOS buildNumber 1, Android versionCode 1, bundle identifier and package uk.co.tatianakarelina.privilege, icon assets/icon.png (1024), adaptive icon assets/adaptive-icon.png on #0A0A0A, splash the TK mark on #0A0A0A. eas.json: profiles internal (TestFlight and Play internal testing) and production, appVersionSource local so the numbers in app.json are the ones built; raise buildNumber and versionCode by 1 for each new upload. The Apple Team ID DHV5VVA328 is in the submit profiles.
+
+The Supabase URL and publishable key are constants in src/supabase.ts, so they reach every build with the code. No local file, .env or EAS environment variable is involved. The publishable key is meant to be public; salon.api_guard and the app_ functions are what protect the data.
+
+Permissions: the app asks for none. No camera, photos, location, contacts, microphone or notifications, so no iOS usage strings are needed. Android keeps INTERNET only; RECORD_AUDIO, external storage and SYSTEM_ALERT_WINDOW are blocked in case a library declares them. ITSAppUsesNonExemptEncryption is false. Push notifications in stage 3 add the notification permission and its prompt.
+
+The icon set was rendered from assets/tkmark_white.png, which is 320 pixels, so the 1024 files are upscaled. Fine for TestFlight; replace assets/icon.png, adaptive-icon.png and splash-icon.png from the original artwork before the store listing.
+
+Commands, run on the Mac in this order:
+
+    npm install -g eas-cli
+    eas login
+    eas build:configure
+    eas build --platform ios --profile internal
+    eas submit --platform ios --latest
+    eas build --platform android --profile internal
+
+The first Android bundle is uploaded to Play Console by hand (Testing, Internal testing, Create release), which also creates the app there. After that a service account key lets eas submit --platform android work.
