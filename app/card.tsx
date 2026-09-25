@@ -12,6 +12,7 @@ import { PrivilegeCard, TierSurface } from '../src/ui/PrivilegeCard';
 import { Bar } from '../src/ui/Rows';
 import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Sect, Small } from '../src/ui/T';
+import { figures } from '../src/ui/figures';
 import { cardNeeded, counter, tierName, track } from '../src/ui/tiers';
 import { Waiting } from '../src/ui/Waiting';
 
@@ -22,7 +23,7 @@ const TIERS: Tier[] = ['silver', 'gold', 'black'];
 // 5 CARD
 export default function Card() {
   const router = useRouter();
-  const { summary: s, tierRules, failed, refreshing, refresh } = useData();
+  const { summary: s, settings, tierRules, failed, refreshing, refresh } = useData();
   // tapping a tier above hers shows her Tier Points against that tier; her own or one below puts it back
   const [chip, setChip] = useState<Tier | null>(null);
 
@@ -30,6 +31,7 @@ export default function Card() {
     return <Screen tab="card" title="Your Card" refreshing={refreshing} onRefresh={refresh} status={statusOf(s, failed)}>{null}</Screen>;
   }
   const normal = track(s);
+  const f = figures(settings, tierRules, s);
   const ct = counter(s, tierRules, chip);
 
   return (
@@ -63,7 +65,7 @@ export default function Card() {
         <Kind label="Tier Points" big={num(s.tier_points)} sub={normal.sub} />
       </Kinds>
       <Gap size="s" />
-      <Copy>10 TK Points is £1, off anything on our price list, at any visit. Tier Points move you up a tier and are not for spending.</Copy>
+      <Copy>{`${num(f.rate)} TK Points is £1, off anything on our price list, at any visit. Tier Points move you up a tier and are not for spending.`}</Copy>
       <Gap size="s" />
       <TextLink label="How points work" onPress={() => router.push('/how-points-work')} />
       <Gap size="s" />

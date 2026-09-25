@@ -8,6 +8,7 @@ import { Gap } from '../src/ui/Gap';
 import { Know } from '../src/ui/Rows';
 import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Disp, Sect, Small } from '../src/ui/T';
+import { figures } from '../src/ui/figures';
 
 const TIERS: Tier[] = ['silver', 'gold', 'black'];
 const NO = '✗';
@@ -26,10 +27,11 @@ const ROWS: Row[] = [
 
 // 8 TIER PERKS. The table is app_tier_perks, her column highlighted.
 export default function TierPerks() {
-  const { summary: s, tierPerks, failed, refreshing, refresh } = useData();
+  const { summary: s, settings, tierRules, tierPerks, failed, refreshing, refresh } = useData();
   if (!s || !tierPerks) {
     return <Screen tab="card" back title="Tier Perks" refreshing={refreshing} onRefresh={refresh} status={statusOf(s && tierPerks, failed)}>{null}</Screen>;
   }
+  const f = figures(settings, tierRules, s);
   const perk = (t: Tier) => tierPerks.find((p) => p.tier === t) ?? null;
   const mine = (t: Tier) => t === s.tier;
 
@@ -38,7 +40,7 @@ export default function TierPerks() {
       <Gap />
       <Disp>Tier Perks</Disp>
       <Gap size="s" />
-      <Copy>Every member gets: the booking bonus, the Care Card, refer a friend, review points and 50% off your first colour.</Copy>
+      <Copy>{`Every member gets: the booking bonus, the Care Card, refer a friend, review points and ${num(f.firstColourPct)}% off your first colour.`}</Copy>
       <Gap />
       <View style={p.table}>
         <View style={p.tr}>

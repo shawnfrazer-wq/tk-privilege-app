@@ -9,6 +9,7 @@ import { LedgerRow } from '../src/ui/Ledger';
 import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Disp, Sect } from '../src/ui/T';
 import { Waiting } from '../src/ui/Waiting';
+import { figures } from '../src/ui/figures';
 
 function line(l: LedgerLine, last: boolean) {
   if (l.status === 'pending') {
@@ -22,7 +23,8 @@ function line(l: LedgerLine, last: boolean) {
 
 // 7 HER POINTS
 export default function Points() {
-  const { summary: s, ledger, failed, ledgerFailed, loadLedger, refreshing, refresh } = useData();
+  const { summary: s, settings, tierRules, ledger, failed, ledgerFailed, loadLedger, refreshing, refresh } = useData();
+  const f = figures(settings, tierRules, s);
   useEffect(() => {
     if (!ledger) loadLedger();
   }, [ledger, loadLedger]);
@@ -46,7 +48,7 @@ export default function Points() {
             </View>
             <Text style={p.gbp}>{pounds(s.balance_pounds)}</Text>
           </View>
-          <Copy>Yours to spend on anything, at any visit. 10 TK Points is £1.</Copy>
+          <Copy>{`Yours to spend on anything, at any visit. ${num(f.rate)} TK Points is £1.`}</Copy>
           <Gap />
           <Waiting summary={s} />
         </>

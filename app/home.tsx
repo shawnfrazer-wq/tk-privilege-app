@@ -13,6 +13,7 @@ import { PrivilegeCard } from '../src/ui/PrivilegeCard';
 import { RowBtn } from '../src/ui/Rows';
 import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Disp, Sect, Stale } from '../src/ui/T';
+import { figures } from '../src/ui/figures';
 import { track } from '../src/ui/tiers';
 import { Waiting } from '../src/ui/Waiting';
 
@@ -35,14 +36,15 @@ function careCardLine(s: Summary, rate: number): string {
 // 4 HOME
 export default function Home() {
   const router = useRouter();
-  const { summary: s, settings, requests, tierPerks, failed, updatedAt, refreshing, refresh } = useData();
+  const { summary: s, settings, requests, tierPerks, tierRules, failed, updatedAt, refreshing, refresh } = useData();
   const now = useNow();
 
   if (!s) {
     return <Screen tab="home" brand refreshing={refreshing} onRefresh={refresh} status={statusOf(s, failed)}>{null}</Screen>;
   }
 
-  const rate = Number(settings?.redeem_rate_points_per_pound) || 10;
+  const f = figures(settings, tierRules, s);
+  const rate = f.rate;
   const next = s.next_appointment_at;
   const waiting = !next && requests && requests.length > 0 ? requests[0] : null;
   const isNew = !next && !waiting && !s.balance_points && !s.pending_points && !s.has_had_maintenance;
@@ -110,7 +112,7 @@ export default function Home() {
           )}
         </View>
         <View style={h.tile}>
-          <Text style={h.tileBig}>{num(s.tier_points)}</Text>
+          <Text style={h.tileBig}>{t.tileBig}</Text>
           <Text style={h.tileSmall}>{t.tileSmall}</Text>
         </View>
       </View>
@@ -139,8 +141,8 @@ export default function Home() {
       <Gap size="l" />
       <View>
         <RowBtn title="Your TK Points" sub="Every line, pending and released" onPress={() => router.push('/points')} />
-        <RowBtn title="Refer a Friend" sub="500 points for you, 1,000 for her" onPress={() => router.push('/refer')} />
-        <RowBtn title="Leave a Review" sub="250 points per platform" onPress={() => router.push('/review')} />
+        <RowBtn title="Refer a Friend" sub={`${num(f.referrer)} points for you, ${num(f.referred)} for her`} onPress={() => router.push('/refer')} />
+        <RowBtn title="Leave a Review" sub={`${num(f.review)} points per platform`} onPress={() => router.push('/review')} />
         <RowBtn title="Your Details" sub="What the salon has for you" onPress={() => router.push('/details')} last />
       </View>
       <Stale>{updatedAgo(updatedAt, now)}</Stale>

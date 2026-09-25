@@ -10,14 +10,16 @@ import { Know, RowBtn, SRow } from '../src/ui/Rows';
 import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Disp, Sect } from '../src/ui/T';
 import { bandWeeks, spell } from '../src/ui/bands';
+import { figures } from '../src/ui/figures';
 
 // 6 HOW POINTS WORK. The fixed text is the wireframe's; the figures in it come from app_tier_rules and app_tier_perks.
 export default function HowPointsWork() {
   const router = useRouter();
-  const { tierRules: r, tierPerks: perks, failed, refreshing, refresh } = useData();
+  const { summary, settings, tierRules: r, tierPerks: perks, failed, refreshing, refresh } = useData();
   if (!r || !perks) {
     return <Screen tab="card" back title="How Points Work" refreshing={refreshing} onRefresh={refresh} status={statusOf(r && perks, failed)}>{null}</Screen>;
   }
+  const f = figures(settings, r, summary);
   const rate = (t: string) => perks.find((p) => p.tier === t)?.earn_rate ?? '';
   const rates = `: ${rate('silver')} at Silver, ${rate('gold')} at Gold and ${rate('black')} at Black`;
   const tierKind = `1 Tier Point for each £1 you spend. ${num(r.gold_achieve)} for Gold and ${num(r.black_achieve)} for Black.`;
@@ -33,7 +35,7 @@ export default function HowPointsWork() {
       <Copy>There are 2 kinds of points. Every maintenance earns TK Points. They show in your account as “pending”, and they are released when you come in for your next maintenance.</Copy>
       <Gap size="s" />
       <Kinds>
-        <Kind label="TK Points" text="Yours to spend. 10 TK Points is £1, off all products and services." />
+        <Kind label="TK Points" text={`Yours to spend. ${num(f.rate)} TK Points is £1, off all products and services.`} />
         <Kind label="Tier Points" text={tierKind} />
       </Kinds>
       <Gap size="s" />
@@ -53,13 +55,13 @@ export default function HowPointsWork() {
       <Sect>What You Earn</Sect>
       <Gap size="s" />
       <Copy>
-        TK Points for every £1 you spend at a maintenance or a top up{rates}. The maintenance itself, colour, a blow dry, a trim, Davines products, anything you buy that day. 10 TK Points is £1. New sets and hair pieces do not qualify for TK Points.
+        TK Points for every £1 you spend at a maintenance or a top up{rates}. The maintenance itself, colour, a blow dry, a trim, Davines products, anything you buy that day. {num(f.rate)} TK Points is £1. New sets and hair pieces do not qualify for TK Points.
       </Copy>
 
       <Gap />
       <Sect>Come Back Earlier. Earn More</Sect>
       <Gap size="s" />
-      <Copy>A £400 maintenance at Silver puts 400 TK Points pending. 10 TK Points is always £1 when you spend them. How many are released depends on how early you come back for your next maintenance.</Copy>
+      <Copy>{`A £400 maintenance at Silver puts 400 TK Points pending. ${num(f.rate)} TK Points is always £1 when you spend them. How many are released depends on how early you come back for your next maintenance.`}</Copy>
       <Gap size="s" />
       <View style={s.egbox}>
         <Text style={s.eyebrow}>Micro rings, micro bonds and wefts</Text>
@@ -95,7 +97,7 @@ export default function HowPointsWork() {
       <Know title="Pending points belong to your next maintenance" body="They are released when you come in for it, and the earlier you come, the more are released." />
       <Know
         last
-        title="Booking is worth 100 points"
+        title={`Booking is worth ${num(f.bookingBonus)} points`}
         body="Book your next visit at the desk on the day of your maintenance, and come in on that exact date. That is the only way to earn it, and it is released when you arrive."
       />
     </Screen>

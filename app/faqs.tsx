@@ -8,6 +8,8 @@ import { Screen } from '../src/ui/Screen';
 import { Copy, Disp, Eyebrow, Small } from '../src/ui/T';
 import { useData } from '../src/data';
 import { bandFaq } from '../src/ui/bands';
+import { Figures, figures } from '../src/ui/figures';
+import { num, pounds } from '../src/format';
 
 const HAIR: [string, string][] = [
   [
@@ -20,10 +22,11 @@ const HAIR: [string, string][] = [
   ],
 ];
 
-const POINTS: [string, string][] = [
+// the scheme figures in these answers are app_settings' and app_tier_rules'
+const pointsFaqs = (f: Figures): [string, string][] => [
   [
     'How does the booking bonus work?',
-    'Booking your next visit before you leave lets us keep the time that suits your hair best and plan the diary ahead. To thank you for it, we add 100 TK Points. To earn them, book your next visit at the desk on the day of your maintenance, and come in on that date. A visit booked later, by phone or by email, or moved to another day, does not qualify.',
+    `Booking your next visit before you leave lets us keep the time that suits your hair best and plan the diary ahead. To thank you for it, we add ${num(f.bookingBonus)} TK Points. To earn them, book your next visit at the desk on the day of your maintenance, and come in on that date. A visit booked later, by phone or by email, or moved to another day, does not qualify.`,
   ],
   [
     'If I pay with points, do I still earn?',
@@ -35,19 +38,19 @@ const POINTS: [string, string][] = [
   ],
   [
     'How does the Care Card work?',
-    'Every maintenance fills a box on your Care Card. Fill all 4 boxes and we add 500 points, worth £50, to your balance. A full card also counts towards Gold and Black.',
+    `Every maintenance fills a box on your Care Card. Fill all ${num(f.cardBoxes)} boxes and we add ${num(f.cardPoints)} points${f.cardPounds != null ? `, worth ${pounds(f.cardPounds)},` : ''} to your balance. A full card also counts towards Gold and Black.`,
   ],
   [
     'What is a top up?',
-    'A visit under £200, or one sooner than 5 weeks after your last maintenance for tapes, or 7 weeks for everything else. It still earns points. They are added to what is pending and released with your next maintenance. A top up does not fill a Care Card box.',
+    `A visit under £${num(f.careMin)}, or one sooner than ${num(f.gapTapes)} weeks after your last maintenance for tapes, or ${num(f.gapOther)} weeks for everything else. It still earns points. They are added to what is pending and released with your next maintenance. A top up does not fill a Care Card box.`,
   ],
   [
     'Do points expire?',
-    'After 24 months from the day they land, and we tell you 3 months before anything does. They are never taken away for anything you do.',
+    `After ${num(f.expiryMonths)} months from the day they land, and we tell you 3 months before anything does. They are never taken away for anything you do.`,
   ],
   [
     'How do I progress to the next Tier?',
-    'Everyone starts at Silver. Fill a Care Card and earn 1,500 Tier Points for Gold, or 3,000 for Black. Tier points are 1 for every £1 you spend with us, on anything. You move up the moment you qualify, and keep your tier for the rest of that year and all of the next. The How Tiers Work section has more details.',
+    `Everyone starts at Silver. Fill a Care Card and earn ${num(f.goldAchieve)} Tier Points for Gold, or ${num(f.blackAchieve)} for Black. Tier points are 1 for every £1 you spend with us, on anything. You move up the moment you qualify, and keep your tier for the rest of that year and all of the next. The How Tiers Work section has more details.`,
   ],
   [
     'What do the different tiers give me?',
@@ -82,11 +85,12 @@ function Item({ q, a, open, onPress }: { q: string; a: string; open: boolean; on
 // 16 QUESTIONS, fixed text
 export default function Faqs() {
   const router = useRouter();
-  const { tierRules } = useData();
+  const { tierRules, settings, summary } = useData();
+  const f = figures(settings, tierRules, summary);
   const [open, setOpen] = useState<string | null>(HAIR[0][0]);
   const toggle = (q: string) => setOpen((cur) => (cur === q ? null : q));
   // the band weeks answer comes first, with the CRM's weeks when it sends them
-  const points: [string, string][] = [['When should I come in to earn the most?', bandFaq(tierRules)], ...POINTS];
+  const points: [string, string][] = [['When should I come in to earn the most?', bandFaq(tierRules)], ...pointsFaqs(f)];
   return (
     <Screen tab="more" back onBack={() => router.navigate('/more')} title="FAQs">
       <Gap />

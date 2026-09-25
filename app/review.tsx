@@ -13,6 +13,8 @@ import { TextArea } from '../src/ui/Field';
 import { Gap } from '../src/ui/Gap';
 import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Disp, Hint, Small } from '../src/ui/T';
+import { figures } from '../src/ui/figures';
+import { num } from '../src/format';
 
 const markGoogle = require('../assets/mark_google.png');
 const markTrustpilot = require('../assets/mark_trustpilot.png');
@@ -23,7 +25,8 @@ const LONG_ENOUGH = 60;
 // backgrounding and a force quit, is cleared on sign out, and is never shown to another account.
 export default function Review() {
   const router = useRouter();
-  const { settings, failed, refreshing, refresh } = useData();
+  const { settings, tierRules, summary, failed, refreshing, refresh } = useData();
+  const f = figures(settings, tierRules, summary);
   const [text, setText] = useState('');
   const [copyLabel, setCopyLabel] = useState('Copy');
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -86,7 +89,7 @@ export default function Review() {
       <Gap />
       <Disp>Tell Us How It Went</Disp>
       <Gap size="s" />
-      <Copy>250 points for sharing it to one, 500 for both. Once every 6 months.</Copy>
+      <Copy>{`${num(f.review)} points for sharing it to one, 500 for both. Once every ${num(f.reviewMonths)} months.`}</Copy>
       <View style={v.field}>
         <View style={v.labrow}>
           <Text style={v.label}>Your review</Text>

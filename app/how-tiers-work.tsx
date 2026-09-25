@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useData } from '../src/data';
-import { fullDate, num, yearOf } from '../src/format';
+import { fullDate, num } from '../src/format';
 import { C, F, ls } from '../src/theme';
 import { Gap } from '../src/ui/Gap';
 import { Kind, Kinds } from '../src/ui/Kinds';
@@ -10,22 +10,28 @@ import { PrivilegeCard } from '../src/ui/PrivilegeCard';
 import { Bar, Know } from '../src/ui/Rows';
 import { Screen, statusOf } from '../src/ui/Screen';
 import { Copy, Disp, Sect } from '../src/ui/T';
-import { cardNeeded, staying, tierName } from '../src/ui/tiers';
+import { figures } from '../src/ui/figures';
+import { cardNeeded, keepFor, retainNote, stayFor, stayYear, tierName, tierState } from '../src/ui/tiers';
 
 // 7 HOW TIERS WORK. Her status and progress from app_summary, the rules from app_tier_rules.
 export default function HowTiersWork() {
-  const { summary: s, tierRules: r, failed, refreshing, refresh } = useData();
+  const { summary: s, settings, tierRules: r, failed, refreshing, refresh } = useData();
   if (!s || !r) {
     return <Screen tab="card" back title="How Tiers Work" refreshing={refreshing} onRefresh={refresh} status={statusOf(s && r, failed)}>{null}</Screen>;
   }
-  const stay = staying(s);
+  const f = figures(settings, r, s);
+  // climb: her next tier. stay: Gold or Black in her stay year. top: Gold or Black before her stay year, when
+  // nothing counts towards keeping it yet, so both bars start at 0 against the keep figures.
+  const state = tierState(s);
+  const stay = state !== 'climb';
   const cardTier = stay ? s.tier : s.next_tier ?? 'gold';
-  const target = stay ? s.keep_points : s.next_tier_points;
-  const tp = s.tier_points;
+  const target = state === 'stay' ? s.keep_points : state === 'top' ? keepFor(s.tier, r) : s.next_tier_points;
+  const tp = state === 'top' ? 0 : s.tier_points;
   const fig = (n: number | null | undefined) => (n != null ? num(n) : '');
   // the Care Card condition for the tier: counted maintenances this tier year, full once the CRM says it is met
-  const boxes = s.tier_card_boxes;
+  const boxes = state === 'top' ? 0 : s.tier_card_boxes;
   const boxTarget = r.care_card_boxes || s.card_target;
+  const boxFill = state === 'top' ? 0 : s.tier_card_done ? 1 : boxTarget ? boxes / boxTarget : 0;
   const status = s.tier === 'silver' ? 'You are Silver' : `You are ${tierName(s.tier)}${s.tier_until ? ` until ${fullDate(s.tier_until)}` : ''}`;
   const name = [s.first_name, s.last_name].filter(Boolean).join(' ');
   // the first tier year's dates from app_tier_rules when it sends them, the wireframe's until then
@@ -43,17 +49,17 @@ export default function HowTiersWork() {
       <Sect>{stay ? `Staying ${tierName(s.tier)}` : 'Your Next Tier'}</Sect>
       <Gap size="s" />
       <View style={{ marginTop: 4 }}>
-        <PrivilegeCard tier={cardTier} word={tierName(cardTier)} name={name} since={stay ? `${tierName(s.tier)} for ${s.keep_year_next}` : 'Your next tier'} right="" />
+        <PrivilegeCard tier={cardTier} word={tierName(cardTier)} name={name} since={stay ? `${tierName(s.tier)} for ${stayFor(s)}` : 'Your next tier'} right="" />
       </View>
       <View style={t.needs}>
-        <Text style={t.eyebrow}>{stay ? `What you need during ${yearOf(s.tier_until)}` : 'What you need'}</Text>
+        <Text style={t.eyebrow}>{stay ? `What you need during ${stayYear(s)}` : 'What you need'}</Text>
         {cardNeeded(s) && (
           <View>
             <View style={t.nh}>
               <Text style={t.nhLabel}>Fill a Care Card</Text>
               <Text style={t.nhVal}>{`${num(boxes)} of ${num(boxTarget)}`}</Text>
             </View>
-            <Bar fill={s.tier_card_done ? 1 : boxTarget ? boxes / boxTarget : 0} style={{ marginTop: 8 }} />
+            <Bar fill={boxFill} style={{ marginTop: 8 }} />
           </View>
         )}
         <View>
@@ -63,7 +69,7 @@ export default function HowTiersWork() {
           </View>
           <Bar fill={tp != null && target ? tp / target : 0} style={{ marginTop: 8 }} />
         </View>
-        {stay && <Text style={t.note}>Reviewed on 1 January</Text>}
+        {stay && <Text style={t.note}>{state === 'top' ? retainNote(s) : 'Reviewed on 1 January'}</Text>}
       </View>
 
       <Gap size="l" />
@@ -79,7 +85,7 @@ export default function HowTiersWork() {
       <Sect>TK Points and Tier Points</Sect>
       <Gap size="s" />
       <Kinds>
-        <Kind label="TK Points" text="Yours to spend. 10 TK Points is £1, off all products and services." />
+        <Kind label="TK Points" text={`Yours to spend. ${num(f.rate)} TK Points is £1, off all products and services.`} />
         <Kind label="Tier Points" text={`1 Tier Point for each £1 you spend. ${num(r.gold_achieve)} for Gold and ${num(r.black_achieve)} for Black.`} />
       </Kinds>
 
