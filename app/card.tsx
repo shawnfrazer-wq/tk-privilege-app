@@ -20,6 +20,9 @@ const badgeApple = require('../assets/badge_apple.png');
 const badgeGoogle = require('../assets/badge_google.png');
 const TIERS: Tier[] = ['silver', 'gold', 'black'];
 
+// the wallet that belongs to the platform the app is running on, or none on anything else
+export const walletFor = (os: string): 'apple' | 'google' | null => (os === 'ios' ? 'apple' : os === 'android' ? 'google' : null);
+
 // 5 CARD
 export default function Card() {
   const router = useRouter();
@@ -32,6 +35,8 @@ export default function Card() {
   }
   const normal = track(s);
   const f = figures(settings, tierRules, s);
+  const wallet = walletFor(Platform.OS);
+  const inWallet = false; // stage 3: true once this phone's wallet holds her pass
   const ct = counter(s, tierRules, chip);
 
   return (
@@ -46,18 +51,27 @@ export default function Card() {
       <Gap size="s" />
       <Small style={c.centre}>Reception will find you by name. Nothing to scan.</Small>
 
-      {/* Wallet passes are stage 3. The badges are drawn as the wireframe shows them and are wired then. Once the
-          card is in Apple Wallet or Google Wallet on this phone, that button is hidden (docs/build-and-release-plan.md). */}
-      <View style={c.wallets}>
-        <Pressable accessibilityRole="button" accessibilityLabel="Add to Apple Wallet">
-          <Image source={badgeApple} style={{ height: 44, width: 44 * (738 / 228) }} resizeMode="contain" />
-        </Pressable>
-        <Pressable accessibilityRole="button" accessibilityLabel="Add to Google Wallet">
-          <Image source={badgeGoogle} style={{ height: 44, width: 44 * (738 / 210) }} resizeMode="contain" />
-        </Pressable>
-      </View>
-      <Gap size="s" />
-      <Small style={c.centre}>Keep it with your other cards. It updates itself.</Small>
+      {/* One wallet button, the platform's own, decided by Platform.OS and nothing the client or the CRM sets:
+          Apple Wallet on iOS, Google Wallet on Android (rules.md, Shawn 28 September). Once the card is in that
+          phone's wallet the button goes too, so the screen shows none. The passes themselves are stage 3, so
+          inWallet is false until then and the button is drawn as the wireframe shows it. */}
+      {wallet && !inWallet && (
+        <>
+          <View style={c.wallets}>
+            {wallet === 'apple' ? (
+              <Pressable accessibilityRole="button" accessibilityLabel="Add to Apple Wallet">
+                <Image source={badgeApple} style={{ height: 44, width: 44 * (738 / 228) }} resizeMode="contain" />
+              </Pressable>
+            ) : (
+              <Pressable accessibilityRole="button" accessibilityLabel="Add to Google Wallet">
+                <Image source={badgeGoogle} style={{ height: 44, width: 44 * (738 / 210) }} resizeMode="contain" />
+              </Pressable>
+            )}
+          </View>
+          <Gap size="s" />
+          <Small style={c.centre}>Keep it with your other cards. It updates itself.</Small>
+        </>
+      )}
 
       <Gap />
       <Kinds>

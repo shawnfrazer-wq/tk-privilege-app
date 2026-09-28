@@ -53,7 +53,11 @@ Read docs/tiers-app-brief.md (copied from the project doc claude/tk-privilege-ti
 
 ## Referral code and message
 
-A referral code never contains a space (SHAWN36, not SHAWN 36). Show, copy and share it with any spaces removed, even if the CRM returns one. The referral message has no links in it; use the exact text on the Refer a Friend screen in the wireframe.
+A referral code never contains a space (SHAWN36, not SHAWN 36). Show, copy and share it with any spaces removed, even if the CRM returns one. The referral message (Shawn, 22 September, corrected 28 September; it overrides the wireframe) reads exactly: "Come to Tatiana Karelina with my code SHAWN36 and you will get 1,000 points, £100, to use on your first visit. Message the salon on WhatsApp, call 020 3645 1761 or email us, and give them my code." On screen, WhatsApp and email us are underlined links opening app_settings contact_whatsapp and contact_email (fallbacks https://wa.me/447714392999 and mailto:info@tatianakarelina.co.uk); the phone number is never a link. Share your code opens the phone's own share sheet with the same message plus 2 plain lines at the end, "WhatsApp: [link]" and "Email: [address]". Nothing in the app says "Choose an app".
+
+## Wallet buttons
+
+The Card screen shows one wallet button, the platform's own, decided by Platform.OS: Add to Apple Wallet on iOS, Add to Google Wallet on Android, never both (Shawn, 28 September; this rule wins over the wireframe, which shows both). Once the card is in that phone's wallet the button is hidden too.
 
 ## Writing
 

@@ -23,7 +23,6 @@ export default function Refer() {
   const [attempt, setAttempt] = useState(0);
   const [list, setList] = useState<Referral[] | null>(null);
   const [copyLabel, setCopyLabel] = useState('Copy');
-  const [shareLabel, setShareLabel] = useState('Share your code');
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
@@ -41,12 +40,17 @@ export default function Refer() {
   // the code is app_summary referral_code with every space removed (SHAWN 36 is shown, copied and shared as SHAWN36);
   // the CRM makes it once from her first name at the time and keeps it
   const code = (s?.referral_code ?? '').replace(/\s+/g, '');
-  // what is shared and copied. The What she will see panel shows the same words, with WhatsApp and email us as links.
-  // the points are app_settings'; the pound values are those points at the redeem rate
+  // The referral message (rules.md section 4, Shawn 22 September). One paragraph. On screen, WhatsApp and
+  // email us are underlined links; the phone number is never a link. The links are app_settings' contact_whatsapp
+  // and contact_email, as on Contact Us, with the salon's own as the fallback when a setting is empty.
+  // The points are app_settings'; the pound values are those points at the redeem rate.
   const line1 = `Come to Tatiana Karelina with my code ${code} and you will get ${num(f.referred)} points, ${pounds(f.referredPounds)}, to use on your first visit.`;
-  const message = `${line1}\n\nMessage the salon on WhatsApp, call 020 3645 1761 or email us, and give them my code.`;
+  const message = `${line1} Message the salon on WhatsApp, call 020 3645 1761 or email us, and give them my code.`;
   const waLink = settings?.contact_whatsapp || 'https://wa.me/447714392999';
   const emailLink = settings?.contact_email || 'mailto:info@tatianakarelina.co.uk';
+  // Shared text cannot carry underlines, so the shared version carries the 2 links as plain lines at the end
+  const emailAddress = emailLink.replace(/^mailto:/i, '');
+  const shared = `${message}\n\nWhatsApp: ${waLink}\nEmail: ${emailAddress}`;
   const open = (url: string) => Linking.openURL(url).catch((e) => console.error('open link', url, e));
 
   async function copyCode() {
@@ -55,12 +59,11 @@ export default function Refer() {
     timers.current.push(setTimeout(() => setCopyLabel('Copy'), 1600));
   }
 
+  // Share your code opens the phone's own share sheet with the shared text, which is also put on the clipboard
   async function share() {
-    await Clipboard.setStringAsync(message);
-    setShareLabel('Copied, now pick an app');
-    timers.current.push(setTimeout(() => setShareLabel('Share your code'), 1800));
+    await Clipboard.setStringAsync(shared);
     try {
-      await Share.share({ message });
+      await Share.share({ message: shared });
     } catch {}
   }
 
@@ -80,9 +83,7 @@ export default function Refer() {
       <Eyebrow>What she will see</Eyebrow>
       <Gap size="s" />
       <Text style={r.said}>
-        {line1}
-        {'\n\n'}
-        Message the salon on{' '}
+        {line1} Message the salon on{' '}
         <Text style={r.ul} onPress={() => open(waLink)} accessibilityRole="link">
           WhatsApp
         </Text>
@@ -93,7 +94,7 @@ export default function Refer() {
         , and give them my code.
       </Text>
       <Gap />
-      <Btn label={shareLabel} onPress={share} />
+      <Btn label="Share your code" onPress={share} />
       <Gap size="s" />
       <Small>Tap the button and choose WhatsApp, Messages, email or any app on your phone. The message and your code go with it. Your friend gives the code at reception, or puts it in her own app.</Small>
 

@@ -26,7 +26,7 @@ What it needs: a Pass Type ID and signing certificate from the Apple Developer a
 
 The Android equivalent is Google Wallet, which is worth adding at the same time since the pass content is already modelled.
 
-Shawn, 22 September: once the card is in Apple Wallet or Google Wallet on that phone, the Card screen hides that wallet button. The app checks the phone's wallet for the pass (PassKit's containsPass on iOS, the Google Wallet API on Android) each time the Card screen opens, so a pass removed from the wallet brings the button back.
+Shawn, 28 September: the Card screen shows only the wallet button for the platform the app runs on, decided by Platform.OS (Apple Wallet on iOS, Google Wallet on Android), never both. Shawn, 22 September: once the card is in that phone's wallet, the Card screen hides that button too. The app checks the phone's wallet for the pass (PassKit's containsPass on iOS, the Google Wallet API on Android) each time the Card screen opens, so a pass removed from the wallet brings the button back.
 
 Beyond being genuinely useful, the Wallet pass is one of the strongest answers to Apple's Guideline 4.2 concern in section 6.
 
