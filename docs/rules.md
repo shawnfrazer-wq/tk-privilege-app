@@ -54,7 +54,8 @@ visit, including against a new set. It is an acquisition cost and is treated as 
 many friends she refers.
 The app cannot see who she sent her code to. It shows only people who arrived with it.
 Referral codes never contain a space: first name then 2 digits, written together, for example SHAWN36. Codes are always shown, copied and shared that way, and a code typed with a space still matches.
-The referral message has no links in it. It reads: "Come to Tatiana Karelina with my code SHAWN36 and you will get 1,000 points, £100, to use on your first visit. Message the salon on WhatsApp on 07714 392999 or call 020 3645 1761 and give them my code." Decided by Shawn on 21 September.
+The referral message, on screen (Shawn, 22 September, corrected 28 September; overrides the wireframe): "Come to Tatiana Karelina with my code SHAWN36 and you will get 1,000 points, £100, to use on your first visit. Message the salon on WhatsApp, call 020 3645 1761 or email us, and give them my code." WhatsApp and email us are underlined links opening app_settings contact_whatsapp and contact_email (fallbacks https://wa.me/447714392999 and mailto:info@tatianakarelina.co.uk); the phone number is never a link.
+The referral message, shared and copied (Shawn, 28 September), carries no URLs: "Come to Tatiana Karelina with my code SHAWN36 and you will get 1,000 points, £100, to use on your first visit. Message the salon on WhatsApp on 07714 392999, call 020 3645 1761 or email info@tatianakarelina.co.uk, and give them my code." The number and address come from the same app_settings values, written for reading. No wa.me link, no mailto link, no lines beneath.
 TO DO: privilege_referral_code issues codes with no space, the 2 existing codes (SHAWN 36, APP 35) have the space taken out, and code lookup ignores spaces.
 BUILT 21 September: referrer 500, referred 1,000, and can_redeem allows the referred friend's
 1,000 on her first visit whatever it is.

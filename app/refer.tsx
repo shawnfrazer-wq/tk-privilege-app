@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Linking, Share, StyleSheet, Text, View } from 'react-native';
 import { crm, Referral } from '../src/crm';
 import { useData } from '../src/data';
-import { dayMonth, num, pounds, signedPoints } from '../src/format';
+import { dayMonth, displayMobile, num, pounds, signedPoints } from '../src/format';
 import { C, F, ls } from '../src/theme';
 import { Btn } from '../src/ui/Btn';
 import { CopyBtn } from '../src/ui/CopyBtn';
@@ -48,9 +48,12 @@ export default function Refer() {
   const message = `${line1} Message the salon on WhatsApp, call 020 3645 1761 or email us, and give them my code.`;
   const waLink = settings?.contact_whatsapp || 'https://wa.me/447714392999';
   const emailLink = settings?.contact_email || 'mailto:info@tatianakarelina.co.uk';
-  // Shared text cannot carry underlines, so the shared version carries the 2 links as plain lines at the end
+  // Shared text cannot carry underlines and carries no URLs (Shawn, 28 September): the same paragraph with the
+  // WhatsApp number and the email address written in plain, from the same app_settings values, so most messaging
+  // apps make them tappable by themselves. https://wa.me/447714392999 reads as 07714 392999.
+  const waNumber = displayMobile(waLink.replace(/\D/g, ''));
   const emailAddress = emailLink.replace(/^mailto:/i, '');
-  const shared = `${message}\n\nWhatsApp: ${waLink}\nEmail: ${emailAddress}`;
+  const shared = `${line1} Message the salon on WhatsApp on ${waNumber}, call 020 3645 1761 or email ${emailAddress}, and give them my code.`;
   const open = (url: string) => Linking.openURL(url).catch((e) => console.error('open link', url, e));
 
   async function copyCode() {
